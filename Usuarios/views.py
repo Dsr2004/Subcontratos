@@ -17,7 +17,6 @@ class Login(LoginView):
         context={}
         form = LoginForm(request,data=request.POST) #con esto se le pasan los datos al formulario, inserción
         context["form"]=form
-        print(request.session)
         if form.is_valid():
             nombre = form.cleaned_data.get("username")
             contrasena = form.cleaned_data.get("password")
