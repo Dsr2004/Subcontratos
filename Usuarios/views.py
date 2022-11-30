@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
+from django.views.generic import View
 from django.contrib.auth import login, logout, authenticate
 from .forms import LoginForm
 from .models import Usuario
@@ -40,3 +41,7 @@ class Login(LoginView):
 
 def logout(request):
     logout(request)
+
+class ResetPass(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "Reset.html")
