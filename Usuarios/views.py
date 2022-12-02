@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
 from django.views.generic import View
 from django.contrib.auth import login, logout, authenticate
+from django.contrib import messages
 from .forms import LoginForm
 from .models import Usuario
 
@@ -43,5 +44,27 @@ def logout(request):
     logout(request)
 
 class ResetPass(View):
+    template_name = "Reset.html"
     def get(self, request, *args, **kwargs):
-        return render(request, "Reset.html")
+        return render(request, self.template_name)
+    
+    def post(self, request, *args, **kwargs):
+        correo = request.POST.get("correo")
+        if not correo:
+            messages.add_message(request, messages.ERROR, 'complete la información e intente nuevamente.')
+            return render(request, self.template_name)
+        try:
+            usuario = Usuario.objects.get(email=correo)
+        except:
+            messages.add_message(request, messages.ERROR, 'No se encontró un usuario con este correo.')
+            return render(request, self.template_name)
+        password = Usuario.objects.make_random_password(length=10, allowed_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ1234567890')
+        usuario.set_password(password)
+        usuario.save(update_fields=['password'])
+        
+   
+
+        messages.add_message(request, messages.INFO, 'Revise su correo electrónico.')
+        return render(request, self.template_name)
+        
+            
