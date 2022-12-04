@@ -4,4 +4,4 @@ from django.shortcuts import render
 
 class Index(View):
     def get(self, request, *aregs, **kwargs):
-        return HttpResponse("Esta en el inicio")
+        return render(request, "index.html")

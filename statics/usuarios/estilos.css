@@ -63,7 +63,15 @@
             text-align: center;
             padding-top: 8px;
         }
-
+        .show_info{
+            background-color: #41f856c4;
+            color: rgb(255, 255, 255);
+            height: 40px;
+            border-radius: 5px;
+            width: 100%;
+            text-align: center;
+            padding-top: 8px;
+        }
         .texto-seccion{
             font-size: 25px;
             font-weight: bold;
