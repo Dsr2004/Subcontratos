@@ -3,8 +3,10 @@ from django.contrib.auth.views import LoginView
 from django.views.generic import View
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
+from Subcontratos.correo import enviarCorreo
 from .forms import LoginForm
 from .models import Usuario
+
 
 class Login(LoginView):
     template_name = "login.html"
@@ -61,10 +63,13 @@ class ResetPass(View):
         password = Usuario.objects.make_random_password(length=10, allowed_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ1234567890')
         usuario.set_password(password)
         usuario.save(update_fields=['password'])
-        
+        enviarCorreo("Recuperación Contraseña - EDEMSA", "Correos/restablecerContraseña.html",{"contraseña":password, "usuario":usuario.__str__()},["davitdy2015@gmail.com","juan.gaviria@lambdaanalytics.co"])
    
 
         messages.add_message(request, messages.INFO, 'Revise su correo electrónico.')
         return render(request, self.template_name)
+    
+def get(request):
+    return render(request, "Correos/restablecerContraseña.html")
         
             

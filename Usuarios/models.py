@@ -61,7 +61,7 @@ class Usuario(AbstractBaseUser):
         db_table = "usuarios"
 
     def __str__(self):
-        return '{}'.format(self.nombres+' '+self.apellidos)
+        return '{}'.format(self.nombres.capitalize()+' '+self.apellidos.lower())
 
     def has_perm(self,perm,obj=None):
         return True
