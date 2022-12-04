@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
 from django.views.generic import View
+from django.shortcuts import render
 from django.contrib.auth import login, logout, authenticate
 from .forms import LoginForm
 from .models import Usuario
@@ -28,7 +29,7 @@ class Login(LoginView):
                     if 'next' in request.GET:
                         return redirect(request.GET.get('next'))
                     else:
-                        return redirect("index")
+                        return redirect("manageuser")
                 else: 
                     context['error']="Este usuario se encuentra inhabilitado"
         else:
@@ -45,3 +46,7 @@ def logout(request):
 class ResetPass(View):
     def get(self, request, *args, **kwargs):
         return render(request, "Reset.html")
+
+class ManageUser(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "ManageUsers.html")
