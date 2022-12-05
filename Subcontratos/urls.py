@@ -19,21 +19,16 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
 
-from Usuarios.views import Login, ResetPass, ManageUser
+from Usuarios.views import *
 from .views import Index
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("Login/", Login.as_view(), name="login"),
-<<<<<<< HEAD
-    path("Restablecer/", ResetPass.as_view(), name="restablecer"),
-    path("GestionUsuarios/", ManageUser.as_view(), name="manageuser"),
-=======
-    path("RestablecerContraseña/", ResetPass.as_view(), name="restablecer"),
->>>>>>> 86c5c242259ccbc3ba016a53caaedd57ef3e5f78
-    path("Logout/", LogoutView.as_view(),{'next_page': settings.LOGOUT_REDIRECT_URL}, name="logout"),
     path("", Index.as_view(), name="index"),
+    path("Login/", Login.as_view(), name="login"),
+    path("Logout/", LogoutView.as_view(),{'next_page': settings.LOGOUT_REDIRECT_URL}, name="logout"),
+    path("RestablecerContraseña/", ResetPass.as_view(), name="restablecer"),
     path("Usuarios/", include("Usuarios.urls")),
 ]
 if settings.DEBUG:

@@ -1,38 +1,32 @@
 from django.db import models
-from  django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group
 
 
 class UsuarioManager(BaseUserManager):
-    def create_user(self,id,usuario,nombres,apellidos,celular,email,cedula,fecha_nacimiento,password=None):
-        if  not email:
+    def create_user(self,usuario,nombres,apellidos,correo,cedula,password=None):
+        if  not correo:
             raise ValueError('El usuario debe tener un correo electronico!')
         usuario = self.model(
-            id = id,
             usuario=usuario, 
             nombres = nombres, 
-            apellidos = apellidos,
-            celular = celular, 
-            email = self.normalize_email(email),
+            apellidos = apellidos, 
+            correo = self.normalize_email(correo),
             cedula = cedula,
-            fecha_nacimiento = fecha_nacimiento 
             )
         usuario.set_password(password)
         usuario.save()
         return usuario
 
 
-    def create_superuser(self,id,usuario,nombres,apellidos,celular,email,cedula,fecha_nacimiento,password=None):
-        if  not email:
+    def create_superuser(self,usuario,nombres,apellidos,correo,cedula,password=None):
+        if  not correo:
             raise ValueError('El usuario debe tener un correo electronico!')
         usuario = self.model(
-            id = id,
             usuario=usuario, 
             nombres = nombres, 
             apellidos = apellidos,
-            celular = celular, 
-            email = self.normalize_email(email),
+            correo = self.normalize_email(correo),
             cedula = cedula,
-            fecha_nacimiento = fecha_nacimiento
 
             )
         usuario.set_password(password)
@@ -41,21 +35,20 @@ class UsuarioManager(BaseUserManager):
         return usuario
 
 class Usuario(AbstractBaseUser):
-    id = models.CharField(max_length=10, primary_key=True, unique=True, blank=False, null=False)
+    id = models.AutoField(unique=True, primary_key=True, auto_created=True)
     usuario = models.CharField("Nombre de Usuario", unique=True, max_length=50)
-    nombres  = models.CharField("Nombre completo", blank=False, null=False, max_length=50)
-    celular = models.CharField("Celular", blank=False, null=False, max_length=10, unique=True)
+    nombres  = models.CharField("Nombres", blank=False, null=False, max_length=50)
     apellidos = models.CharField("Apellidos", blank=False, null=False, max_length=25)
-    cedula = models.CharField("Cedula", blank=False, null=False, max_length=25, unique=True)
-    fecha_nacimiento = models.DateField("Fecha de nacimiento",auto_now=False, auto_now_add=False)
-    email = models.EmailField('Correo Electrónico', unique=True)
+    correo = models.EmailField('Correo Electrónico', unique=True)
+    cedula = models.CharField('Cedula', unique=True, max_length=15, null=False, blank=False)
     estado = models.BooleanField("Estado del usuario", default=True)
+    rol = models.ForeignKey(Group, on_delete=models.PROTECT, related_name="rol", null=True, blank=True)
     administrador = models.BooleanField(default=False)
     objects = UsuarioManager()
 
 
     USERNAME_FIELD='usuario' 
-    REQUIRED_FIELDS=["nombres", "apellidos","celular","email","cedula","fecha_nacimiento",'id']
+    REQUIRED_FIELDS=["nombres", "apellidos","correo","cedula"]
 
     class Meta:
         db_table = "usuarios"

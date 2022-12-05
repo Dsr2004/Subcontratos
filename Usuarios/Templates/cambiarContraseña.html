@@ -1,0 +1,88 @@
+
+{% extends "side.html" %}
+{% load static %}
+
+{% block estilos %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.15/dist/sweetalert2.css">
+{% endblock estilos %}
+    
+
+{% block contenido %} 
+
+
+<div class="row mb-4 mt-2" id="encabezado">
+    {{request.user}}
+    <div class="col-12">
+        <h3><strong>Cambiar Contraseña</strong></h3>
+        <hr>
+        <div class="divPasswords">
+            <form action="{% url 'cambiarContrasena' %}" method="post" id="cambiarPass">
+                {% csrf_token %}
+                <Label><strong>Contraseña Antigua: <sup class="campo_requerido">*</sup></strong></Label>
+                {{form.passwordA}}
+                <p id="passwordA" class="bg-light text-danger" style="color: #dc3545;"></p>
+                <br>
+                <Label><strong>Contraseña Nueva: <sup class="campo_requerido">*</sup></strong></Label>
+                {{form.password}}
+                <p id="password" class="bg-light text-danger" style="color: #dc3545;"></p>
+                <br>
+                <Label><strong>Confirmar Contraseña: <sup class="campo_requerido">*</sup></strong></Label>
+                {{form.password2}}
+                <p id="passwordC" class="bg-light text-danger" style="color: #dc3545;"></p>
+                <button class="btn btn-success w-100" id="CambiarContrasenaButton" type="button">Enviar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock contenido %} 
+
+
+{% block scripts %}
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#CambiarContrasenaButton').click(function () {
+            var form = $('#cambiarPass');
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: {
+                    "contraseña":form.find('input[name=password]').val(),
+                    "contraseñaA":form.find('input[name=passwordA]').val(),
+                    "contraseñaC":form.find('input[name=password2]').val(),
+                    "csrfmiddlewaretoken":form.find('input[name=csrfmiddlewaretoken]').val()
+                },
+                success: function (data) {
+                    swal.fire({
+                            title: "Exito!",
+                            text: "Contraseña modificada con exito!",
+                            icon: "success",
+                            button: "Aceptar",
+                        }).then(function() {
+                            window.location.href = "{%url 'logout'%}";
+                        });
+                       
+                },error: function (error) {
+                    Error = error['responseJSON']
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Atención.',
+                        text: Error['error'] + '.',
+                    })
+                }
+            });
+        });
+    });
+</script>
+{% endblock scripts %}
+    
+
+
+
+
+      
+
+    
