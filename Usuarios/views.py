@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
 from django.views.generic import View
+from django.shortcuts import render
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from Subcontratos.correo import enviarCorreo
@@ -31,7 +32,7 @@ class Login(LoginView):
                     if 'next' in request.GET:
                         return redirect(request.GET.get('next'))
                     else:
-                        return redirect("index")
+                        return redirect("manageuser")
                 else: 
                     context['error']="Este usuario se encuentra inhabilitado"
         else:
@@ -48,6 +49,13 @@ def logout(request):
 class ResetPass(View):
     template_name = "Reset.html"
     def get(self, request, *args, **kwargs):
+<<<<<<< HEAD
+        return render(request, "Reset.html")
+
+class ManageUser(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "ManageUsers.html")
+=======
         return render(request, self.template_name)
     
     def post(self, request, *args, **kwargs):
@@ -73,3 +81,4 @@ def get(request):
     return render(request, "Correos/restablecerContraseña.html")
         
             
+>>>>>>> 86c5c242259ccbc3ba016a53caaedd57ef3e5f78
