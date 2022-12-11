@@ -30,6 +30,8 @@ urlpatterns = [
     path("Logout/", LogoutView.as_view(),{'next_page': settings.LOGOUT_REDIRECT_URL}, name="logout"),
     path("RestablecerContraseña/", ResetPass.as_view(), name="restablecer"),
     path("Usuarios/", include("Usuarios.urls")),
+
+    path("Subcontratos/", SubContratos.as_view(), name="subcontratos"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

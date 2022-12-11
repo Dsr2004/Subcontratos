@@ -169,3 +169,9 @@ class CambiarContrasena(View):
             data = json.dumps({'error': 'Las contraseñas no coinciden'})
             return HttpResponse(data, content_type="application/json", status=400)
         
+class SubContratos(View):
+    template_name = "subcontratos.html"
+    
+    def get(self, request, *args, **kwargs):
+        ctx = {"usuarios":Usuario.objects.all()}
+        return render(request, self.template_name)

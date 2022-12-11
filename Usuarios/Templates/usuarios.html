@@ -127,35 +127,45 @@
         <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Registro de Usuarios</h5>
+            <h5 class="modal-title" id="exampleModalLabel"><strong>Registro de Usuarios</strong></h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form action="{% url 'crearUsuario' %}" method="post" id="registroUsuarioForm">
                     {% csrf_token %}
-                    <label>Nombres: <sup class="campo_requerido">*</sup></label>
-                    {{form.nombres}}
-                    <p id="nombres" class="error_text"></p>
-                    <label>Apellidos: <sup class="campo_requerido">*</sup></label>
-                    {{form.apellidos}}
-                    <p id="apellidos" class="error_text"></p>
-                    <label>Nombre de usuario: <sup class="campo_requerido">*</sup></label>
+                    <div class="row">
+                        <div class="col-6">
+                            <label><strong>Nombres</strong> <sup class="campo_requerido">*</sup></label>
+                            {{form.nombres}}
+                            <p id="nombres" class="error_text"></p>
+                        </div>
+                        <div class="col-6">
+                            <label><strong>Apellidos</strong> <sup class="campo_requerido">*</sup></label>
+                            {{form.apellidos}}
+                            <p id="apellidos" class="error_text"></p>
+                        </div>
+                    </div>
+                    
+                    <label><strong>Nombre de usuario</strong> <sup class="campo_requerido">*</sup></label>
                     {{form.usuario}}
                     <p id="usuario" class="error_text"></p>
-                    <label>Cedula(Esta será la contraseña provisional): <sup class="campo_requerido">*</sup></label>
+
+                    <label><strong>Cedula(Esta será la contraseña provisional)</strong> <sup class="campo_requerido">*</sup></label>
                     {{form.cedula}}
                     <p id="cedula" class="error_text"></p>
-                    <label>Correo electronico: <sup class="campo_requerido">*</sup></label>
+
+                    <label><strong>Correo electronico</strong> <sup class="campo_requerido">*</sup></label>
                     {{form.correo}}
                     <p id="correo" class="error_text"></p>
-                    <label>Rol de usuario: <sup class="campo_requerido">*</sup></label>
+                    
+                    <label><strong>Rol de usuario</strong> <sup class="campo_requerido">*</sup></label>
                     {{form.rol}}
                     <p id="rol" class="error_text"></p>
                 </form>      
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            <button type="button" class="btn btn-success" onclick="guardarUsuario()">Guardar Usuario</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class='bx bx-x'></i> Cerrar</button>
+            <button type="button" class="btn btn-success" onclick="guardarUsuario()"><i class='bx bx-save'></i> Guardar Usuario</button>
             </div>
         </div>
         </div>

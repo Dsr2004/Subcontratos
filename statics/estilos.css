@@ -31,6 +31,7 @@ body{
 
 ::selection{
     background-color: var(--primary-color);
+    height: 100%;
     color: #fff;
 }
 
@@ -302,7 +303,7 @@ body.dark .switch::before{
 
 .sidebar.close ~ .home{
     left: 78px;
-    height: 100vh;
+    height: 150%;
     width: calc(100% - 78px);
 }
 body.dark .home .text{

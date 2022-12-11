@@ -17,11 +17,11 @@ class UsuarioForm(forms.ModelForm):
         model = Usuario
         fields = ['usuario','nombres','apellidos','correo','cedula',"rol"]
         widgets = {
-            "usuario": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "nombres": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "apellidos": forms.DateInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "cedula": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "correo": forms.EmailInput(attrs={"class":"form-control", "autocomplete":"off"}),
+            "usuario": forms.TextInput(attrs={"class":"form-control mb-3", "autocomplete":"off", "placeholder":"Ingrese el nombre de usuario"}),
+            "nombres": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el nombre completo"}),
+            "apellidos": forms.DateInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese los apellidos"}),
+            "cedula": forms.TextInput(attrs={"class":"form-control mb-2", "autocomplete":"off", "placeholder":"Ingrese el número de documento"}),
+            "correo": forms.EmailInput(attrs={"class":"form-control mb-2", "autocomplete":"off", "placeholder":"Ingrese el correo electrónico"}),
             "rol": forms.Select(attrs={"class":"form-select", "autocomplete":"off"}),
             
         }
