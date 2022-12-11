@@ -2,6 +2,12 @@
 {% extends "side.html" %}
 {% load static %}
 
+
+{% block titulo %}
+    Cambiar Contraseña
+{% endblock titulo %}
+    Cambiar Contraseña
+
 {% block estilos %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.15/dist/sweetalert2.css">
 {% endblock estilos %}
@@ -11,7 +17,6 @@
 
 
 <div class="row mb-4 mt-2" id="encabezado">
-    {{request.user}}
     <div class="col-12">
         <h3><strong>Cambiar Contraseña</strong></h3>
         <hr>

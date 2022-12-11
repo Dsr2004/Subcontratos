@@ -6,7 +6,6 @@
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
 }
-
 :root{
     /* ===== Colors ===== */
     --body-color: #E4E9F7;
@@ -36,6 +35,7 @@ body{
 }
 
 body.dark{
+    background-color: #18191a;
     --body-color: #18191a;
     --sidebar-color: #242526;
     --primary-color: #3a3b3c;
@@ -291,7 +291,6 @@ body.dark .switch::before{
     left: 250px;
     height: 100vh;
     width: calc(100% - 250px);
-    background-color: var(--body-color);
     transition: var(--tran-05);
 }
 .home .text{
