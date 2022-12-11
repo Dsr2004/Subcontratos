@@ -11,6 +11,7 @@ from Subcontratos.correo import enviarCorreo
 from .forms import LoginForm, UsuarioForm, CambiarContrasena
 from .models import Usuario
 from django.contrib.auth.models import  Group
+from .carga_masiva import *
 
 
 class Login(LoginView):
@@ -138,6 +139,9 @@ class ModificarUsuario(UpdateView):
         print(form.errors)
         return JsonResponse({"errores":form.errors}, status=400)
     
+class ModificarEstadoUsuario(View):
+    def post(self, request, *args, **kwargs):
+        pass
 class CambiarContrasena(View):
     model = Usuario
     template_name = "cambiarContraseña.html"
