@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Usuarios'
+    'Usuarios',
+    'ModSubcontratos'
 ]
 
 MIDDLEWARE = [
@@ -60,7 +61,7 @@ ROOT_URLCONF = 'Subcontratos.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,"Usuarios/Templates"),os.path.join(BASE_DIR,"Subcontratos/Templates")],
+        'DIRS': [os.path.join(BASE_DIR,"Usuarios/Templates"),os.path.join(BASE_DIR,"Subcontratos/Templates"), os.path.join(BASE_DIR,"ModSubcontratos/Templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

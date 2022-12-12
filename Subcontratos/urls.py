@@ -20,8 +20,8 @@ from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth.decorators import login_required
 from Usuarios.views import *
-from .views import Index, SubContratos
-from Usuarios.carga_masiva import carga_masiva
+from .views import Index
+from ModSubcontratos.carga_masiva import carga_masiva
 
 
 urlpatterns = [
@@ -31,7 +31,8 @@ urlpatterns = [
     path("Logout/", login_required(LogoutView.as_view()),{'next_page': settings.LOGOUT_REDIRECT_URL}, name="logout"),
     path("RestablecerContraseña/", ResetPass.as_view(), name="restablecer"),
     path("Usuarios/", include("Usuarios.urls")),
-    path("Subcontratos/", SubContratos.as_view(), name="subcontratos"),
+    path("Subcontratos/", include("ModSubcontratos.urls")),
+    
     path("cargaMasiva", login_required(carga_masiva))
 ]
 if settings.DEBUG:

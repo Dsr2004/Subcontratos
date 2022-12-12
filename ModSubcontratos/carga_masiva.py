@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from Usuarios.models import Nomina ,Centro_Operacion ,Compania ,Proveedor
+from .models import Nomina ,Centro_Operacion ,Compania ,Proveedor
 from django.conf import settings
 from django.shortcuts import redirect
 
