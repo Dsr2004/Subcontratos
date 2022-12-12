@@ -140,8 +140,17 @@ class ModificarUsuario(UpdateView):
         return JsonResponse({"errores":form.errors}, status=400)
     
 class ModificarEstadoUsuario(View):
-    def post(self, request, *args, **kwargs):
-        pass
+     def post(self, request, *args, **kwargs):
+       try:
+            usuario = Usuario.objects.get(pk=request.POST.get("id"))
+            if usuario.estado == True:
+                usuario.estado = False
+            else:
+                usuario.estado = True
+            usuario.save()
+            return JsonResponse({"mensaje":"cambiado correctamente"})
+       except:
+           return JsonResponse({"error":"No se encontro el usuario"}, status=400)
 class CambiarContrasena(View):
     model = Usuario
     template_name = "cambiarContraseña.html"
@@ -173,9 +182,3 @@ class CambiarContrasena(View):
             data = json.dumps({'error': 'Las contraseñas no coinciden'})
             return HttpResponse(data, content_type="application/json", status=400)
         
-class SubContratos(View):
-    template_name = "subcontratos.html"
-    
-    def get(self, request, *args, **kwargs):
-        ctx = {"usuarios":Usuario.objects.all()}
-        return render(request, self.template_name)

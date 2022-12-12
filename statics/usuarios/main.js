@@ -29,7 +29,7 @@ function abrirModalModificarUsuario(url){
     })
 }
 
-function cambiarEstadoUsuario(url,id){
+function actualizarEstadoUsuario(url,id){
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: 'btn btn-success',
@@ -59,7 +59,9 @@ function cambiarEstadoUsuario(url,id){
           'Modificado!',
           'El estado del usuario se ha modificado',
           'success'
-        )
+        ).then(function(){
+          location.reload()
+        })
         },
         error: function(){
            swalWithBootstrapButtons.fire(

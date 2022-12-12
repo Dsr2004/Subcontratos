@@ -342,4 +342,9 @@ body.dark .home .text{
         margin: 0 10%;
     }
 /* fin de estilos para cambiar contraseña */
+/* estilos de sweet alert */
 
+.buttonSweetalert{
+    margin-left: 20px !important;
+}
+/* fin de estilos de sweet alert */

@@ -1,10 +1,18 @@
 {% extends "side.html" %}
 {% load static %}
 
-{% block contenido %} 
+{% block titulo %}
+    Creación de subcontrato
+{% endblock titulo %}
+    
+
+{% block estilos %}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock estilos %}
 
 
+
+{% block contenido %} 
 <style>
     .sidebar.close ~ .home {
         left: 78px;
@@ -12,22 +20,15 @@
         width: calc(100% - 78px);
     }
 </style>
-<script>
-    $(document).on('click', '#AddActa', function() {
-        $('#AddActa').modal('show');
-    });
 
-    $(document).on('click', '#addItem', function() {
-        $('#addItem').modal('show');
-    });
-</script>
-<script src="{% static 'js/firma.js' %}"></script>
 <h3 class="text-center mb-4 mt-3">Creación de subcontratos</h3>
 
 <div class="row mb-2">
     <div class="col-3">
         <label for=""><strong>Identificador subcontrato </strong> <sup class="campo_requerido">*</sup></label>
-        <input type="text" class="form-control">
+        <div style=" padding: 5px 10px;height: 35px; border-radius: 5px;" >
+            <p>1</p>
+        </div>
     </div>
     <div class="col-3">
         <label for=""><strong>Tipo de contrato</strong> <sup class="campo_requerido">*</sup></label>
@@ -41,48 +42,55 @@
     </div>
     <div class="col-3">
         <label for=""><strong>Elaborador</strong> <sup class="campo_requerido">*</sup></label>
-        <select name="" id="elab">
-            <option value="">Alejandro</option>
-            <option value="">Camila</option>
-            <option value="">Sebastian</option>
-            <option value="">Laura</option>
-            <option value="">Elaborador1</option>
-            <option value="">Sara</option>
-            <option value="">Juan</option>
+        <select name="" id="elaborador" class="form-control">
+            
         </select>
     </div>
     <div class="col-3">
         <label for=""><strong>Cargo</strong> <sup class="campo_requerido">*</sup></label>
-        <input type="text" class="form-control">
+        <input type="text" class="form-control" id="cargoElaborador">
     </div>
 </div>
 <div class="row mb-2">
 
     <div class="col-3">
         <label for=""><strong>Proyecto </strong> <sup class="campo_requerido">*</sup></label>
-        <input type="text" class="form-control">
+        <select name="" id="proyecto" class="form-control">
+            
+        </select>
     </div>
     <div class="col-3">
         <label for=""><strong>Centro de operaciones </strong> <sup class="campo_requerido">*</sup></label>
-        <input type="text" class="form-control">
+        <select name="" id="centro_de_operaciones" class="form-control">
+            
+        </select>
     </div>
     <div class="col-3">
         <label for=""><strong>Nit</strong> <sup class="campo_requerido">*</sup></label>
-        <input type="text" class="form-control">
+        <select name="" id="nit" class="form-control">
+            
+        </select>
     </div>
     <div class="col-3">
         <label for=""><strong>Proveedor</strong> <sup class="campo_requerido">*</sup></label>
-        <input type="text" class="form-control" >
+        <select name="" id="proveedor" class="form-control">
+            
+        </select>
     </div>
 </div>
 <div class="row mb-2">
-    <div class="col-3">
-        <label for=""><strong>Estado </strong> <sup class="campo_requerido">*</sup></label>
-        <input type="text" class="form-control">
+    <div class="col-3" >
+        <label for=""><strong>Estado </strong></label>
+        <div style="background-color: rgb(255, 216, 177); padding: 5px 10px;height: 35px; border-radius: 5px;" >
+            <p>En ejecución</p>
+        </div>
+        
     </div>
     <div class="col-3">
         <label for=""><strong>Compañía de registro</strong> <sup class="campo_requerido">*</sup></label>
-        <input type="text" class="form-control">
+        <select name="" id="compania" class="form-control">
+            
+        </select>
     </div>
     <div class="col-3">
         <label for=""><strong>Tipo Orden de compra</strong> <sup class="campo_requerido">*</sup></label>
@@ -235,132 +243,7 @@
                             <i class='bx bx-plus'></i> Agregar
                         </button>
                         
-                        <!-- Modal -->
-                        <div class="modal fade" id="AddActa" tabindex="-1" role="dialog" style="overflow-y: scroll;" aria-hidden="true">
-                            <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel"><strong>Agregar Acta</strong></h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <h6>Seguimiento</h6>
-                                    <div class="card" style="padding: 10px;">
-                                        <table class="table text-center">
-                                            <thead>
-                                                <tr>
-                                                    <th>Item</th>
-                                                    <th>Descripción</th>
-                                                    <th>Unidad</th>
-                                                    <th>Cantidad</th>
-                                                    <th>Valor unitario</th>
-                                                </tr>
-                                                <tr>
-                                                    <td><input type="text" class="form-control"></td>
-                                                    <td><input type="text" class="form-control"></td>
-                                                    <td><input type="text" class="form-control"></td>
-                                                    <td><input type="text" class="form-control"></td>
-                                                    <td><input type="text" class="form-control"></td>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <div class="card" style="padding: 5px;">
-                                                    <h6>Cantidades</h6>
-                                                    <table class="table">
-                                                        <tr>
-                                                            <th>Item</th>
-                                                            <th>Cantidad</th>
-                                                            <th>Paquete de trabajo</th>
-                                                        </tr>
-                                                    </table>
-                                                    <div class="row">
-                                                        <div class="col-4">
-                                                            
-                                                              <button type="button" class="btn btn-sm" onclick="mod()">
-                                                                <i class='bx bx-plus'></i> Agregar
-                                                              </button>
-                                                              
-                                                              
-                                                        </div>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="card">
-                                                    <table class="table">
-                                                        <tr>
-                                                            <th>Cantidad ejec.</th>
-                                                            <th>Valor total</th>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row mt-3">
-                                        <div class="col-12">
-                                            <button class="btn btn-dark btn-sm mb-4">Nueva entrada</button>
-                                        </div>
-                                    </div>
-                                    
-                                    <label for=""><strong>Estado</strong> </label>
-                                    <span class="badge rounded-pill bg-warning">Sin revisar</span>
-
-                                    <div class="row mt-4">
-                                        <div class="col-4">
-                                            <label for=""><strong>Otros datos adjuntos</strong> </label>
-                                            <input class="form-control form-control-sm" type="file" id="formFile">
-                                        </div>
-                                        <div class="col-4">
-                                            <label for=""><strong>Seguridad social</strong> </label>
-                                            <input class="form-control form-control-sm" type="file" id="formFile">
-                                        </div>
-                                        <div class="col-4">
-                                            <label for=""><strong>Listado de personal</strong> </label>
-                                            <input class="form-control form-control-sm" type="file" id="formFile">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class='bx bx-x'></i> Cancelar</button>
-                                <button type="button" class="btn btn-success">Guardar <i class='bx bx-save'></i></button>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-
-                        <!-- Modal -->
-                        <div class="modal" id="addItem"style="display: none; background-color: rgba(0,0,0,0.3);">
-                            <div class="modal-dialog modal-dialog-centered">
-                              <div class="modal-content">
-                                
-                                <div class="modal-body">
-                                  <button type="button" class="btn-close"aria-label="Close" onclick="hidedjs()"></button>
-                                  <form action="">
-                                    <div class="row mt-4 justify-content-right">
-                                        <div class="col-6">
-                                            <label for=""><strong>Cantidad</strong>  <sup class="campo_requerido">*</sup></label>
-                                            <input type="text" class="form-control">
-                                        </div>
-                                        <div class="col-6">
-                                            <label for=""><strong>Paquete de trabajo</strong>  <sup class="campo_requerido">*</sup></label>
-                                            <input type="text" class="form-control">
-                                        </div>
-                                        <div class="col-2 mt-3">
-                                            <button class="btn btn-sm" style="background-color: #60b232; color: white;
-                                            
-                                            ">Guardar</button>
-                                        </div>
-                                    </div>
-                                  </form>
-                                </div>
-                                
-                              </div>
-                            </div>
-                          </div>
+                        
                     </div>
                 </div>
 
@@ -519,18 +402,157 @@
 </div>
 
 
+
+{% endblock contenido %} 
+
+
+{% block modales %}
+    <!-- Modal -->
+    <div class="modal fade" id="AddActa" tabindex="-1" role="dialog" style="overflow-y: scroll;" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"><strong>Agregar Acta</strong></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Seguimiento</h6>
+                <div class="card" style="padding: 10px;">
+                    <table class="table text-center">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Descripción</th>
+                                <th>Unidad</th>
+                                <th>Cantidad</th>
+                                <th>Valor unitario</th>
+                            </tr>
+                            <tr>
+                                <td><input type="text" class="form-control"></td>
+                                <td><input type="text" class="form-control"></td>
+                                <td><input type="text" class="form-control"></td>
+                                <td><input type="text" class="form-control"></td>
+                                <td><input type="text" class="form-control"></td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="card" style="padding: 5px;">
+                                <h6>Cantidades</h6>
+                                <table class="table">
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Cantidad</th>
+                                        <th>Paquete de trabajo</th>
+                                    </tr>
+                                </table>
+                                <div class="row">
+                                    <div class="col-4">
+                                        
+                                          <button type="button" class="btn btn-sm" onclick="mod()">
+                                            <i class='bx bx-plus'></i> Agregar
+                                          </button>
+                                          
+                                          
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card">
+                                <table class="table">
+                                    <tr>
+                                        <th>Cantidad ejec.</th>
+                                        <th>Valor total</th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <button class="btn btn-dark btn-sm mb-4">Nueva entrada</button>
+                    </div>
+                </div>
+                
+                <label for=""><strong>Estado</strong> </label>
+                <span class="badge rounded-pill bg-warning">Sin revisar</span>
+
+                <div class="row mt-4">
+                    <div class="col-4">
+                        <label for=""><strong>Otros datos adjuntos</strong> </label>
+                        <input class="form-control form-control-sm" type="file" id="formFile">
+                    </div>
+                    <div class="col-4">
+                        <label for=""><strong>Seguridad social</strong> </label>
+                        <input class="form-control form-control-sm" type="file" id="formFile">
+                    </div>
+                    <div class="col-4">
+                        <label for=""><strong>Listado de personal</strong> </label>
+                        <input class="form-control form-control-sm" type="file" id="formFile">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class='bx bx-x'></i> Cancelar</button>
+            <button type="button" class="btn btn-success">Guardar <i class='bx bx-save'></i></button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="addItem"style="display: none; background-color: rgba(0,0,0,0.3);">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            
+            <div class="modal-body">
+              <button type="button" class="btn-close"aria-label="Close" onclick="hidedjs()"></button>
+              <form action="">
+                <div class="row mt-4 justify-content-right">
+                    <div class="col-6">
+                        <label for=""><strong>Cantidad</strong>  <sup class="campo_requerido">*</sup></label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="col-6">
+                        <label for=""><strong>Paquete de trabajo</strong>  <sup class="campo_requerido">*</sup></label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="col-2 mt-3">
+                        <button class="btn btn-sm" style="background-color: #60b232; color: white;
+                        
+                        ">Guardar</button>
+                    </div>
+                </div>
+              </form>
+            </div>
+            
+          </div>
+        </div>
+    </div>
+    {% csrf_token %}
+{% endblock modales %}
+
+
+{% block scripts %}
+<script src="{% static 'js/firma.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/es.js"></script>
 <script>
-    // In your Javascript (external .js resource or <script> tag)
-        $(document).ready(function() {
-        $('#elab').select2({
-            language: "es"
-        });
+    $(document).on('click', '#AddActa', function() {
+        $('#AddActa').modal('show');
     });
 
+    $(document).on('click', '#addItem', function() {
+        $('#addItem').modal('show');
+    });
+</script>
+
+<script>
     function getComboA(selectObject) {
         var campo = document.getElementById("tipoComp")
         var selec = document.getElementById("slec")
@@ -606,4 +628,5 @@
         document.getElementById("note").innerHTML="";
     }
     </script>
-{% endblock contenido %} 
+{% endblock scripts %}
+    
