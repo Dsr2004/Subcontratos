@@ -11,7 +11,7 @@ from Subcontratos.correo import enviarCorreo
 from .forms import LoginForm, UsuarioForm, CambiarContrasena
 from .models import Usuario
 from django.contrib.auth.models import  Group
-from .carga_masiva import *
+
 
 
 class Login(LoginView):
