@@ -11,7 +11,7 @@ from Subcontratos.correo import enviarCorreo
 from .forms import LoginForm, UsuarioForm, CambiarContrasena
 from .models import Usuario
 from django.contrib.auth.models import  Group
-
+from .mixins import ValidateProfileUser
 
 
 class Login(LoginView):
@@ -47,6 +47,7 @@ class Login(LoginView):
             except:
                 context['error']="El usuario ingresado no existe"
         return render(request, self.template_name, context)
+
 
 class ResetPass(View):
     template_name = "restablecerContraseña.html"
@@ -181,4 +182,13 @@ class CambiarContrasena(View):
         else:
             data = json.dumps({'error': 'Las contraseñas no coinciden'})
             return HttpResponse(data, content_type="application/json", status=400)
-        
+
+class MiCuenta(ValidateProfileUser, UpdateView):   
+    model = Usuario
+    template_name = "cuenta.html"
+    form_class = UsuarioForm
+    success_url = reverse_lazy("micuenta")
+    
+    def form_invalid(self, form):
+        print(form.errors)
+        return JsonResponse({"errores":form.errors}, status=400)

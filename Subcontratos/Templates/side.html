@@ -27,6 +27,8 @@
                     <img src="{% static 'img/user.png' %}" alt=""> 
                 </span>
 
+                <a href="{% url 'miCuenta' request.user.id %}">
+               
                 <div class="text logo-text">
                     <span class="name">{{request.user.usuario}}</span>
                     <span class="profession">
@@ -36,7 +38,9 @@
                             Sin rol
                         {% endif %}
                     </span>
+                    
                 </div>
+                </a>
             </div>
 
             <i class='bx bx-chevron-right toggle'></i>
