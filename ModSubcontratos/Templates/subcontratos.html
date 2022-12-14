@@ -8,7 +8,7 @@
 
 {% block estilos %}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
+<link href="{% static 'usuarios/gestion.css' %}" rel="stylesheet" />
 {% endblock estilos %}
 
 
@@ -20,16 +20,31 @@
         height: 200%;
         width: calc(100% - 78px);
     }
+
+    .tit_sec{
+        background-color: #60b232;
+        padding: 10px;
+        color: white;
+    
+    }
+
+    .nav-link{
+        color: #60b232 !important;
+    }
+    .nav-link.active{
+        color: #1a1a1a !important;
+    }
 </style>
 
-<h3 class="text-center mb-4 mt-3">Creación de subcontratos</h3>
+<h3 class="text-center mb-5 mt-3 tit_sec">Creación de subcontratos</h3>
 
-<div class="row mb-2">
+
+
+<div class="row mb-3">
     <div class="col-3">
         <label for=""><strong>Identificador subcontrato </strong> <sup class="campo_requerido">*</sup></label>
-        <div style=" padding: 5px 10px;height: 35px; border-radius: 5px;" >
-            <p>{{ultimo_id}}</p>
-        </div>
+
+        <input type="text" class="form-control" value="{{ultimo_id}}" readonly>
     </div>
     <div class="col-3">
         <label for=""><strong>Tipo de contrato</strong> <sup class="campo_requerido">*</sup></label>
@@ -43,16 +58,17 @@
     </div>
     <div class="col-3">
         <label for=""><strong>Elaborador</strong> <sup class="campo_requerido">*</sup></label>
-        <select name="" id="elaborador" class="form-control">
+        <select name="" id="elaborador" class="form-control" style="width: 100%; background-color: red;">
             
         </select>
     </div>
     <div class="col-3">
         <label for=""><strong>Cargo</strong> <sup class="campo_requerido">*</sup></label>
-        <input type="text" class="form-control" id="cargoElaborador">
+        <input type="text" class="form-control" id="cargoElaborador" readonly>
     </div>
 </div>
-<div class="row mb-2">
+
+<div class="row mb-3">
 
     <div class="col-3">
         <label for=""><strong>Proyecto </strong> <sup class="campo_requerido">*</sup></label>
@@ -79,7 +95,8 @@
         </select>
     </div>
 </div>
-<div class="row mb-2">
+
+<div class="row mb-3">
     <div class="col-3" >
         <label for=""><strong>Estado </strong></label>
         <div style="background-color: rgb(255, 216, 177); padding: 5px 10px;height: 35px; border-radius: 5px;" >
@@ -106,6 +123,7 @@
         <input type="text" class="form-control">
     </div>
 </div>
+
 <div class="row mt-5">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -126,7 +144,7 @@
                     <div class="row">
                         <div class="col-6">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="impo" id="impo">
+                                <input class="form-check-input" onclick="importarExcel(1)" type="radio" name="impo" id="impo" value="si">
                                 <label class="form-check-label" for="impo">
                                   Si
                                 </label>
@@ -134,13 +152,18 @@
                         </div>
                         <div class="col-6">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="impo" id="impo">
+                                <input class="form-check-input" onclick="importarExcel(2)" type="radio" name="impo" id="impo" value="no">
                                 <label class="form-check-label" for="impo">
                                     No
                                 </label>
                             </div>
                         </div>
                     </div>            
+                </div>
+                <div class="col-8" id="excel" style="display: none;">
+                    <label for=""><strong>Información items</strong> </label>
+                    <input type="file" class="form-control" name="" id="">
+                    <small>Si desea importar los items para este subcapitulo, adjunte el excel con el formato indicado</small>
                 </div>
             </div>
 
@@ -172,7 +195,7 @@
             <div class="card mt-3 mb-5" style="padding: 10px;">
                 <h6>Items</h6>
                 
-                <table class="table text-center">
+                <table class="table text-center" id="tbl_items">
                     <thead>
                         <tr>
                             <th>Código</th>
@@ -186,15 +209,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><input type="text" class="form-control"></td>
-                            <td><input type="text" class="form-control"></td>
-                            <td><input type="text" class="form-control"></td>
-                            <td><input type="text" class="form-control"></td>
-                            <td><input type="text" class="form-control"></td>
-                            <td><input type="text" class="form-control"></td>
-                            <td><input type="text" class="form-control"></td>
-                            <td><button class="btn" style="background-color: #60b232; color: white; font-weight: bold;"><strong><i class='bx bx-plus'></i></strong> </button></td>
+                        <tr onchange="calcularTotal()">
+                            <td><input type="text" class="form-control" id="Codigo"></td>
+                            <td><input type="text" class="form-control" id="Item"></td>
+                            <td><input type="text" class="form-control" id="Descripcion"></td>
+                            <td><input type="text" class="form-control" id="Unidad"></td>
+                            <td><input type="text" class="form-control" id="Cantidad"></td>
+                            <td><input type="text" class="form-control" id="ValorUnitario"></td>
+                            <td><input type="text" class="form-control" id="ValorTotal" readonly></td>
+                            <td><button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarItems()"><strong><i class='bx bx-plus'></i></strong> </button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -580,6 +603,37 @@
         }
     }
 
+    var campo = document.getElementById("impo").value
+
+    function importarExcel(campo){
+        
+        var tabla = document.getElementById("tbl_items")
+        var campoExcel = document.getElementById("excel")
+
+        if(campo == 1){
+            tabla.style.display = "none"
+            campoExcel.style.display = "block"
+        }
+        else{
+            tabla.style.display = "block"
+            campoExcel.style.display = "none"
+        }
+    }
+
+    function calcularTotal(){
+        campoCantidad = document.getElementById("Cantidad").value
+        campoValorUnitario = document.getElementById("ValorUnitario").value
+
+        resultado = campoCantidad * campoValorUnitario
+
+        campoTotal = document.getElementById("ValorTotal")
+        campoTotal.value = resultado
+
+    }
+
+    function AgregarItems(){
+        
+    }
 
     function hidedjs() {
         let item = document.getElementById('addItem')
