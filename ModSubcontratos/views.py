@@ -1,14 +1,17 @@
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import View
 from django.shortcuts import render
-from .models import Nomina, Centro_Operacion, Proveedor, Compania
+from .models import *
 
 # Create your views here.
 class SubContratos(View):
     template_name = "subcontratos.html"
     
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+        ultimo_id = Subcontrato.objects.last()
+        if ultimo_id:ultimo_id+=1
+        else:ultimo_id=1
+        return render(request, self.template_name,{"ultimo_id":ultimo_id})
     
     def post(self, request, *args, **kwargs):
         try:

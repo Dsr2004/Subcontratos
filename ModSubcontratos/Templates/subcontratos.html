@@ -8,6 +8,7 @@
 
 {% block estilos %}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 {% endblock estilos %}
 
 
@@ -27,7 +28,7 @@
     <div class="col-3">
         <label for=""><strong>Identificador subcontrato </strong> <sup class="campo_requerido">*</sup></label>
         <div style=" padding: 5px 10px;height: 35px; border-radius: 5px;" >
-            <p>1</p>
+            <p>{{ultimo_id}}</p>
         </div>
     </div>
     <div class="col-3">
@@ -539,7 +540,7 @@
 
 {% block scripts %}
 <script src="{% static 'js/firma.js' %}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{% static 'modSubcontratos/js/main.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/es.js"></script>
 <script>

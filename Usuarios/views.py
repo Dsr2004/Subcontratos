@@ -20,7 +20,7 @@ class Login(LoginView):
     
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('index')
+            return redirect('manageuser')
         return render(request, self.template_name, {"form": self.form_class})
     
     def post(self, request, *args, **kwargs):

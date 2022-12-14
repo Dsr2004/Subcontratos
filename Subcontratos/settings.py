@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'multiselectfield',
     'Usuarios',
     'ModSubcontratos'
 ]
@@ -154,3 +155,6 @@ EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = env.int("EMAIL_PORT")
 EMAIL_BACKEND = env.str("EMAIL_BACKEND")
 EMAIL_ENCRYPTION = env.str("EMAIL_ENCRYPTION")
+
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
