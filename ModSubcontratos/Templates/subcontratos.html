@@ -7,6 +7,7 @@
     
 
 {% block estilos %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="{% static 'usuarios/gestion.css' %}" rel="stylesheet" />
 {% endblock estilos %}
 
@@ -42,7 +43,8 @@
 <div class="row mb-3">
     <div class="col-3">
         <label for=""><strong>Identificador subcontrato </strong> <sup class="campo_requerido">*</sup></label>
-        <input type="text" class="form-control" value="1" readonly>
+
+        <input type="text" class="form-control" value="{{ultimo_id}}" readonly>
     </div>
     <div class="col-3">
         <label for=""><strong>Tipo de contrato</strong> <sup class="campo_requerido">*</sup></label>
@@ -562,7 +564,7 @@
 
 {% block scripts %}
 <script src="{% static 'js/firma.js' %}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{% static 'modSubcontratos/js/main.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/es.js"></script>
 <script>

@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from .models import Nomina ,Centro_Operacion ,Compania ,Proveedor
+from .models import Nomina ,Centro_Operacion ,Compania ,Proveedor, Item
 from django.conf import settings
 from django.shortcuts import redirect
 
@@ -47,6 +47,7 @@ def cargar_compania():
     print("Terminado la carga masiva de las compañias")
         
 
+    
 def cargar_proveedores():
     Proveedor.objects.all().delete()
     Proveedor.objects.raw('TRUNCATE proveedores RESTART IDENTITY')
@@ -59,8 +60,23 @@ def cargar_proveedores():
             razon_social = row["razon_social"],
             email = row["f202_email"]
         )
-    print("Terminado la carga masiva de los proveedores")
+    print("Terminado la carga masiva de los Proveedores")
 
+def cargar_items():
+    Item.objects.all().delete()
+    Item.objects.raw('TRUNCATE items RESTART IDENTITY')
+    excel = os.path.join(BASE_DIR, "EXCELS/items.xlsx")
+    df = pd.read_excel(excel)
+    
+    for index, row in df.iterrows():
+        item, creado = Item.objects.get_or_create(
+            id_cia = row["f120_id_cia"],
+            codigo = row["f120_rowid"],
+            referencia = row["f120_referencia"],
+            descripcion = row["f120_descripcion"],
+            final = row["final"],
+        )
+    print("Terminado la carga masiva de los items")
 
 
 def carga_masiva(request):
@@ -68,4 +84,5 @@ def carga_masiva(request):
     cargar_Centro_Operacion()
     cargar_compania()
     cargar_proveedores()
+    cargar_items()
     return redirect("manageuser")

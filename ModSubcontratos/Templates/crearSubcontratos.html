@@ -1,0 +1,621 @@
+{% extends "side.html" %}
+{% load static %}
+
+{% block titulo %}
+    Creación de subcontrato
+{% endblock titulo %}
+    
+
+{% block estilos %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="{% static 'usuarios/gestion.css' %}" rel="stylesheet" />
+{% endblock estilos %}
+
+
+
+{% block contenido %} 
+<style>
+    .sidebar.close ~ .home {
+        left: 78px;
+        height: 200%;
+        width: calc(100% - 78px);
+    }
+
+    .tit_sec{
+        background-color: #60b232;
+        padding: 10px;
+        color: white;
+    
+    }
+
+    .nav-link{
+        color: #60b232 !important;
+    }
+    .nav-link.active{
+        color: #1a1a1a !important;
+    }
+</style>
+
+<h3 class="text-center mb-5 mt-3 tit_sec">Creación de subcontratos</h3>
+
+
+<form action="{% url 'guardarSubcontrato' %}" method="post" id="guardarSubcontratoForm">
+    {% csrf_token %}
+    <div class="row mb-3">
+        <div class="col-3">
+            <label for=""><strong>Identificador subcontrato </strong> <sup class="campo_requerido">*</sup></label>
+    
+            <input type="text" class="form-control" value="{{ultimo_id}}" readonly>
+        </div>
+        <div class="col-3">
+            <label for=""><strong>Tipo de contrato</strong> <sup class="campo_requerido">*</sup></label>
+            <select id="comboA"  class="form-select " onchange="getComboA(this)" name="tipo_contrato" >
+                <option value="1.1">1.1 Contratos con IVA pleno suministros</option>
+                <option value="1.2">1.2 Contratos con IVA pleno y algunos servicios.</option>
+                <option value="2">2. Contratos de servicios de obra civil.</option>
+                <option value="3">3. Contratos mixtos.</option>
+            </select>
+            
+        </div>
+        <div class="col-3">
+            <label for=""><strong>Elaborador</strong> <sup class="campo_requerido">*</sup></label>
+            <select name="elaborador" id="elaborador" class="form-control" style="width: 100%;">
+                
+            </select>
+        </div>
+        <div class="col-3">
+            <label for=""><strong>Cargo</strong> <sup class="campo_requerido">*</sup></label>
+            <input type="text" class="form-control" id="cargoElaborador" readonly>
+        </div>
+    </div>
+    
+    <div class="row mb-3">
+    
+        <div class="col-3">
+            <label for=""><strong>Proyecto </strong> <sup class="campo_requerido">*</sup></label>
+            <select name="proyecto" id="proyecto" class="form-control">
+                
+            </select>
+        </div>
+        <div class="col-3">
+            <label for=""><strong>Centro de operaciones </strong> <sup class="campo_requerido">*</sup></label>
+            <select name="" id="centro_de_operaciones" class="form-control">
+                
+            </select>
+        </div>
+        <div class="col-3">
+            <label for=""><strong>Nit</strong> <sup class="campo_requerido">*</sup></label>
+            <select name="" id="nit" class="form-control">
+                
+            </select>
+        </div>
+        <div class="col-3">
+            <label for=""><strong>Proveedor</strong> <sup class="campo_requerido">*</sup></label>
+            <select name="proveedor" id="proveedor" class="form-control">
+                
+            </select>
+        </div>
+    </div>
+    
+    <div class="row mb-3">
+        <div class="col-3" >
+            <label for=""><strong>Estado </strong></label>
+            <div style="background-color: rgb(255, 216, 177); padding: 5px 10px;height: 35px; border-radius: 5px;" >
+                <p>En ejecución</p>
+            </div>
+            
+        </div>
+        <div class="col-3">
+            <label for=""><strong>Compañía de registro</strong> <sup class="campo_requerido">*</sup></label>
+            <select name="compania" id="compania" class="form-control">
+                
+            </select>
+        </div>
+        <div class="col-3">
+            <label for=""><strong>Tipo Orden de compra</strong> <sup class="campo_requerido">*</sup></label>
+            <select class="form-select" name="tipo_orden" id="slec" style="display: none";>
+                <option value="1">OCS</option>
+                <option value="2">OCM</option>
+            </select>
+            <input type="text" class="form-control" id="tipoComp" value="OCS" name="tipo_orden" readonly>
+        </div>
+        <div class="col-3">
+            <label for=""><strong>Nro. Orden de compra</strong> <sup class="campo_requerido">*</sup></label>
+            <input type="text" class="form-control" name="numero_orden">
+        </div>
+    </div>
+    
+    <div class="row mt-5">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true"><strong>Condiciones contractuales</strong> </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false"><strong>Actas de producción</strong> </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false"><strong>Documentación e información adicional</strong> </button>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="row mt-4">
+                    <div class="col-3">
+                        <label for=""><strong>¿Importar desde un excel?</strong>  <sup class="campo_requerido">*</sup></label>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" onclick="importarExcel(1)" type="radio" name="impo" id="impo" value="si">
+                                    <label class="form-check-label" for="impo">
+                                      Si
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" onclick="importarExcel(2)" type="radio" name="impo" id="impo" value="no">
+                                    <label class="form-check-label" for="impo">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </div>            
+                    </div>
+                    <div class="col-8" id="excel" style="display: none;">
+                        <label for=""><strong>Información items</strong> </label>
+                        <input type="file" class="form-control" name="" id="">
+                        <small>Si desea importar los items para este subcapitulo, adjunte el excel con el formato indicado</small>
+                    </div>
+                </div>
+    
+                <div class="row mt-4">
+                    <div class="col-3">
+                        <label for=""><strong>¿Desea generar otro?</strong></label>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="desg" id="desg">
+                                    <label class="form-check-label" for="desg">
+                                      Si
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="desg" id="desg">
+                                    <label class="form-check-label" for="desg">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                              
+                        </div>            
+                    </div>
+                </div>
+    
+                <div class="card mt-3 mb-5" style="padding: 10px;">
+                    <h6>Items</h6>
+                    
+                    <table class="table text-center" id="tbl_items">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Item</th>
+                                <th>Descripción</th>
+                                <th>Unidad</th>
+                                <th>Cantidad</th>
+                                <th>Valor Unitario</th>
+                                <th>Valor total</th>
+                           
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr onchange="calcularTotal()">
+                                <td><input type="text" class="form-control" id="Codigo"></td>
+                                <td><input type="text" class="form-control" id="Item"></td>
+                                <td><input type="text" class="form-control" id="Descripcion"></td>
+                                <td><input type="text" class="form-control" id="Unidad"></td>
+                                <td><input type="text" class="form-control" id="Cantidad"></td>
+                                <td><input type="text" class="form-control" id="ValorUnitario"></td>
+                                <td><input type="text" class="form-control" id="ValorTotal" readonly></td>
+                                <td><button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarItems()"><strong><i class='bx bx-plus'></i></strong> </button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+    
+                <div class="row justify-content-between mb-5">
+                    <div class="col-4">
+                        <label for="">Tarifa de IVA</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="col-6">
+                        Subtotal
+                    </div>
+                </div>
+    
+            </div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="row mt-4 mb-3">
+                    <div class="col-12">
+                        <label for=""><strong>¿Como se hará el seguimiento de actas?</strong> <sup class="campo_requerido">*</sup></label>
+                        <select class="form-select" name="" id="">
+                            <option value="Semanal">Semanal</option>
+                            <option value="Catorcenal">Catorcenal</option>
+                            <option value="Quincenal">Quincenal</option>
+                            <option value="Mensual">Mensual</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                <div class="row mt-4">
+                    <div class="col-3">
+                        <label for=""><strong>Fecha inicio del contrato</strong> <sup class="campo_requerido">*</sup></label>
+                        <input type="date" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <label for=""><strong>Fecha vencimiento contrato</strong> <sup class="campo_requerido">*</sup></label>
+                        <input type="date" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <label for=""><strong>Director de obra</strong> <sup class="campo_requerido">*</sup></label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <label for=""><strong>Gestor del contrato</strong> <sup class="campo_requerido">*</sup></label>
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <label for=""><strong>Correo de notificación del proveedor</strong> <sup class="campo_requerido">*</sup></label>
+                        <input type="email" class="form-control">
+                    </div>
+                    <div class="col-12 mt-3">
+                        <label for=""><strong>Validador/es del subcontrato</strong> <sup class="campo_requerido">*</sup></label>
+                        <select name="" id="">
+    
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <div id="signature-pad">
+                            <div style="border:solid 1px teal; width:360px;height:110px;padding:3px;position:relative;">
+                                <div id="note" onmouseover="my_function();">Ingrese su firma</div>
+                                <canvas id="the_canvas" width="350px" height="100px"></canvas>
+                            </div>
+                            <div style="margin:10px;">
+                                <input type="hidden" id="signature" name="signature">
+                                <button type="button" id="clear_btn" class="btn btn-secondary" data-action="clear"><span class="glyphicon glyphicon-remove"></span> Borrar</button>
+                                <button type="submit" id="save_btn" class="btn btn-primary" data-action="save-png"><span class="glyphicon glyphicon-ok"></span> Guardar firma</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mt-3 mb-5" style="padding: 10px;">
+                    <h6>Pólizas</h6>
+                    <div class="row mb-3">
+                        <div class="col-2 mr-3">
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-2">
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-2">
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-2">
+                            <input type="date" class="form-control">
+                        </div>
+                        <div class="col-1">
+                            <button class="btn" style="background-color: #60b232; color: white; font-weight: bold;"><strong><i class='bx bx-plus'></i></strong> </button>
+                        </div>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Tipo de póliza</th>
+                                <th>Número de póliza</th>
+                                <th>Aseguradora</th>
+                                <th>Fecha de vencimiento</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <label for=""><strong>Contrato</strong> </label>
+                        <input type="file" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-4">
+                        <label for=""><strong>Pólizas o garantías</strong> </label>
+                        <input type="file" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-4">
+                        <label for=""><strong>Acta de inicio</strong> </label>
+                        <input type="file" class="form-control form-control-sm">
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-4">
+                        <label for=""><strong>Modificaciones contractuales</strong> </label>
+                        <input type="file" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-4">
+                        <label for=""><strong>Acta de recibo final</strong></label>
+                        <input type="file" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-4">
+                        <label for=""><strong>Acta de liquidación</strong></label>
+                        <input type="file" class="form-control form-control-sm">
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="row mt-5 mb-2 justify-content-end text-center">
+            <div class="col-2">
+                <button class="btn btn-success" type="submit"><i class='bx bx-save'></i> Guardar</button>
+            </div>
+          </div>
+</form>
+     
+</div>
+
+{% endblock contenido %} 
+
+
+{% block modales %}
+    <!-- Modal -->
+    <div class="modal fade" id="AddActa" tabindex="-1" role="dialog" style="overflow-y: scroll;" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"><strong>Agregar Acta</strong></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Seguimiento</h6>
+                <div class="card" style="padding: 10px;">
+                    <table class="table text-center">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Descripción</th>
+                                <th>Unidad</th>
+                                <th>Cantidad</th>
+                                <th>Valor unitario</th>
+                            </tr>
+                            <tr>
+                                <td><input type="text" class="form-control"></td>
+                                <td><input type="text" class="form-control"></td>
+                                <td><input type="text" class="form-control"></td>
+                                <td><input type="text" class="form-control"></td>
+                                <td><input type="text" class="form-control"></td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="card" style="padding: 5px;">
+                                <h6>Cantidades</h6>
+                                <table class="table">
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Cantidad</th>
+                                        <th>Paquete de trabajo</th>
+                                    </tr>
+                                </table>
+                                <div class="row">
+                                    <div class="col-4">
+                                        
+                                          <button type="button" class="btn btn-sm" onclick="mod()">
+                                            <i class='bx bx-plus'></i> Agregar
+                                          </button>
+                                          
+                                          
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card">
+                                <table class="table">
+                                    <tr>
+                                        <th>Cantidad ejec.</th>
+                                        <th>Valor total</th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <button class="btn btn-dark btn-sm mb-4">Nueva entrada</button>
+                    </div>
+                </div>
+                
+                <label for=""><strong>Estado</strong> </label>
+                <span class="badge rounded-pill bg-warning">Sin revisar</span>
+
+                <div class="row mt-4">
+                    <div class="col-4">
+                        <label for=""><strong>Otros datos adjuntos</strong> </label>
+                        <input class="form-control form-control-sm" type="file" id="formFile">
+                    </div>
+                    <div class="col-4">
+                        <label for=""><strong>Seguridad social</strong> </label>
+                        <input class="form-control form-control-sm" type="file" id="formFile">
+                    </div>
+                    <div class="col-4">
+                        <label for=""><strong>Listado de personal</strong> </label>
+                        <input class="form-control form-control-sm" type="file" id="formFile">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class='bx bx-x'></i> Cancelar</button>
+            <button type="button" class="btn btn-success">Guardar <i class='bx bx-save'></i></button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="addItem"style="display: none; background-color: rgba(0,0,0,0.3);">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            
+            <div class="modal-body">
+              <button type="button" class="btn-close"aria-label="Close" onclick="hidedjs()"></button>
+              <form action="">
+                <div class="row mt-4 justify-content-right">
+                    <div class="col-6">
+                        <label for=""><strong>Cantidad</strong>  <sup class="campo_requerido">*</sup></label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="col-6">
+                        <label for=""><strong>Paquete de trabajo</strong>  <sup class="campo_requerido">*</sup></label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="col-2 mt-3">
+                        <button class="btn btn-sm" style="background-color: #60b232; color: white;
+                        
+                        ">Guardar</button>
+                    </div>
+                </div>
+              </form>
+            </div>
+            
+          </div>
+        </div>
+    </div>
+{% endblock modales %}
+
+
+{% block scripts %}
+<script src="{% static 'js/firma.js' %}"></script>
+<script src="{% static 'modSubcontratos/js/main.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/es.js"></script>
+<script>
+    $(document).on('click', '#AddActa', function() {
+        $('#AddActa').modal('show');
+    });
+
+    $(document).on('click', '#addItem', function() {
+        $('#addItem').modal('show');
+    });
+</script>
+
+<script>
+    function getComboA(selectObject) {
+        var campo = document.getElementById("tipoComp")
+        var selec = document.getElementById("slec")
+        var value = selectObject.value;  
+        
+        if(value == "1.1"){
+            selec.style.display = 'none'
+            campo.style.display = 'block'
+            campo.value = "OCS"
+        }
+        else if(value == "1.2"){
+            selec.style.display = 'none'
+            campo.style.display = 'block'
+            campo.value = "OCM"
+        }
+        else if(value == "2"){
+            selec.style.display = 'none'
+            campo.style.display = 'block'
+            campo.value = "OCS"
+        }
+        else{
+            selec.style.display = 'block'
+            campo.style.display = 'none'
+        }
+    }
+
+    var campo = document.getElementById("impo").value
+
+    function importarExcel(campo){
+        
+        var tabla = document.getElementById("tbl_items")
+        var campoExcel = document.getElementById("excel")
+
+        if(campo == 1){
+            tabla.style.display = "none"
+            campoExcel.style.display = "block"
+        }
+        else{
+            tabla.style.display = "block"
+            campoExcel.style.display = "none"
+        }
+    }
+
+    function calcularTotal(){
+        campoCantidad = document.getElementById("Cantidad").value
+        campoValorUnitario = document.getElementById("ValorUnitario").value
+
+        resultado = campoCantidad * campoValorUnitario
+
+        campoTotal = document.getElementById("ValorTotal")
+        campoTotal.value = resultado
+
+    }
+
+    function AgregarItems(){
+        
+    }
+
+    function hidedjs() {
+        let item = document.getElementById('addItem')
+        item.style.display='none';$('#addItem').removeClass('show');
+        item.removeAttribute('aria-modal');
+        item.removeAttribute('role'); 
+        item.setAttribute('aria-hidden','true');
+        let modales = document.querySelectorAll('.modal-backdrop')
+        for (let i = 0; i < modales.length; i++) {
+            if('fade' != modales[i].className.split(' ')[1]){
+                console.log(modales[i].remove())
+            }
+        }
+    }
+    function mod(){
+        $('#addItem').css('display','block')
+        $('#addItem').show()
+        let item = document.getElementById('addItem')
+        item.setAttribute('aria-modal','true')
+        item.setAttribute('role','dialog')
+    }
+
+    var wrapper = document.getElementById("signature-pad");
+    var clearButton = wrapper.querySelector("[data-action=clear]");
+    var savePNGButton = wrapper.querySelector("[data-action=save-png]");
+    var canvas = wrapper.querySelector("canvas");
+    var el_note = document.getElementById("note");
+    var signaturePad;
+    signaturePad = new SignaturePad(canvas);
+    
+    clearButton.addEventListener("click", function (event) {
+        document.getElementById("note").innerHTML="Ingrese su firma";
+        signaturePad.clear();
+    });
+
+    savePNGButton.addEventListener("click", function (event){
+        if (signaturePad.isEmpty()){
+            alert("Ingrese una firma por favor.");
+            event.preventDefault();
+        }else{
+            var canvas  = document.getElementById("the_canvas");
+            var dataUrl = canvas.toDataURL();
+            document.getElementById("signature").value = dataUrl;
+        }
+    });
+    function my_function(){
+        document.getElementById("note").innerHTML="";
+    }
+    </script>
+{% endblock scripts %}
+    
