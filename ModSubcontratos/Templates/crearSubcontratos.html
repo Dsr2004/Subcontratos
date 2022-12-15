@@ -35,6 +35,9 @@
     .nav-link.active{
         color: #1a1a1a !important;
     }
+    .calcampo{
+        font-weight: bold;
+    }
 </style>
 
 <h3 class="text-center mb-5 mt-3 tit_sec">Creación de subcontratos</h3>
@@ -61,8 +64,6 @@
         <div class="col-3">
             <label for=""><strong>Elaborador</strong> <sup class="campo_requerido">*</sup></label>
             <select name="elaborador" id="elaborador" class="form-control" style="width: 100%;">
-                
-            </select>
         </div>
         <div class="col-3">
             <label for=""><strong>Cargo</strong> <sup class="campo_requerido">*</sup></label>
@@ -171,7 +172,7 @@
                 <div class="card mt-3 mb-5" style="padding: 10px;">
                     <h6>Items</h6>
                     
-                    <table class="table text-center" id="tbl_items">
+                    <table class="table text-center" id="tbl_items" >
                         <thead>
                             <tr>
                                 <th>Código</th>
@@ -190,7 +191,7 @@
                                 <td><input type="number" class="form-control" id="Cantidad"></td>
                                 <td><input type="number" class="form-control" id="ValorUnitario"></td>
                                 <td><input type="text" class="form-control" id="ValorTotal" readonly></td>
-                                <td><button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarItems()"><strong><i class='bx bx-plus'></i></strong> </button></td>
+                                <td><button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarItems(), calcularSubtotal()"><strong><i class='bx bx-plus'></i></strong> </button></td>
                             </tr>
                         </thead>
                         <tbody id="tblItems">
@@ -199,14 +200,63 @@
                         </tbody>
                     </table>
                 </div>
-
-                <div class="row justify-content-between mb-5">
+    
+                <div class="row justify-content-between mb-5" id="contnorm">
                     <div class="col-4">
-                        <label for="">Tarifa de IVA</label>
-                        <input type="text" class="form-control" name="tarifa_iva">
+                        <label for=""><strong>Tarifa de IVA</strong> </label>
+                        <input type="number" class="form-control" id="tarifaiva">
                     </div>
                     <div class="col-6">
-                        Subtotal
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="calcampo">Subtotal</p>
+                                <p class="calcampo">IVA:</p>
+                                <p class="calcampo">IVA (Sobre la U):</p>
+                                <p class="calcampo">Total (Inc. IVA):</p>
+                            </div>
+                            <div class="col-6">
+                                <p id="subtot"></p>
+                                <p id="calciv"></p>
+                                <p id="calcIvu"></p>
+                                <p id="Tot"></p>
+                            </div>
+                        </div>
+                        <!-- <button onclick="calcularSubtotal()">f</button> -->
+                    </div>
+                </div>
+                <div class="row justify-content-between mb-5" id="contservice" style="display: none;">
+                    <div class="col-4">
+                        <label for=""><strong>Tarifa de IVA</strong> </label>
+                        <input type="number" class="form-control" id="tarifaiva">
+    
+                        <label for=""><strong>Porcentaje Administración</strong> </label>
+                        <input type="number" class="form-control" id="porcAdmin">
+    
+                        <label for=""><strong>Porcentaje Imprevistos</strong> </label>
+                        <input type="number" class="form-control" id="porcImpr">
+    
+                        <label for=""><strong>Porcentaje Utilidad</strong> </label>
+                        <input type="number" class="form-control" id="porcUtil">
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="calcampo">SUBTOTAL: </p>
+                                <p class="calcampo">ADMINISTRACIÓN: </p>
+                                <p class="calcampo">IMPREVISTOS: </p>
+                                <P class="calcampo">UTILIDAD: </P>
+                                <p class="calcampo">IVA:</p>
+                                <p class="calcampo">IVA (Sobre la U):</p>
+                                <p class="calcampo">Total (Inc. IVA):</p>
+                            </div>
+                            <div class="col-6">
+                                <p id="subtot"></p>
+                                <p id="calciv"></p>
+                                <p id="calcIvu"></p>
+                                <p id="Tot"></p>
+                            </div>
+                        </div>
+                        <!-- <button onclick="calcularSubtotal()">f</button> -->
                     </div>
                 </div>
 
@@ -471,22 +521,34 @@
     function getComboA(selectObject) {
         // var campo = document.getElementById("tipoComp")
         var selec = document.getElementById("slec")
+
+        var contNo = document.getElementById("contnorm")
+        var tipoTarf = document.getElementById("contservice")
         var value = selectObject.value;  
         
         if(value == "1.1"){
             selec.value = "1"
             selec.setAttribute('disabled', '')
+            contNo.style.display = 'block'
+            tipoTarf.style.display = 'none'
         }
         else if(value == "1.2"){
             selec.value = "2"
             selec.setAttribute('disabled', '')
+            contNo.style.display = 'block'
+            tipoTarf.style.display = 'none'
+            
         }
         else if(value == "2"){
             selec.value = "1"
             selec.setAttribute('disabled', '')
+            contNo.style.display = 'none'
+            tipoTarf.style.display = 'block'
         }
         else{
             selec.removeAttribute('disabled')
+            contNo.style.display = 'none'
+            tipoTarf.style.display = 'block'
         }
     }
 
@@ -518,6 +580,50 @@
 
     }
 
+    function calcularSubtotal(){
+
+        const resume_table = document.getElementById("tbl_items");
+
+        const tableRows = document.querySelectorAll('#tbl_items tr.it_row');
+
+        let subt = document.getElementById("subtot");
+
+        let iva = document.getElementById("tarifaiva").value;
+
+        let con = parseFloat(iva)
+        let porc = (con / 100);
+
+        
+        for(let i = 0; i < tableRows.length; i++) {
+            // const row = tableRows[i];
+
+            
+            const status = document.querySelector('.valTot');
+            let conversion= parseInt(status.innerHTML); 
+
+            conversion+=conversion
+
+            console.log(conversion)
+            // if(status === status){
+            //     console.log(status)
+            // }
+            // else{
+            //     // conversion 
+            //     let conversion= parseInt(status.innerHTML); 
+
+                            
+
+            //     let su = conversion++
+            //     let suma = conversion + conversion 
+            //     console.log(su);
+            // }
+            
+        
+            // Para modificar un estado:
+            // status.innerText = 'offline';
+        }
+    }
+
     
 
     function AgregarItems(){
@@ -531,7 +637,7 @@
 
         if(cantidad > 0 && valorUnitario > 0 && valorTotal > 0){
             $('#tblItems').append(`
-            <tr id="tr-${codigo}">
+            <tr class="it_row" id="tr-${codigo}">
                 <td>
                     <input type="hidden" name=""/>
                     ${codigo}
@@ -541,7 +647,7 @@
                 <td>${unidad}</td>  
                 <td>${cantidad}</td>  
                 <td>${valorUnitario}</td>
-                <td>${valorTotal}</td>  
+                <td class="valTot">${valorTotal}</td>  
                 <td>
                     <button class="btn" onclick="Eliminar_item(${codigo})" style="color: #fc3322; font-size: 20px; font-weight: bold;"><i class='bx bx-x'></i></button>
                 </td>    

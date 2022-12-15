@@ -1,0 +1,17 @@
+{% extends 'modales/modalBase.html' %}
+
+<!--Block id-->
+
+{% block modal-id %} id="modalInformativo" {% endblock modal-id %}
+
+<!-- Bloque de titulo -->
+{% block titulo-modal %} <i class="fas fa-exclamation-triangle"></i> &nbsp; &nbsp; Información ! {% endblock titulo-modal %}
+
+<!-- Bloque de cuerpo -->
+{% block color-modal %} text-primary {% endblock color-modal %}
+
+{% block icono-modal %} fas fa-user-shield {% endblock icono-modal %}
+
+{% block mensaje-modal %} 
+    Por su propia seguridad , el sistema cerrará sesión de forma automática. <p></p><span class="text-primary">Tu cuenta está segura ahora !</span>
+{% endblock mensaje-modal %}
