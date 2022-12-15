@@ -11,7 +11,116 @@
 {% endblock estilos %}
 
 {% block contenido %} 
-    <h1>cuenta</h1>
+
+    <style>
+        .card{
+            border: 1px solid transparent;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+        }
+        .card-header{
+            background-color: #78bb50;
+            border: 1px solid transparent;
+            height: 85px;
+        }
+        .circulo{
+            /* background-color: red; */
+            border: 5px solid white;
+            margin-top: -40px;
+            border-radius: 50%;
+            width: 90px;
+            height: 90px;
+        }
+        .circulo img{
+            width: 100%;
+        }
+        #car{
+            display: flex;
+            flex-direction: row;
+        }
+        #car .nomb_usua{
+            font-weight: 600;
+            font-size: 20px;
+            margin-left: 10px;
+        }
+
+        .nombs{
+            display: flex;
+            flex-direction: column;
+        }
+        .nomb{
+            margin-left: 10px;
+            margin-top: -20px;
+            font-size: 15px;
+        }
+        .info_persona{
+            margin: 10px;
+            padding: 25px;
+            background-color: rgb(231, 231, 231);
+            border-radius: 10px;
+        }
+        .separador{
+            
+        }
+        .auth{
+            margin-left: 10px;
+        }
+    </style>
+    <h4>Mi cuenta</h4>
+
+    <div class="card">
+        <div class="card-header">
+
+        </div>
+        <div class="card-body" id="car">
+            <div class="circulo">
+                <img src="{% static 'img/user.png' %}" alt="">
+            </div>
+            <div class="nombs">
+                <p class="nomb_usua">{{request.user.usuario}}</p>
+                <p class="nomb">{{request.user.nombres}}</p>
+            </div>
+        </div>
+        <div class="info_persona mb-5">
+            <form action="{% url 'crearUsuario' %}" method="post" id="registroUsuarioForm">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-6">
+                        <label><strong>Nombres</strong> <sup class="campo_requerido">*</sup></label>
+                        {{form.nombres}}
+                        <p id="nombres" class="error_text"></p>
+                    </div>
+                    <div class="col-6">
+                        <label><strong>Apellidos</strong> <sup class="campo_requerido">*</sup></label>
+                        {{form.apellidos}}
+                        <p id="apellidos" class="error_text"></p>
+                    </div>
+                </div>
+                
+                <label><strong>Nombre de usuario</strong> <sup class="campo_requerido">*</sup></label>
+                {{form.usuario}}
+                <p id="usuario" class="error_text"></p>
+
+                <label><strong>Cédula</strong> <sup class="campo_requerido">*</sup></label>
+                {{form.cedula}}
+                <p id="cedula" class="error_text"></p>
+
+                <label><strong>Correo electronico</strong> <sup class="campo_requerido">*</sup></label>
+                {{form.correo}}
+                <p id="correo" class="error_text"></p>
+                
+                <label><strong>Rol de usuario</strong> <sup class="campo_requerido">*</sup></label>
+                {{form.rol}}
+                <p id="rol" class="error_text"></p>
+            </form>  
+        </div>
+        <div class="separador">
+            <center><hr style="width: 95%;"></center>
+        </div>
+        
+        <div class="row">
+            <h5 class="auth">Contraseña y autenticación</h5>
+        </div>
+    </div>
 {% endblock contenido %} 
 
 
