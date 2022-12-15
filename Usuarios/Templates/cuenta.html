@@ -97,7 +97,9 @@
                 </div>
                 
                 <label><strong>Nombre de usuario</strong> <sup class="campo_requerido">*</sup></label>
-                {{form.usuario}}
+                <input type="text" class="form-control" value="{{form.usuario.value}}" readonly>
+                <input type="hidden" name="usuario" value="{{form.usuario.value}}">
+                
                 <p id="usuario" class="error_text"></p>
 
                 <label><strong>Cédula</strong> <sup class="campo_requerido">*</sup></label>
@@ -109,7 +111,12 @@
                 <p id="correo" class="error_text"></p>
                 
                 <label><strong>Rol de usuario</strong> <sup class="campo_requerido">*</sup></label>
-                {{form.rol}}
+                {% if object.rol %}
+                    {{object.rol}}
+                    {% else %}
+                    <p>Sin rol</p>
+                {% endif %}
+                
                 <p id="rol" class="error_text"></p>
             </form>  
         </div>
@@ -119,6 +126,8 @@
         
         <div class="row">
             <h5 class="auth">Contraseña y autenticación</h5>
+            <p></p>
+            
         </div>
     </div>
 {% endblock contenido %} 
