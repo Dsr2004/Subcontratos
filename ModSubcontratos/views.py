@@ -76,6 +76,16 @@ class SubContratos(View):
             return JsonResponse({"error":str(e)}, status = 400)
 
 class GuardarSubcontrato(View):
+    template_name = "crearSubcontratos.html"
+    
     def post(self, request, *args, **kwargs):
+        form = SubcontratoForm(request.POST)
+        if form.is_valid():
+            print("valido")
+        else:
+            ultimo_id = Subcontrato.objects.last()
+            if ultimo_id:ultimo_id+=1
+            else:ultimo_id=1
+            return render(request, self.template_name,{"ultimo_id":ultimo_id, "form":SubcontratoForm()})
         print(request.POST)
         return HttpResponse(request.POST)

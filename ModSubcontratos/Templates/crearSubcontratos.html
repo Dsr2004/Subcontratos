@@ -5,6 +5,7 @@
     Creación de subcontrato
 {% endblock titulo %}
     
+    
 
 {% block estilos %}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -39,17 +40,17 @@
 <h3 class="text-center mb-5 mt-3 tit_sec">Creación de subcontratos</h3>
 
 
-<form action="{% url 'guardarSubcontrato' %}" method="post" id="guardarSubcontratoForm">
+<form action="{% url 'guardarSubcontrato' %}" method="post">
     {% csrf_token %}
     <div class="row mb-3">
         <div class="col-3">
             <label for=""><strong>Identificador subcontrato </strong> <sup class="campo_requerido">*</sup></label>
-    
+
             <input type="text" class="form-control" value="{{ultimo_id}}" readonly>
         </div>
         <div class="col-3">
             <label for=""><strong>Tipo de contrato</strong> <sup class="campo_requerido">*</sup></label>
-            <select id="comboA"  class="form-select " onchange="getComboA(this)" name="tipo_contrato" >
+            <select id="comboA"  class="form-select " onchange="getComboA(this)" name="tipo_contrato">
                 <option value="1.1">1.1 Contratos con IVA pleno suministros</option>
                 <option value="1.2">1.2 Contratos con IVA pleno y algunos servicios.</option>
                 <option value="2">2. Contratos de servicios de obra civil.</option>
@@ -68,9 +69,9 @@
             <input type="text" class="form-control" id="cargoElaborador" readonly>
         </div>
     </div>
-    
+
     <div class="row mb-3">
-    
+
         <div class="col-3">
             <label for=""><strong>Proyecto </strong> <sup class="campo_requerido">*</sup></label>
             <select name="proyecto" id="proyecto" class="form-control">
@@ -96,7 +97,7 @@
             </select>
         </div>
     </div>
-    
+
     <div class="row mb-3">
         <div class="col-3" >
             <label for=""><strong>Estado </strong></label>
@@ -113,31 +114,30 @@
         </div>
         <div class="col-3">
             <label for=""><strong>Tipo Orden de compra</strong> <sup class="campo_requerido">*</sup></label>
-            <select class="form-select" name="tipo_orden" id="slec" style="display: none";>
-                <option value="1">OCS</option>
+            <select class="form-select" name="tipo_orden" id="slec" disabled>
+                <option value="1" selected>OCS</option>
                 <option value="2">OCM</option>
             </select>
-            <input type="text" class="form-control" id="tipoComp" value="OCS" name="tipo_orden" readonly>
         </div>
         <div class="col-3">
             <label for=""><strong>Nro. Orden de compra</strong> <sup class="campo_requerido">*</sup></label>
             <input type="text" class="form-control" name="numero_orden">
         </div>
     </div>
-    
+
     <div class="row mt-5">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-              <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true"><strong>Condiciones contractuales</strong> </button>
+            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true"><strong>Condiciones contractuales</strong> </button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false"><strong>Actas de producción</strong> </button>
+            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false"><strong>Actas de producción</strong> </button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false"><strong>Documentación e información adicional</strong> </button>
+            <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false"><strong>Documentación e información adicional</strong> </button>
             </li>
-          </ul>
-          <div class="tab-content" id="myTabContent">
+        </ul>
+        <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                 <div class="row mt-4">
                     <div class="col-3">
@@ -147,13 +147,13 @@
                                 <div class="form-check">
                                     <input class="form-check-input" onclick="importarExcel(1)" type="radio" name="impo" id="impo" value="si">
                                     <label class="form-check-label" for="impo">
-                                      Si
+                                    Si
                                     </label>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-check">
-                                    <input class="form-check-input" onclick="importarExcel(2)" type="radio" name="impo" id="impo" value="no">
+                                    <input class="form-check-input" onclick="importarExcel(2)" type="radio" name="impo" id="impo" value="no" checked>
                                     <label class="form-check-label" for="impo">
                                         No
                                     </label>
@@ -167,32 +167,7 @@
                         <small>Si desea importar los items para este subcapitulo, adjunte el excel con el formato indicado</small>
                     </div>
                 </div>
-    
-                <div class="row mt-4">
-                    <div class="col-3">
-                        <label for=""><strong>¿Desea generar otro?</strong></label>
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="desg" id="desg">
-                                    <label class="form-check-label" for="desg">
-                                      Si
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="desg" id="desg">
-                                    <label class="form-check-label" for="desg">
-                                        No
-                                    </label>
-                                </div>
-                            </div>
-                              
-                        </div>            
-                    </div>
-                </div>
-    
+
                 <div class="card mt-3 mb-5" style="padding: 10px;">
                     <h6>Items</h6>
                     
@@ -206,45 +181,41 @@
                                 <th>Cantidad</th>
                                 <th>Valor Unitario</th>
                                 <th>Valor total</th>
-                           
                             </tr>
-                        </thead>
-                        <tbody>
                             <tr onchange="calcularTotal()">
                                 <td><input type="text" class="form-control" id="Codigo"></td>
                                 <td><input type="text" class="form-control" id="Item"></td>
                                 <td><input type="text" class="form-control" id="Descripcion"></td>
                                 <td><input type="text" class="form-control" id="Unidad"></td>
-                                <td><input type="text" class="form-control" id="Cantidad"></td>
-                                <td><input type="text" class="form-control" id="ValorUnitario"></td>
+                                <td><input type="number" class="form-control" id="Cantidad"></td>
+                                <td><input type="number" class="form-control" id="ValorUnitario"></td>
                                 <td><input type="text" class="form-control" id="ValorTotal" readonly></td>
                                 <td><button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarItems()"><strong><i class='bx bx-plus'></i></strong> </button></td>
                             </tr>
+                        </thead>
+                        <tbody id="tblItems">
+                            
+                            
                         </tbody>
                     </table>
                 </div>
-    
+
                 <div class="row justify-content-between mb-5">
                     <div class="col-4">
                         <label for="">Tarifa de IVA</label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control" name="tarifa_iva">
                     </div>
                     <div class="col-6">
                         Subtotal
                     </div>
                 </div>
-    
+
             </div>
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                 <div class="row mt-4 mb-3">
                     <div class="col-12">
                         <label for=""><strong>¿Como se hará el seguimiento de actas?</strong> <sup class="campo_requerido">*</sup></label>
-                        <select class="form-select" name="" id="">
-                            <option value="Semanal">Semanal</option>
-                            <option value="Catorcenal">Catorcenal</option>
-                            <option value="Quincenal">Quincenal</option>
-                            <option value="Mensual">Mensual</option>
-                        </select>
+                        {{form.seguimiento_acta}}
                     </div>
                 </div>
             </div>
@@ -252,44 +223,31 @@
                 <div class="row mt-4">
                     <div class="col-3">
                         <label for=""><strong>Fecha inicio del contrato</strong> <sup class="campo_requerido">*</sup></label>
-                        <input type="date" class="form-control">
+                        <input type="date" class="form-control" name="fecha_inicio_contrato">
                     </div>
                     <div class="col-3">
                         <label for=""><strong>Fecha vencimiento contrato</strong> <sup class="campo_requerido">*</sup></label>
-                        <input type="date" class="form-control">
+                        <input type="date" class="form-control" name="fecha_vencimiento_contrato">
                     </div>
                     <div class="col-3">
                         <label for=""><strong>Director de obra</strong> <sup class="campo_requerido">*</sup></label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control" name="director_obra">
                     </div>
                     <div class="col-3">
                         <label for=""><strong>Gestor del contrato</strong> <sup class="campo_requerido">*</sup></label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control" name="gestor_contrato">
                     </div>
                 </div>
                 <div class="row mt-4">
                     <div class="col-12">
                         <label for=""><strong>Correo de notificación del proveedor</strong> <sup class="campo_requerido">*</sup></label>
-                        <input type="email" class="form-control">
+                        <input type="email" class="form-control" name="correo_notificacion_proveedor" id="correo_notificacion_proveedor">
                     </div>
                     <div class="col-12 mt-3">
                         <label for=""><strong>Validador/es del subcontrato</strong> <sup class="campo_requerido">*</sup></label>
                         <select name="" id="">
-    
+
                         </select>
-                    </div>
-                    <div class="col-12">
-                        <div id="signature-pad">
-                            <div style="border:solid 1px teal; width:360px;height:110px;padding:3px;position:relative;">
-                                <div id="note" onmouseover="my_function();">Ingrese su firma</div>
-                                <canvas id="the_canvas" width="350px" height="100px"></canvas>
-                            </div>
-                            <div style="margin:10px;">
-                                <input type="hidden" id="signature" name="signature">
-                                <button type="button" id="clear_btn" class="btn btn-secondary" data-action="clear"><span class="glyphicon glyphicon-remove"></span> Borrar</button>
-                                <button type="submit" id="save_btn" class="btn btn-primary" data-action="save-png"><span class="glyphicon glyphicon-ok"></span> Guardar firma</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="card mt-3 mb-5" style="padding: 10px;">
@@ -352,15 +310,14 @@
                     </div>
                 </div>
             </div>
-          </div>
-          <div class="row mt-5 mb-2 justify-content-end text-center">
+        </div>
+        <div class="row mt-5 mb-2 justify-content-end text-center">
             <div class="col-2">
                 <button class="btn btn-success" type="submit"><i class='bx bx-save'></i> Guardar</button>
             </div>
-          </div>
+        </div>
+    </div>
 </form>
-     
-</div>
 {% endblock contenido %} 
 
 
@@ -491,6 +448,7 @@
           </div>
         </div>
     </div>
+    {% csrf_token %}
 {% endblock modales %}
 
 
@@ -511,28 +469,24 @@
 
 <script>
     function getComboA(selectObject) {
-        var campo = document.getElementById("tipoComp")
+        // var campo = document.getElementById("tipoComp")
         var selec = document.getElementById("slec")
         var value = selectObject.value;  
         
         if(value == "1.1"){
-            selec.style.display = 'none'
-            campo.style.display = 'block'
-            campo.value = "OCS"
+            selec.value = "1"
+            selec.setAttribute('disabled', '')
         }
         else if(value == "1.2"){
-            selec.style.display = 'none'
-            campo.style.display = 'block'
-            campo.value = "OCM"
+            selec.value = "2"
+            selec.setAttribute('disabled', '')
         }
         else if(value == "2"){
-            selec.style.display = 'none'
-            campo.style.display = 'block'
-            campo.value = "OCS"
+            selec.value = "1"
+            selec.setAttribute('disabled', '')
         }
         else{
-            selec.style.display = 'block'
-            campo.style.display = 'none'
+            selec.removeAttribute('disabled')
         }
     }
 
@@ -564,8 +518,45 @@
 
     }
 
+    
+
     function AgregarItems(){
+        let codigo = $("#Codigo").val();
+        let item = $("#Item").val();
+        let descripcion = $("#Descripcion").val();
+        let unidad = $("#Unidad").val();
+        let cantidad = $("#Cantidad").val();
+        let valorUnitario = $("#ValorUnitario").val(); 
+        let valorTotal = $("#ValorTotal").val();
+
+        if(cantidad > 0 && valorUnitario > 0 && valorTotal > 0){
+            $('#tblItems').append(`
+            <tr id="tr-${codigo}">
+                <td>
+                    <input type="hidden" name=""/>
+                    ${codigo}
+                </td>
+                <td>${item}</td>  
+                <td>${descripcion}</td>  
+                <td>${unidad}</td>  
+                <td>${cantidad}</td>  
+                <td>${valorUnitario}</td>
+                <td>${valorTotal}</td>  
+                <td>
+                    <button class="btn" onclick="Eliminar_item(${codigo})" style="color: #fc3322; font-size: 20px; font-weight: bold;"><i class='bx bx-x'></i></button>
+                </td>    
+            </tr>
+        `)
+        }
+        else{
+            alert("Ingrese una cantidad válida")
+        }
         
+    }
+
+    function Eliminar_item(id){
+        $("#tr-"+ id).remove();
+
     }
 
     function hidedjs() {

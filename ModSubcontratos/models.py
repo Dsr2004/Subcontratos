@@ -158,7 +158,7 @@ class Subcontrato(models.Model):
     tipo_orden = models.CharField(max_length=5, choices=TIPO_ORDEN)
     numero_orden = models.CharField(max_length=250)
     tarifa_iva = models.IntegerField(default=19)
-    porcentaje_administracion = models.IntegerField(default=0)
+    porcentaje_administracion = models.IntegerField(default=0) 
     porcentaje_imprevistos = models.IntegerField(default=0)
     porcentaje_utilidad = models.IntegerField(default=0)
     seguimiento_acta = models.CharField(max_length=5, choices=SEGUIMIENTO_ACTAS)
