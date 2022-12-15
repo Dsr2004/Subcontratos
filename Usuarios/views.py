@@ -1,11 +1,11 @@
 import json
 from django.shortcuts import render, redirect
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
 from django.views.generic import View, ListView, CreateView, UpdateView
 from django.shortcuts import render
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from Subcontratos.correo import enviarCorreo
 from .forms import LoginForm, UsuarioForm, CambiarContrasena
@@ -152,6 +152,7 @@ class ModificarEstadoUsuario(View):
             return JsonResponse({"mensaje":"cambiado correctamente"})
        except:
            return JsonResponse({"error":"No se encontro el usuario"}, status=400)
+
 class CambiarContrasena(View):
     model = Usuario
     template_name = "cambiarContraseña.html"
@@ -192,3 +193,11 @@ class MiCuenta(ValidateProfileUser, UpdateView):
     def form_invalid(self, form):
         print(form.errors)
         return JsonResponse({"errores":form.errors}, status=400)
+
+# Auto Logout
+class AutoLogout():
+    def autoLogoutUser(request):
+        logout(request)
+        request.user = None
+        messages.info(request, ".") # Nota: El argumento no puede estar vacío
+        return HttpResponseRedirect('/Login')

@@ -1,0 +1,28 @@
+{% extends 'modales/modalBase.html' %}
+
+<!--Block id-->
+
+{% block modal-id %} id="modalAdvertencia" {% endblock modal-id %}
+
+<!-- Bloque de titulo -->
+{% block titulo-modal %} <i class="fas fa-exclamation-triangle"></i> &nbsp; &nbsp; Atención ! {% endblock titulo-modal %}
+
+<!-- Bloque de cuerpo -->
+{% block color-modal %} text-warning {% endblock color-modal %}
+
+{% block icono-modal %} fas fa-exclamation-triangle {% endblock icono-modal %}
+
+{% block mensaje-modal %} 
+    El sistema cerrará sesión en 5 minutos... <p></p>
+    <span class="container" style="font-size: 13px; width: 90%;">Nota: Si quieres permanecer conectado, solo haga click en 
+        <span class="text-primary">Permanecer</span> boton de abajo.
+    </span>
+{% endblock mensaje-modal %}
+
+<!-- Bloque pie -->
+
+{% block btn-action %}
+    <a href="#" class="btn btn-outline-dark btn-sm" id="btn-30m" style="width: 80px;">+15 sec</a>
+{% endblock btn-action %}
+
+{% block nombre-btn %}Ok{% endblock nombre-btn %}

@@ -1,0 +1,32 @@
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Launch demo modal
+  </button> -->
+  
+  <!-- Modal -->
+  <div class="modal fade" {% block modal-id %} {% endblock modal-id%} tabindex="-1" aria-labelledby="DefectoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="DefectoModalLabel">
+            {% block titulo-modal %}{% endblock titulo-modal %}
+          </h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <div class="text-center mt-1 {% block color-modal %}{% endblock color-modal %}">
+            <span class="fas fa-stack fa-3x">
+                <i class="fas fa-cloud fa-stack-2x"></i>
+                <i class="{% block icono-modal %}{% endblock icono-modal %} fa-stack-1x fa-inverse"></i>
+            </span>
+          </div>
+          <div class="mb-2 mt-2">{% block mensaje-modal %}{% endblock mensaje-modal %}</div>
+        </div>
+        <div class="modal-footer">
+          {% block btn-action %}{% endblock btn-action %}
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" style="width: 80px;">{% block nombre-btn %}Cerrar{% endblock nombre-btn %}</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,22 @@
+{% extends 'modales/modalBase.html' %}
+
+<!--Block id-->
+
+{% block modal-id %} id="modalSalir" {% endblock modal-id %}
+
+<!-- Bloque de titulo -->
+{% block titulo-modal %} <i class="fas fa-door-cloosed"></i> &nbsp; &nbsp;  Sesión cerrada {% endblock titulo-modal %}
+
+<!-- Bloque de cuerpo -->
+{% block color-modal %} text-danger {% endblock color-modal %}
+
+{% block icono-modal %} fas fa-door-open {% endblock icono-modal %}
+
+{% block mensaje-modal %} 
+   Estas seguro que desea cerrar sesión ?
+{% endblock mensaje-modal %}
+
+<!-- Footer -->
+{% block btn-action %}
+<a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm" style="width: 80px;">Cerrar sesión</a>
+{% endblock btn-action %}
