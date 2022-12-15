@@ -344,6 +344,35 @@
             placeholder: "Ingrese el nombre de la compañia",
             minimumInputLength :1
         });
+     //items
+     $('#Codigo').select2({
+        language: "es",
+        allowClear: true,
+        ajax:{
+            delay: 250,
+            url: window.location.pathname,
+            type: "POST",
+            data: function(params){
+            var queryParams = {
+                csrfmiddlewaretoken:csrftoken,
+                term: params.term,
+                action: "autocompleteItem",
+                tipo: "item"
+            }
+            return queryParams
+            },
+            processResults: function(data){
+                return{
+                    results: $.map(data, function(item){
+                        return {id: item.id, text:item.final}
+                    })
+                }
+            }
+        },
+        placeholder: "Ingrese el codigo",
+        minimumInputLength :1,
+        scrollAfterSelect:true
+    });
 
 
 

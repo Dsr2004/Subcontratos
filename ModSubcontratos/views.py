@@ -69,6 +69,12 @@ class SubContratos(View):
                     compania = Compania.objects.filter(compania__icontains=request.POST.get("term"))
                     compania = compania.values()
                     return JsonResponse(list(compania), safe=False)
+            elif tipo == "item":
+                if action == "autocompleteItem":
+                    items = Item.objects.filter(codigo__icontains=request.POST.get("term"))
+                    items = items.values()
+
+                    return JsonResponse(list(items), safe=False)
                 
                 
         except Exception as e:
