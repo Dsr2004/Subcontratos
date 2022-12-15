@@ -2,16 +2,17 @@ from django.http import HttpResponse, JsonResponse
 from django.views.generic import View
 from django.shortcuts import render
 from .models import *
+from .forms import SubcontratoForm
 
 # Create your views here.
 class SubContratos(View):
-    template_name = "subcontratos.html"
+    template_name = "crearSubcontratos.html"
     
     def get(self, request, *args, **kwargs):
         ultimo_id = Subcontrato.objects.last()
         if ultimo_id:ultimo_id+=1
         else:ultimo_id=1
-        return render(request, self.template_name,{"ultimo_id":ultimo_id})
+        return render(request, self.template_name,{"ultimo_id":ultimo_id, "form":SubcontratoForm()})
     
     def post(self, request, *args, **kwargs):
         try:
@@ -73,4 +74,8 @@ class SubContratos(View):
         except Exception as e:
             print(str(e))
             return JsonResponse({"error":str(e)}, status = 400)
-        # return render(request, self.template_name)
+
+class GuardarSubcontrato(View):
+    def post(self, request, *args, **kwargs):
+        print(request.POST)
+        return HttpResponse(request.POST)

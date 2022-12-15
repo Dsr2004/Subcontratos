@@ -27,7 +27,7 @@ from ModSubcontratos.carga_masiva import carga_masiva
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("Login/", Login.as_view(), name="login"),
-    path("Logout/", login_required(LogoutView.as_view()),{'next_page': settings.LOGOUT_REDIRECT_URL}, name="logout"),
+    path("Logout/", LogoutView.as_view(),{'next_page': settings.LOGOUT_REDIRECT_URL}, name="logout"),
     path("RestablecerContraseña/", ResetPass.as_view(), name="restablecer"),
     path("Usuarios/", include("Usuarios.urls")),
     path("Subcontratos/", include("ModSubcontratos.urls")),

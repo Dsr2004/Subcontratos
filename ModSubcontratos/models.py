@@ -57,10 +57,10 @@ class Proveedor(models.Model):
 
 # FIN
 TIPO_CONTRANTO =(
-   ("1", "1.1 Contratos con IVA pleno suministros."),
-   ("2", "1.2 Contratos con IVA pleno y algunos servicios."),
-   ("3", "2. Contratos de servicios de obra civil."),
-   ("4", "3. Contratos mixtos."),
+   ("1.1", "1.1 Contratos con IVA pleno suministros."),
+   ("1.2", "1.2 Contratos con IVA pleno y algunos servicios."),
+   ("2", "2. Contratos de servicios de obra civil."),
+   ("3", "3. Contratos mixtos."),
   
 )   
 TIPO_ORDEN =(
@@ -145,12 +145,16 @@ class Poliza(models.Model):
     aseguradora = models.CharField(max_length=34)
     fecha_vencimiento = models.DateField()
     
+    class Meta:
+        db_table = "polizas"
+    
      
 class Subcontrato(models.Model):
     tipo_contrato = models.CharField(max_length=5, choices=TIPO_CONTRANTO)
     elaborador = models.ForeignKey(Nomina, on_delete=models.SET_NULL, null=True)
     proyecto = models.ForeignKey(Centro_Operacion, on_delete=models.SET_NULL, null=True)
     proveedor = models.ForeignKey(Proveedor, on_delete=models.SET_NULL, null=True)
+    compania = models.ForeignKey(Compania, on_delete=models.SET_NULL, null=True)
     tipo_orden = models.CharField(max_length=5, choices=TIPO_ORDEN)
     numero_orden = models.CharField(max_length=250)
     tarifa_iva = models.IntegerField(default=19)
@@ -171,3 +175,7 @@ class Subcontrato(models.Model):
     modificaciones_contractuales = models.FileField(upload_to=guardar_modificaciones_contractuales, validators = [validar_extencion_archivo])
     acta_recibo_final = models.FileField(upload_to=guardar_acta_recibo_final, validators = [validar_extencion_archivo])
     acta_liquidacion = models.FileField(upload_to=guardar_acta_liquidacion, validators = [validar_extencion_archivo])
+    estado = models.CharField(max_length=250, default="En ejecución")
+
+    class Meta:
+        db_table = "subcontratos"
