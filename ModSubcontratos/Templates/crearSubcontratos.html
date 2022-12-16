@@ -174,7 +174,7 @@
                 <div class="card mt-3 mb-5" style="padding: 10px;">
                     <h6>Items</h6>
                     
-                    <table class="table text-center" id="tbl_items" >
+                    <table class="table text-center" id="tbl_items">
                         <thead>
                             <tr>
                                 <th width="200px">Código</th> 
@@ -193,7 +193,7 @@
                                 <td><input type="number" class="form-control" id="Cantidad"></td>
                                 <td><input type="number" class="form-control" id="ValorUnitario"></td>
                                 <td><input type="text" class="form-control" id="ValorTotal" readonly></td>
-                                <td><button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarItems(), calcularSubtotal()"><strong><i class='bx bx-plus'></i></strong> </button></td>
+                                <td><button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarItems(), calcularIva(), CalcularT()"><strong><i class='bx bx-plus'></i></strong> </button></td>
                             </tr>
                         </thead>
                         <tbody id="tblItems">
@@ -206,21 +206,19 @@
                 <div class="row justify-content-between mb-5" id="contnorm">
                     <div class="col-4">
                         <label for=""><strong>Tarifa de IVA</strong> </label>
-                        <input type="number" class="form-control" id="tarifaiva">
+                        <input type="number" class="form-control" onchange="calcularIva(), CalcularT()" id="tarifaiva" value="19">
                     </div>
                     <div class="col-6">
                         <div class="row">
                             <div class="col-6">
-                                <p class="calcampo">Subtotal</p>
-                                <p class="calcampo">IVA:</p>
-                                <p class="calcampo">IVA (Sobre la U):</p>
+                                <p class="calcampo">SUBTOTAL:</p>
+                                <p class="calcampo" id="campoIva">IVA:</p>
                                 <p class="calcampo">Total (Inc. IVA):</p>
                             </div>
                             <div class="col-6">
-                                <p id="subtot"></p>
-                                <p id="calciv"></p>
-                                <p id="calcIvu"></p>
-                                <p id="Tot"></p>
+                                <p id="subtot">0</p>
+                                <p id="calciv">0</p>
+                                <p id="Tot">0</p>
                             </div>
                         </div>
                         <!-- <button onclick="calcularSubtotal()">f</button> -->
@@ -582,6 +580,8 @@
 
     }
 
+    
+
     function calcularSubtotal(){
 
         const resume_table = document.getElementById("tbl_items");
@@ -597,13 +597,13 @@
 
         
         for(let i = 0; i < tableRows.length; i++) {
-            // const row = tableRows[i];
+            const row = tableRows[i];
 
             
-            const status = document.querySelector('.valTot');
+            const status = row.querySelector('.valTot');
             let conversion= parseInt(status.innerHTML); 
 
-            conversion+=conversion
+            
 
             console.log(conversion)
             // if(status === status){
@@ -622,11 +622,12 @@
             
         
             // Para modificar un estado:
-            // status.innerText = 'offline';
+            status.innerText = valorTotal;
         }
     }
 
     
+    var valorSubtotal = 0;
 
     function AgregarItems(){
         let codigo = $("#Codigo").val();
@@ -636,6 +637,8 @@
         let cantidad = $("#Cantidad").val();
         let valorUnitario = $("#ValorUnitario").val(); 
         let valorTotal = $("#ValorTotal").val();
+
+        let subt = document.getElementById("subtot");
 
         if(cantidad > 0 && valorUnitario > 0 && valorTotal > 0){
             $('#tblItems').append(`
@@ -649,12 +652,17 @@
                 <td>${unidad}</td>  
                 <td>${cantidad}</td>  
                 <td>${valorUnitario}</td>
-                <td class="valTot">${valorTotal}</td>  
+                <td class="valTot">${parseInt(valorTotal)}</td>  
                 <td>
                     <button class="btn" onclick="Eliminar_item(${codigo})" style="color: #fc3322; font-size: 20px; font-weight: bold;"><i class='bx bx-x'></i></button>
                 </td>    
             </tr>
         `)
+            let con = parseInt(valorTotal)
+            valorSubtotal += con;
+            
+            subt.innerText = valorSubtotal
+            // subt.innerText = ${parseInt(valorSubtotal) += parseInt(valorSubtotal)};
         }
         else{
             alert("Ingrese una cantidad válida")
@@ -666,6 +674,36 @@
         $("#tr-"+ id).remove();
 
     }
+
+    function calcularIva(){
+       
+        let iva = document.getElementById("tarifaiva").value
+        
+        let porcIva = parseFloat(iva) / 100
+        let ValorSubto = document.getElementById("subtot")
+        let conSubtot = parseFloat(ValorSubto.innerText)
+
+        let CalcIva = porcIva * conSubtot
+       
+
+        let campoIva = document.getElementById("calciv")
+        campoIva.innerHTML = CalcIva
+    }
+
+    function CalcularT(){
+        let ValorSubto = document.getElementById("subtot")
+        let campoIva = document.getElementById("calciv")
+
+        let total = document.getElementById("Tot")
+
+        let sum =  parseFloat(ValorSubto.innerText) + parseFloat(campoIva.innerText)
+        total.innerHTML = sum
+    }
+
+
+    
+    
+    
 
     function hidedjs() {
         let item = document.getElementById('addItem')
