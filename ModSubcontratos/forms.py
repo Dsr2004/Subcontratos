@@ -16,20 +16,26 @@ class SubcontratoForm(forms.ModelForm):
             "porcentaje_administracion": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "porcentaje_imprevistos": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "porcentaje_utilidad": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "seguimiento_acta": forms.Select(attrs={"class":"form-select", "autocomplete":"off"}),
+            "seguimiento_acta": forms.Select(attrs={"class":"form-select"}),
             "fecha_inicio_contrato": forms.DateInput(attrs={"type":"date","class":"form-control", "autocomplete":"off"}),
             "fecha_vencimiento_contrato": forms.DateInput(attrs={"type":"date","class":"form-control", "autocomplete":"off"}),
             "director_obra": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "gestor_contrato": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "correo_notificacion_proveedor": forms.EmailInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "validadores": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
+            "validadores": forms.SelectMultiple(attrs={"class":"form-select"}),
             "polizas": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "contrato": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "polizas_garantias": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "acta_inicio": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "modificaciones_contractuales": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "acta_recibo_final": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "acta_liquidacion": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-           
-        
+            "contrato": forms.FileInput(attrs={"class":"form-control form-control-sm", "autocomplete":"off"}),
+            "polizas_garantias": forms.FileInput(attrs={"class":"form-control form-control-sm", "autocomplete":"off"}),
+            "acta_inicio": forms.FileInput(attrs={"class":"form-control form-control-sm", "autocomplete":"off"}),
+            "modificaciones_contractuales": forms.FileInput(attrs={"class":"form-control form-control-sm", "autocomplete":"off"}),
+            "acta_recibo_final": forms.FileInput(attrs={"class":"form-control form-control-sm", "autocomplete":"off"}),
+            "acta_liquidacion": forms.FileInput(attrs={"class":"form-control form-control-sm", "autocomplete":"off"}),
         }
+    def __init__(self, *args, **kwargs):
+        super(SubcontratoForm, self).__init__(*args, **kwargs)
+        self.fields['contrato'].required = False
+        self.fields['polizas_garantias'].required = False
+        self.fields['acta_inicio'].required = False
+        self.fields['modificaciones_contractuales'].required = False
+        self.fields['acta_recibo_final'].required = False
+        self.fields['acta_liquidacion'].required = False

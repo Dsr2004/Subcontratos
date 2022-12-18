@@ -43,7 +43,7 @@
 <h3 class="text-center mb-5 mt-3 tit_sec">Creación de subcontratos</h3>
 
 
-<form action="{% url 'guardarSubcontrato' %}" method="post">
+<form action="{% url 'guardarSubcontrato' %}" method="post" enctype="multipart/form-data" id="guardarSubcontratoForm">
     {% csrf_token %}
     <div class="row mb-3">
         <div class="col-3">
@@ -64,7 +64,7 @@
         <div class="col-3">
             <label for=""><strong>Elaborador</strong> <sup class="campo_requerido">*</sup></label>
 
-            <select name="elaborador" id="elaborador" class="form-control" style="width: 100%;">
+            <select name="elaborador" id="elaborador" class="form-control is-invalid" style="width: 100%;">
             </select>
         </div>
         <div class="col-3">
@@ -166,7 +166,7 @@
                     </div>
                     <div class="col-8" id="excel" style="display: none;">
                         <label for=""><strong>Información items</strong> </label>
-                        <input type="file" class="form-control" name="" id="">
+                        <input type="file" class="form-control" name="excelItems" id="">
                         <small>Si desea importar los items para este subcapitulo, adjunte el excel con el formato indicado</small>
                     </div>
                 </div>
@@ -206,7 +206,7 @@
                 <div class="row justify-content-between mb-5" id="contnorm">
                     <div class="col-4">
                         <label for=""><strong>Tarifa de IVA</strong> </label>
-                        <input type="number" class="form-control" id="tarifaiva">
+                        <input type="number" class="form-control" id="tarifaiva" name="tarifa_iva">
                     </div>
                     <div class="col-6">
                         <div class="row">
@@ -223,6 +223,8 @@
                                 <p id="Tot"></p>
                             </div>
                         </div>
+
+                        
                         <!-- <button onclick="calcularSubtotal()">f</button> -->
                     </div>
                 </div>
@@ -297,9 +299,7 @@
                     </div>
                     <div class="col-12 mt-3">
                         <label for=""><strong>Validador/es del subcontrato</strong> <sup class="campo_requerido">*</sup></label>
-                        <select name="" id="">
-
-                        </select>
+                        {{form.validadores}}
                     </div>
                 </div>
                 <div class="card mt-3 mb-5" style="padding: 10px;">
@@ -336,29 +336,29 @@
                 <div class="row">
                     <div class="col-4">
                         <label for=""><strong>Contrato</strong> </label>
-                        <input type="file" class="form-control form-control-sm">
+                        {{form.contrato}}
                     </div>
                     <div class="col-4">
                         <label for=""><strong>Pólizas o garantías</strong> </label>
-                        <input type="file" class="form-control form-control-sm">
+                        {{form.polizas_garantias}}
                     </div>
                     <div class="col-4">
                         <label for=""><strong>Acta de inicio</strong> </label>
-                        <input type="file" class="form-control form-control-sm">
+                        {{form.acta_inicio}}
                     </div>
                 </div>
                 <div class="row mt-4">
                     <div class="col-4">
                         <label for=""><strong>Modificaciones contractuales</strong> </label>
-                        <input type="file" class="form-control form-control-sm">
+                        {{form.modificaciones_contractuales}}
                     </div>
                     <div class="col-4">
                         <label for=""><strong>Acta de recibo final</strong></label>
-                        <input type="file" class="form-control form-control-sm">
+                        {{form.acta_recibo_final}}
                     </div>
                     <div class="col-4">
                         <label for=""><strong>Acta de liquidación</strong></label>
-                        <input type="file" class="form-control form-control-sm">
+                        {{form.acta_liquidacion}}
                     </div>
                 </div>
             </div>
@@ -500,7 +500,6 @@
           </div>
         </div>
     </div>
-    {% csrf_token %}
 {% endblock modales %}
 
 
@@ -625,6 +624,9 @@
             // status.innerText = 'offline';
         }
     }
+   var ItemsObject ={
+    data:[]
+   }
 
     
 
@@ -655,6 +657,19 @@
                 </td>    
             </tr>
         `)
+        ItemsObject.data.push({
+            codigo:codigo,
+            data:{
+                codigo:codigo,
+                item:item,
+                descripcion: descripcion,
+                unidad: unidad,
+                cantidad:cantidad,
+                valorUnitario:valorUnitario,
+                valorTotal:valorTotal
+            }
+        })
+        console.log(ItemsObject)
         }
         else{
             alert("Ingrese una cantidad válida")
@@ -663,7 +678,10 @@
     }
 
     function Eliminar_item(id){
+        console.log(id)
         $("#tr-"+ id).remove();
+        let filtro = ItemsObject.data.filter(item => item.codigo != id)
+        console.log(ItemsObject, filtro)
 
     }
 

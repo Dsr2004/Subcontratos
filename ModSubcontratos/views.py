@@ -1,3 +1,4 @@
+import pandas as pd
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import View
 from django.shortcuts import render
@@ -85,13 +86,19 @@ class GuardarSubcontrato(View):
     template_name = "crearSubcontratos.html"
     
     def post(self, request, *args, **kwargs):
-        form = SubcontratoForm(request.POST)
-        if form.is_valid():
-            print("valido")
-        else:
-            ultimo_id = Subcontrato.objects.last()
-            if ultimo_id:ultimo_id+=1
-            else:ultimo_id=1
-            return render(request, self.template_name,{"ultimo_id":ultimo_id, "form":SubcontratoForm()})
+        # form = SubcontratoForm(request.POST)
+        # if form.is_valid():
+        #     print("valido")
+        # else:
+        #     ultimo_id = Subcontrato.objects.last()
+        #     if ultimo_id:ultimo_id+=1
+        #     else:ultimo_id=1
+        #     return render(request, self.template_name,{"ultimo_id":ultimo_id, "form":SubcontratoForm()})
         print(request.POST)
+        if request.POST.get("impo")=="si":
+            file = request.FILES["excelItems"]
+            if file:
+                df = pd.read_excel(file)
+                print(df)
+        print(request.POST)    
         return HttpResponse(request.POST)

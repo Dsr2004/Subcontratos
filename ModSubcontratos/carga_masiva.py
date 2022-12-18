@@ -80,9 +80,9 @@ def cargar_items():
 
 
 def carga_masiva(request):
-    cargar_Nomina()
-    cargar_Centro_Operacion()
-    cargar_compania()
-    cargar_proveedores()
+    # cargar_Nomina()
+    # cargar_Centro_Operacion()
+    # cargar_compania()
+    # cargar_proveedores()
     cargar_items()
     return redirect("manageuser")

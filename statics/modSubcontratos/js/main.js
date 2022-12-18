@@ -377,3 +377,19 @@
 
 
 });
+
+
+function guardarSubcontrato(){
+    let form = $("#guardarSubcontratoForm")
+    let datos = form.serialize()
+    print(typeof(datos))
+    // $.ajax({
+    //     type:form.attr("method"),
+    //     url:form.attr("action"),
+    //     data: datos,
+    //     dataType: "dataType",
+    //     success: function (response) {
+            
+    //     }
+    // });
+}
