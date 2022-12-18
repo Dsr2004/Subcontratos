@@ -380,16 +380,21 @@
 
 
 function guardarSubcontrato(){
+    const items = ItemsObject.data
     let form = $("#guardarSubcontratoForm")
-    let datos = form.serialize()
-    print(typeof(datos))
-    // $.ajax({
-    //     type:form.attr("method"),
-    //     url:form.attr("action"),
-    //     data: datos,
-    //     dataType: "dataType",
-    //     success: function (response) {
-            
-    //     }
-    // });
+    let formData = form.serializeArray()
+    formData.push({"items":items})
+    console.log(formData)
+    $.ajax({
+        type:form.attr("method"),
+        url:form.attr("action"),
+        data: formData,
+        success: function(response) {
+            console.log("si ")
+        },
+        error: function(errors){
+            errores = errors.responseJSON["errores"]
+            console.log(errores)
+        }
+    });
 }
