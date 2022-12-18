@@ -8,7 +8,8 @@
     
 
 {% block estilos %}
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 <link href="{% static 'usuarios/gestion.css' %}" rel="stylesheet" />
 {% endblock estilos %}
 
@@ -499,13 +500,19 @@
           </div>
         </div>
     </div>
+   
 {% endblock modales %}
 
 
 {% block scripts %}
 <script src="{% static 'js/firma.js' %}"></script>
 <script src="{% static 'modSubcontratos/js/main.js' %}"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<!-- solucion de autofocus en los campos version mas antigua de jquery  -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- fin de la solucion fddfd -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/es.js"></script>
 <script>
     $(document).on('click', '#AddActa', function() {

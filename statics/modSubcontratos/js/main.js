@@ -1,6 +1,7 @@
   $(document).ready(function() {
     // elaborador
         $('#elaborador').select2({
+            theme: "bootstrap-5",
             language: "es",
             allowClear: true,
             ajax:{
@@ -46,6 +47,7 @@
         })
     // proyecto
     $('#proyecto').select2({
+            theme: "bootstrap-5",
             language: "es",
             allowClear: true,
             ajax:{
@@ -82,6 +84,7 @@
                     respuesta = JSON.parse(respuesta)
                     $('#centro_de_operaciones').empty().select2({
                         data:[{id:respuesta["id"], text:respuesta["id_proyecto"]}],
+                        theme: "bootstrap-5",
                         language: "es",
                         allowClear: true,
                         ajax:{
@@ -116,6 +119,7 @@
             });
         })
         $('#centro_de_operaciones').select2({
+            theme: "bootstrap-5",
             language: "es",
             allowClear: true,
             ajax:{
@@ -153,6 +157,7 @@
                     respuesta = JSON.parse(respuesta)
                     $('#proyecto').empty().select2({
                         data:[{id:respuesta["id"], text:respuesta["proyecto"]}],
+                        theme: "bootstrap-5",
                         language: "es",
                         allowClear: true,
                         ajax:{
@@ -184,6 +189,7 @@
         })
         // proveedor
         $('#nit').select2({
+            theme: "bootstrap-5",
             language: "es",
             allowClear: true,
             ajax:{
@@ -211,6 +217,7 @@
             minimumInputLength :1
         });
         $('#proveedor').select2({
+            theme: "bootstrap-5",
             language: "es",
             allowClear: true,
             ajax:{
@@ -247,6 +254,7 @@
                     respuesta = JSON.parse(respuesta)
                     $('#proveedor').empty().select2({
                         data:[{id:respuesta["id"], text:respuesta["proveedor"]}],
+                        theme: "bootstrap-5",
                         language: "es",
                         allowClear: true,
                         ajax:{
@@ -287,6 +295,7 @@
                     console.log(respuesta)
                     $('#nit').empty().select2({
                         data:[{id:respuesta["id"], text:respuesta["nit"]}],
+                        theme: "bootstrap-5",
                         language: "es",
                         allowClear: true,
                         ajax:{
@@ -318,6 +327,7 @@
         })
         //compañia
         $('#compania').select2({
+            theme: "bootstrap-5",
             language: "es",
             allowClear: true,
             ajax:{
@@ -346,6 +356,7 @@
         });
      //items
      $('#Codigo').select2({
+        theme: "bootstrap-5",
         language: "es",
         allowClear: true,
         ajax:{
@@ -373,7 +384,16 @@
         minimumInputLength :3,
         scrollAfterSelect:true
     });
-
+    // elaboradores
+    $('#validadores').select2({
+        language: "es",
+        theme: "bootstrap-5",
+        placeholder: "Seleccione a los validadores",
+        closeOnSelect: false,
+        allowClear: false,
+        width:"100%",
+        height:"100%"
+    });
 
 
 });
