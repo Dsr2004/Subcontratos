@@ -370,7 +370,7 @@
             }
         },
         placeholder: "Ingrese el codigo",
-        minimumInputLength :1,
+        minimumInputLength :3,
         scrollAfterSelect:true
     });
 
