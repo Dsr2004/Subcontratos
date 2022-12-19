@@ -47,6 +47,7 @@ def validar_itemsSubcontrato(item):
     return True
 class SubContratos(View):
     template_name = "crearSubcontratos.html"
+    # template_name = "subcontratos.html"
     
     def get(self, request, *args, **kwargs):
         ultimo_id = Subcontrato.objects.last()
