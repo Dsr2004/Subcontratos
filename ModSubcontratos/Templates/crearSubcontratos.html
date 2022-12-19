@@ -143,7 +143,7 @@
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                 <div class="row mt-4">
-                    <div class="col-3">
+                    <div class="col-3" id="impExcel">
                         <label for=""><strong>¿Importar desde un excel?</strong>  <sup class="campo_requerido">*</sup></label>
                         <div class="row">
                             <div class="col-6">
@@ -171,7 +171,7 @@
                     </div>
                 </div>
 
-                <div class="card mt-3 mb-5" style="padding: 10px;">
+                <div class="card mt-3 mb-5" style="padding: 10px;" id="card_it">
                     <h6>Items</h6>
                     
                     <table class="table text-center" id="tbl_items">
@@ -202,6 +202,21 @@
                         </tbody>
                     </table>
                 </div>
+
+                <div class="card mt-3 mb-5" style="padding: 10px; display: none;" id="card_subcap">
+                    <h6>Subcapitulos - Items</h6>
+                    
+                    <table class="table text-center" id="tbl_items">
+                        <thead>
+                            
+                        </thead>
+                        <tbody>
+                            
+                            
+                        </tbody>
+                    </table>
+                </div>
+    
     
                 <div class="row justify-content-between mb-5" id="contnorm">
                     <div class="col-4">
@@ -224,19 +239,20 @@
                         <!-- <button onclick="calcularSubtotal()">f</button> -->
                     </div>
                 </div>
+
                 <div class="row justify-content-between mb-5" id="contservice" style="display: none;">
                     <div class="col-4">
                         <label for=""><strong>Tarifa de IVA</strong> </label>
-                        <input type="number" class="form-control" id="tarifaiva">
+                        <input type="number" class="form-control mb-1" onchange="calcularIva(), CalcularT()" id="tarifaivaT" value="19">
     
                         <label for=""><strong>Porcentaje Administración</strong> </label>
-                        <input type="number" class="form-control" id="porcAdmin">
+                        <input type="number" class="form-control mb-1" onchange="CalcularAdmins(), CalcularT()" id="porcAdmin" value="0">
     
                         <label for=""><strong>Porcentaje Imprevistos</strong> </label>
-                        <input type="number" class="form-control" id="porcImpr">
+                        <input type="number" class="form-control mb-1" onchange="CalcularImprevist(), CalcularT()" id="porcImpr" value="0">
     
                         <label for=""><strong>Porcentaje Utilidad</strong> </label>
-                        <input type="number" class="form-control" id="porcUtil">
+                        <input type="number" class="form-control mb-1" onchange="CalcularUtilidad(), CalcularIvaUtilidad(), CalcularT()" id="porcUtil" value="0">
                     </div>
                     <div class="col-6">
                         <div class="row">
@@ -250,10 +266,13 @@
                                 <p class="calcampo">Total (Inc. IVA):</p>
                             </div>
                             <div class="col-6">
-                                <p id="subtot"></p>
-                                <p id="calciv"></p>
-                                <p id="calcIvu"></p>
-                                <p id="Tot"></p>
+                                <p id="subtot3">0</p>
+                                <p id="admin2">0</p>
+                                <p id="imprev2">0</p>
+                                <p id="util2">0</p>
+                                <p id="iv3">0</p>
+                                <p id="ivu2">0</p>
+                                <p id="Tot3">0</p>
                             </div>
                         </div>
                         <!-- <button onclick="calcularSubtotal()">f</button> -->
@@ -507,6 +526,7 @@
 <script src="{% static 'modSubcontratos/js/main.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/es.js"></script>
+<script src="{% static 'js/calculos.js' %}"></script>
 <script>
     $(document).on('click', '#AddActa', function() {
         $('#AddActa').modal('show');
@@ -524,6 +544,12 @@
 
         var contNo = document.getElementById("contnorm")
         var tipoTarf = document.getElementById("contservice")
+
+        var impExc = document.getElementById("impExcel")
+
+        var cardItems = document.getElementById("card_it")
+        var cardSubcap = document.getElementById("card_subcap")
+
         var value = selectObject.value;  
         
         if(value == "1.1"){
@@ -531,12 +557,18 @@
             selec.setAttribute('disabled', '')
             contNo.style.display = 'flex'
             tipoTarf.style.display = 'none'
+            impExc.style.display = 'block'
+            cardItems.style.display = 'flex'
+            cardSubcap.style.display = 'none'
         }
         else if(value == "1.2"){
             selec.value = "2"
             selec.setAttribute('disabled', '')
             contNo.style.display = 'flex'
             tipoTarf.style.display = 'none'
+            impExc.style.display = 'block'
+            cardItems.style.display = 'flex'
+            cardSubcap.style.display = 'none'
             
         }
         else if(value == "2"){
@@ -544,11 +576,17 @@
             selec.setAttribute('disabled', '')
             contNo.style.display = 'none'
             tipoTarf.style.display = 'flex'
+            impExc.style.display = 'block'
+            cardItems.style.display = 'flex'
+            cardSubcap.style.display = 'none'
         }
         else{
             selec.removeAttribute('disabled')
             contNo.style.display = 'none'
             tipoTarf.style.display = 'flex'
+            impExc.style.display = 'none'
+            cardItems.style.display = 'none'
+            cardSubcap.style.display = 'flex'
         }
     }
 
@@ -569,63 +607,7 @@
         }
     }
 
-    function calcularTotal(){
-        campoCantidad = document.getElementById("Cantidad").value
-        campoValorUnitario = document.getElementById("ValorUnitario").value
-
-        resultado = campoCantidad * campoValorUnitario
-
-        campoTotal = document.getElementById("ValorTotal")
-        campoTotal.value = resultado
-
-    }
-
     
-
-    function calcularSubtotal(){
-
-        const resume_table = document.getElementById("tbl_items");
-
-        const tableRows = document.querySelectorAll('#tbl_items tr.it_row');
-
-        let subt = document.getElementById("subtot");
-
-        let iva = document.getElementById("tarifaiva").value;
-
-        let con = parseFloat(iva)
-        let porc = (con / 100);
-
-        
-        for(let i = 0; i < tableRows.length; i++) {
-            const row = tableRows[i];
-
-            
-            const status = row.querySelector('.valTot');
-            let conversion= parseInt(status.innerHTML); 
-
-            
-
-            console.log(conversion)
-            // if(status === status){
-            //     console.log(status)
-            // }
-            // else{
-            //     // conversion 
-            //     let conversion= parseInt(status.innerHTML); 
-
-                            
-
-            //     let su = conversion++
-            //     let suma = conversion + conversion 
-            //     console.log(su);
-            // }
-            
-        
-            // Para modificar un estado:
-            status.innerText = valorTotal;
-        }
-    }
-
     
     var valorSubtotal = 0;
 
@@ -639,6 +621,7 @@
         let valorTotal = $("#ValorTotal").val();
 
         let subt = document.getElementById("subtot");
+        let subtt = document.getElementById("subtot3")
 
         if(cantidad > 0 && valorUnitario > 0 && valorTotal > 0){
             $('#tblItems').append(`
@@ -662,6 +645,7 @@
             valorSubtotal += con;
             
             subt.innerText = valorSubtotal
+            subtt.innerText = valorSubtotal
             // subt.innerText = ${parseInt(valorSubtotal) += parseInt(valorSubtotal)};
         }
         else{
@@ -675,31 +659,7 @@
 
     }
 
-    function calcularIva(){
-       
-        let iva = document.getElementById("tarifaiva").value
-        
-        let porcIva = parseFloat(iva) / 100
-        let ValorSubto = document.getElementById("subtot")
-        let conSubtot = parseFloat(ValorSubto.innerText)
-
-        let CalcIva = porcIva * conSubtot
-       
-
-        let campoIva = document.getElementById("calciv")
-        campoIva.innerHTML = CalcIva
-    }
-
-    function CalcularT(){
-        let ValorSubto = document.getElementById("subtot")
-        let campoIva = document.getElementById("calciv")
-
-        let total = document.getElementById("Tot")
-
-        let sum =  parseFloat(ValorSubto.innerText) + parseFloat(campoIva.innerText)
-        total.innerHTML = sum
-    }
-
+    
 
     
     
