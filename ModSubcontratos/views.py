@@ -51,9 +51,12 @@ class SubContratos(View):
     
     def get(self, request, *args, **kwargs):
         ultimo_id = Subcontrato.objects.last()
-        if ultimo_id:ultimo_id.pk+=1
-        else:ultimo_id=1
-        return render(request, self.template_name,{"ultimo_id":ultimo_id.pk, "form":SubcontratoForm()})
+        if ultimo_id:
+            ultimo_id.pk+=1
+            ultimo_id = ultimo_id.pk
+        else:
+            ultimo_id=1
+        return render(request, self.template_name,{"ultimo_id":ultimo_id, "form":SubcontratoForm()})
     
     def post(self, request, *args, **kwargs):
         try:
