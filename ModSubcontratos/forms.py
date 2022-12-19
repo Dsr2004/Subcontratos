@@ -1,5 +1,5 @@
 from django import forms
-from .models import Subcontrato
+from .models import Subcontrato, Item_Subcontrato
 
 class SubcontratoForm(forms.ModelForm):
     class Meta:
@@ -22,7 +22,8 @@ class SubcontratoForm(forms.ModelForm):
             "director_obra": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "gestor_contrato": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "correo_notificacion_proveedor": forms.EmailInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "validadores": forms.SelectMultiple(attrs={"class":"form-select","id":"validadores"}),
+            "validadores": forms.SelectMultiple(attrs={"class":"form-select", "id":"validadores"}),
+            "polizas": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "contrato": forms.FileInput(attrs={"class":"form-control form-control-sm", "autocomplete":"off"}),
             "polizas_garantias": forms.FileInput(attrs={"class":"form-control form-control-sm", "autocomplete":"off"}),
             "acta_inicio": forms.FileInput(attrs={"class":"form-control form-control-sm", "autocomplete":"off"}),
@@ -38,3 +39,16 @@ class SubcontratoForm(forms.ModelForm):
         self.fields['modificaciones_contractuales'].required = False
         self.fields['acta_recibo_final'].required = False
         self.fields['acta_liquidacion'].required = False
+        
+        self.fields['estado'].required = False
+        self.fields['tarifa_iva'].required = False
+        self.fields['porcentaje_administracion'].required = False
+        self.fields['porcentaje_imprevistos'].required = False
+        self.fields['porcentaje_utilidad'].required = False
+        self.fields['polizas'].required = False
+        
+        
+class Item_SubcontratoForm(forms.ModelForm):
+    class Meta:
+        model = Item_Subcontrato
+        fields = "__all__"

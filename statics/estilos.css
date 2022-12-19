@@ -330,8 +330,8 @@ body.dark .home .text{
 
 .error_text{
     font-size: 15px;
-    font-weight:600;
-    color: red;
+    font-weight:500;
+    color: rgb(220, 53, 69);
     margin-left: 10px;
 }
 /* fin de clases golabales para los campos de los formulario */
@@ -348,3 +348,16 @@ body.dark .home .text{
     margin-left: 20px !important;
 }
 /* fin de estilos de sweet alert */
+
+/* estilos para los iconos de errors pára las paginas de bootrap */
+#icon_danger_CONDICIONES,#icon_danger_ACTAS,#icon_danger_DOCUMENTOS{
+    color: red;
+}
+
+.mostrar_iconos{
+    display: block !important;
+}
+.ocultar_iconos{
+    display: none !important;
+}
+/* fin de los estilos para los iconos de errors pára las paginas de bootrap */

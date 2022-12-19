@@ -2,6 +2,7 @@
     // elaborador
         $('#elaborador').select2({
             theme: "bootstrap-5",
+            width:"100%",
             language: "es",
             allowClear: true,
             ajax:{
@@ -48,6 +49,7 @@
     // proyecto
     $('#proyecto').select2({
             theme: "bootstrap-5",
+            width:"100%",
             language: "es",
             allowClear: true,
             ajax:{
@@ -85,6 +87,7 @@
                     $('#centro_de_operaciones').empty().select2({
                         data:[{id:respuesta["id"], text:respuesta["id_proyecto"]}],
                         theme: "bootstrap-5",
+                        width:"100%",
                         language: "es",
                         allowClear: true,
                         ajax:{
@@ -120,6 +123,7 @@
         })
         $('#centro_de_operaciones').select2({
             theme: "bootstrap-5",
+            width:"100%",
             language: "es",
             allowClear: true,
             ajax:{
@@ -158,6 +162,7 @@
                     $('#proyecto').empty().select2({
                         data:[{id:respuesta["id"], text:respuesta["proyecto"]}],
                         theme: "bootstrap-5",
+                        width:"100%",
                         language: "es",
                         allowClear: true,
                         ajax:{
@@ -190,6 +195,7 @@
         // proveedor
         $('#nit').select2({
             theme: "bootstrap-5",
+            width:"100%",
             language: "es",
             allowClear: true,
             ajax:{
@@ -218,6 +224,7 @@
         });
         $('#proveedor').select2({
             theme: "bootstrap-5",
+            width:"100%",
             language: "es",
             allowClear: true,
             ajax:{
@@ -255,6 +262,7 @@
                     $('#proveedor').empty().select2({
                         data:[{id:respuesta["id"], text:respuesta["proveedor"]}],
                         theme: "bootstrap-5",
+                        width:"100%",
                         language: "es",
                         allowClear: true,
                         ajax:{
@@ -296,6 +304,7 @@
                     $('#nit').empty().select2({
                         data:[{id:respuesta["id"], text:respuesta["nit"]}],
                         theme: "bootstrap-5",
+                        width:"100%",
                         language: "es",
                         allowClear: true,
                         ajax:{
@@ -328,6 +337,7 @@
         //compañia
         $('#compania').select2({
             theme: "bootstrap-5",
+            width:"100%",
             language: "es",
             allowClear: true,
             ajax:{
@@ -357,6 +367,7 @@
      //items
      $('#Codigo').select2({
         theme: "bootstrap-5",
+        width:"100%",
         language: "es",
         allowClear: true,
         ajax:{
@@ -388,6 +399,7 @@
     $('#validadores').select2({
         language: "es",
         theme: "bootstrap-5",
+        width:"100%",
         placeholder: "Seleccione a los validadores",
         closeOnSelect: false,
         allowClear: false,
@@ -402,18 +414,41 @@
 function guardarSubcontrato(){
     const items = ItemsObject.data
     let form = $("#guardarSubcontratoForm")
-    let formData = form.serializeArray()
-    formData.push({"items":items})
+
+    $("#slec").prop("disabled", false)
+    let tipo_orden = $("#slec").val()
+    $("#slec").prop("disabled", true)
+    console.log()
+    if ($('#comboA').val() == "3"){
+        $("#slec").prop("disabled", false)
+    }
+
+    let formData = new FormData(document.getElementById("guardarSubcontratoForm"));
+    formData.append("items",items)
+    formData.append("tipo_orden",tipo_orden)
     console.log(formData)
     $.ajax({
         type:form.attr("method"),
         url:form.attr("action"),
+        processData: false,
+        contentType: false,
         data: formData,
         success: function(response) {
+            form.find('.error_text').text('');
+            form.find('.is-invalid').removeClass('is-invalid');
             console.log("si ")
         },
         error: function(errors){
             errores = errors.responseJSON["errores"]
+            form.find('.error_text').text('');
+            form.find('.is-invalid').removeClass('is-invalid');
+            for (let i in errores){
+                let x=form.find('input[name='+i+']')
+                let y=form.find('select[name='+i+']')
+                x.addClass("is-invalid")
+                y.addClass("is-invalid")
+                $("#P_"+i).text(errores[i])
+            }
             console.log(errores)
         }
     });

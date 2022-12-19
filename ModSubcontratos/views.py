@@ -2,18 +2,57 @@ import pandas as pd
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import View
 from django.shortcuts import render
+from django.db import transaction
+from django.http import QueryDict
 from .models import *
-from .forms import SubcontratoForm
+from .forms import SubcontratoForm, Item_SubcontratoForm
 
-# Create your views here.
+def validar_itemsSubcontrato(item):
+    if not item["subcontrato"]:
+        return {"subcontrato":"No hay un subcontrato en la lista."}
+    
+    if not item["item_codigo"]:
+        return {"item_codigo":"No hay un codigo en la lista."}
+    
+    if not item["item_nombre"]:
+        return {"item_nombre":"No hay un item en la lista."}
+    
+    if not item["descripcion"]:
+        return {"descripcion":"No hay una descripción en la lista."}
+    
+    if not item["unidad"]:
+        return {"unidad":"No hay un unidad en la lista."}
+    
+    if not item["cantidad"]:
+        return {"cantidad":"No hay un cantidad en la lista."}
+    
+    if not item["valor_unitario"]:
+        return {"valor_unitario":"No hay un valor unitario en la lista."}
+    
+    try:
+        Item.objects.get(codigo=item["item_codigo"])
+    except:
+        return {"item_codigo":"No ay un item con este codigo {codigo}} en la base de datos".format(codigo=item['item_codigo'])}
+    
+    try:
+        x = int(item["cantidad"])
+    except:
+        return {"cantidad":"Una cantidad no es un numero"}
+    
+    try:
+       x = int(item["valor_unitario"])
+    except:
+        return {"valor_unitario":"Un valor unitario no es un numero"}
+        
+    return True
 class SubContratos(View):
     template_name = "crearSubcontratos.html"
     
     def get(self, request, *args, **kwargs):
         ultimo_id = Subcontrato.objects.last()
-        if ultimo_id:ultimo_id+=1
+        if ultimo_id:ultimo_id.pk+=1
         else:ultimo_id=1
-        return render(request, self.template_name,{"ultimo_id":ultimo_id, "form":SubcontratoForm()})
+        return render(request, self.template_name,{"ultimo_id":ultimo_id.pk, "form":SubcontratoForm()})
     
     def post(self, request, *args, **kwargs):
         try:
@@ -88,15 +127,43 @@ class GuardarSubcontrato(View):
     
     def post(self, request, *args, **kwargs):
         print(request.POST)
-        if request.POST.get("impo")=="si":
-            file = request.FILES["excelItems"]
-            if file:
-                df = pd.read_excel(file)
-                print(df)
         form = self.form_class(request.POST)
         if form.is_valid():
-            print("yes")
+            if request.POST.get("impo")=="si":
+                print(request.FILES)  
+                
+            try:
+                with transaction.atomic():
+                    subcontrato = form.save()
+                    print("el subcontratos es", subcontrato.pk)
+                    if request.POST.get("impo")=="si":
+                        file = request.FILES["excelItems"]
+                        print("adfds", file)
+                        if file:
+                            df = pd.read_excel(file)
+                            for index, row in df.iterrows():
+                                data = {"subcontrato":subcontrato.pk,
+                                        "item_codigo":row["Código ITEM"],
+                                        "item_nombre":row["Item"],
+                                        "descripcion":row["Descripción"],
+                                        "unidad":row["Unidad"],
+                                        "cantidad":row["Cantidad"],
+                                        "valor_unitario":row["Valor Unitario"]}
+                                if validar_itemsSubcontrato(data) == True:
+                                    formItemSubcon = Item_Subcontrato.objects.create(subcontrato=subcontrato,
+                                            item_codigo=Item.objects.get(codigo=row["Código ITEM"]),
+                                            item_nombre=row["Item"],
+                                            descripcion=row["Descripción"],
+                                            unidad=row["Unidad"],
+                                            cantidad=row["Cantidad"],
+                                            valor_unitario=row["Valor Unitario"]
+                                            )
+                                else:
+                                    print("validacionws: ",validar_itemsSubcontrato)
+            except Exception as e:
+                print("hubo un error ",e)
             return HttpResponse(request.POST)
         else:
+            print(form.errors)
             return JsonResponse({"errores":form.errors}, status=400) 
         

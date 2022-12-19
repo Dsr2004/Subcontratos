@@ -167,8 +167,9 @@ class Subcontrato(models.Model):
     director_obra = models.CharField(max_length=250)
     gestor_contrato = models.CharField(max_length=250)
     correo_notificacion_proveedor = models.EmailField()
-    validadores = MultiSelectField(max_length=20, choices=VALIDADORES)
+    validadores = MultiSelectField(max_length=150, choices=VALIDADORES)
     polizas = models.ManyToManyField(Poliza)
+    
     contrato = models.FileField(upload_to=guardar_contrato, validators = [validar_extencion_archivo])
     polizas_garantias = models.FileField(upload_to=guardar_polizas_garantias, validators = [validar_extencion_archivo])
     acta_inicio = models.FileField(upload_to=guardar_acta_inicio, validators = [validar_extencion_archivo])
@@ -179,3 +180,21 @@ class Subcontrato(models.Model):
 
     class Meta:
         db_table = "subcontratos"
+    
+
+class Item_Subcontrato(models.Model):
+        subcontrato = models.ForeignKey(Subcontrato, on_delete=models.CASCADE)
+        item_codigo = models.ForeignKey(Item, on_delete=models.CASCADE)
+        item_nombre = models.CharField(max_length=150)
+        descripcion = models.TextField()
+        unidad = models.CharField(max_length=150)
+        cantidad = models.IntegerField()
+        valor_unitario = models.IntegerField()
+        
+        class Meta:
+            db_table = "items_subcontrato"
+        
+        @property
+        def get_total(self):
+            return str(self.cantidad*self.valor_unitario)
+    

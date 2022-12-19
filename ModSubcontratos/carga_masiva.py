@@ -69,6 +69,7 @@ def cargar_items():
     df = pd.read_excel(excel)
     
     for index, row in df.iterrows():
+    
         item, creado = Item.objects.get_or_create(
             id_cia = row["f120_id_cia"],
             codigo = row["f120_rowid"],
