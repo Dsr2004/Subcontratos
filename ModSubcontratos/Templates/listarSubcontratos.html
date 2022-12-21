@@ -1,0 +1,250 @@
+{% extends "side.html" %}
+{% load static %}
+
+
+{% block titulo %}
+    Listado de Subcontratos
+{% endblock titulo %}
+
+
+{% block estilos %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css"> 
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.dataTables.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.15/dist/sweetalert2.css">
+{% endblock estilos %}
+    
+
+{% block contenido %} 
+
+<style>
+
+    #encabezado{
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+    }
+    #encabezado .colm2{
+        display: flex;
+        justify-content: end;
+    }
+    .add{
+        background-color: #78bb50;
+        font-weight: 600;
+        color: white;
+    }
+    .add:hover{
+        background-color: #78bb50;
+        font-weight: 600;
+        color: black;
+    }
+
+</style>
+<div class="row mb-4 mt-2" id="encabezado">
+    <div class="col-6">
+        <h3><strong>Subcontratos registrados</strong></h3>
+    </div>
+    <div class="col-6 colm2">
+        <!-- Button trigger modal -->
+        <a type="button" href="{% url 'subcontratos' %}" class="btn add">
+            <i class='bx bx-plus'></i> Nuevo subcontrato
+        </a>
+    </div>
+</div>
+
+<table class="table table-striped" id="listarUsuarios"  width="100%">
+    <thead>
+      <tr style="font-size: 14px;">
+        <th scope="col">Consecutivo</th>
+        <th scope="col">Tipo de contrato</th>
+        <th scope="col">Elaborador</th>
+        <th scope="col">Nit</th>
+        <th scope="col">Proveedor</th>
+        <th scope="col">Fecha de inicio</th>
+        <th scope="col">Fecha de vencimiento</th>
+        <th scope="col">Detalles</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr style="font-size: 13px;">
+            <td>Subcontrato-1</td>
+            <td>1.1 Contratos con IVA pleno suministros</td>
+            <td>Lambda analytics</td>
+            <td>0604224</td>
+            <td>GOOD INSPECTION LTDA</td>
+            <td>01/12/2022</td>
+            <td>27/12/2022</td>
+            <td>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <i class="fa-solid fa-eye"></i>
+                </button>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Detalles del subontrato: 1</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                        ...
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <button class="btn btn-outline-primary btn-sm"><a href="{% url 'modificarSubcontrato' %}"> <i class="fa-solid fa-pen-to-square"></i></a></button>
+                <button class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
+                <!-- <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-outline-primary"><i class='bx bx-edit'></i></button>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-check form-switch">
+                            <button class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div> -->
+            </td>
+        </tr>
+      
+      {% for usuario in usuarios  %}
+      <tr>
+        <th scope="row">{{forloop.counter}}</th>
+        <td>{{usuario.usuario}}</td>
+        <td>{{usuario}}</td>
+        <td>{{usuario.correo}}</td>
+        {% if usuario.rol %}
+            <td>{{usuario.rol}}</td>
+        {% else %}
+            <td>Sin Rol</td>
+        {% endif %}
+            
+        {% if usuario.estado %}
+            <td><span class="badge bg-success">Activo</span></td>
+        {% else %}
+            <td><span class="badge bg-danger">Inactivo</span></td>
+        {% endif %}
+        <td>
+            <div class="row">
+                <div class="col-6">
+                    <!-- <button onclick="abrirModalModificarUsuario('{%url 'modificarUsuario' usuario.pk %}')" class="btn btn-outline-primary"><i class='bx bx-edit'></i></button> -->
+                </div>
+                <div class="col-6">
+                    <div class="form-check form-switch">
+                        <!-- <input class="form-check-input" type="checkbox" role="switch" onclick="actualizarEstadoUsuario('{%url 'modificarEstadoUsuario'%}', '{{usuario.pk}}')"  {% if usuario.estado %}checked{% endif %}> -->
+                      </div>
+                </div>
+            </div>
+        </td>
+      </tr>
+      {% endfor %}
+        
+    </tbody>
+  </table>
+
+  
+
+
+{% endblock contenido %} 
+
+
+{% block scripts %}
+    <script src="{% static 'usuarios/main.js' %}"></script>
+
+  
+  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script><script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+        $('#listarUsuarios').DataTable({
+            "language": {
+                "lengthMenu": "Mostrar " + `<select class="custom-select custom-select-sm form-control form-control-sm">
+                                <option value='5'>5</option>
+                                <option value='10'>10</option>
+                                <option value='25'>25</option>
+                                <option value='-1'>Todos</option>
+                    </select>` + " registros por página",
+                "zeroRecords": "No hay nada - perdón",
+                "info": "Mostrando pagina _PAGE_ de _PAGES_",
+                "infoEmpty": "No hay registros disponibles",
+                "infoFiltered": "(filtrado desde _MAX_ registros totales)",
+                "search": `<button class='btn btn-dark btn-sm'>Buscar</button>`,
+                "paginate":{
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+            responsive: true
+        });
+    });
+  </script>
+{% endblock scripts %}
+    
+
+
+
+{% block modales %}
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="height: 98%;">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"><strong>Registro de Usuarios</strong></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'crearUsuario' %}" method="post" id="registroUsuarioForm">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-6">
+                            <label><strong>Nombres</strong> <sup class="campo_requerido">*</sup></label>
+                            {{form.nombres}}
+                            <p id="nombres" class="error_text"></p>
+                        </div>
+                        <div class="col-6">
+                            <label><strong>Apellidos</strong> <sup class="campo_requerido">*</sup></label>
+                            {{form.apellidos}}
+                            <p id="apellidos" class="error_text"></p>
+                        </div>
+                    </div>
+                    
+                    <label><strong>Nombre de usuario</strong> <sup class="campo_requerido">*</sup></label>
+                    {{form.usuario}}
+                    <p id="usuario" class="error_text"></p>
+
+                    <label><strong>Cedula(Esta será la contraseña provisional)</strong> <sup class="campo_requerido">*</sup></label>
+                    {{form.cedula}}
+                    <p id="cedula" class="error_text"></p>
+
+                    <label><strong>Correo electronico</strong> <sup class="campo_requerido">*</sup></label>
+                    {{form.correo}}
+                    <p id="correo" class="error_text"></p>
+                    
+                    <label><strong>Rol de usuario</strong> <sup class="campo_requerido">*</sup></label>
+                    {{form.rol}}
+                    <p id="rol" class="error_text"></p>
+                </form>      
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class='bx bx-x'></i> Cerrar</button>
+            <button type="button" class="btn btn-success" onclick="guardarUsuario()"><i class='bx bx-save'></i> Guardar Usuario</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modificarUsuarioModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"  style="height: 98%;">
+
+    </div>
+{% endblock modales %}

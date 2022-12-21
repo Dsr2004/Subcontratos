@@ -18,23 +18,44 @@
 
 <div class="row mb-4 mt-2" id="encabezado">
     <div class="col-12">
-        <h3><strong>Cambiar Contraseña</strong></h3>
+        <h3 class="camb_contr" style="font-weight: 600;">Cambiar Contraseña</h3>
+        <p>Una constraseña segura contribuye a evitar el acceso no autorizado a su cuenta</p>
         <hr>
         <div class="divPasswords">
             <form action="{% url 'cambiarContrasena' %}" method="post" id="cambiarPass">
                 {% csrf_token %}
                 <Label><strong>Contraseña Antigua: <sup class="campo_requerido">*</sup></strong></Label>
-                {{form.passwordA}}
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
+                    {{form.passwordA}}
+                </div>
                 <p id="passwordA" class="bg-light text-danger" style="color: #dc3545;"></p>
                 <br>
+
                 <Label><strong>Contraseña Nueva: <sup class="campo_requerido">*</sup></strong></Label>
-                {{form.password}}
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
+                    {{form.password}}
+                </div>
                 <p id="password" class="bg-light text-danger" style="color: #dc3545;"></p>
                 <br>
+
                 <Label><strong>Confirmar Contraseña: <sup class="campo_requerido">*</sup></strong></Label>
-                {{form.password2}}
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
+                    {{form.password2}}
+                </div>
                 <p id="passwordC" class="bg-light text-danger" style="color: #dc3545;"></p>
-                <button class="btn btn-success w-100" id="CambiarContrasenaButton" type="button">Enviar</button>
+
+                <div class="row" style="margin-top: 35px;">
+                    <div class="col-6">
+                        <button class="btn w-100" style="background-color: #78bb50; color: white;" id="CambiarContrasenaButton" type="button">Enviar &nbsp; <i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                    <div class="col-6">
+                        <a href="{% url 'miCuenta' request.user.id %}" class="btn w-100" style="background-color: #cbcbcb;" type="button">Cancelar  &nbsp; <i class="fa-solid fa-xmark"></i></a>
+                    </div>
+                </div>
+                
             </form>
         </div>
     </div>
