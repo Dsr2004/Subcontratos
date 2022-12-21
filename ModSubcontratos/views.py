@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import timedelta
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import View
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.db import transaction
 from django.views.generic import View, ListView, CreateView, UpdateView
@@ -54,7 +54,6 @@ def validar_itemsSubcontrato(item ,tipo):
 
 class SubContratos(View):
     template_name = "crearSubcontratos.html"
-    # template_name = "subcontratos.html"
     
     def get(self, request, *args, **kwargs):
         ultimo_id = Subcontrato.objects.last()
@@ -231,7 +230,7 @@ class GuardarSubcontrato(View):
                 print("hubo un error al crear el subcontrato",e)
                 return JsonResponse({"errores":e, "tipo":"general"}, status=400)
       
-            return HttpResponse(request.POST)
+            return redirect("listsubcontratos")
         else:
             return JsonResponse({"errores":form.errors}, status=400) 
 
