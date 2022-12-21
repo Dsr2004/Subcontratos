@@ -108,6 +108,8 @@ function SignaturePad(canvas, options) {
 	this.on();
 }
 
+
+
 SignaturePad.prototype.clear = function () {
 	var ctx = this._ctx;
 	var canvas = this._canvas;

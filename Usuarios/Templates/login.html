@@ -62,12 +62,13 @@
     <!-- INCLUDES -->
     {% include 'modales/informativo.html' %}
  
-    {% for message in messages %}
-        {% if message.tags == 'info' %}
+    {% for messag in messages %}
+        {% if messag.tags == 'info' %}
             <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
             <script>
                 $(document).ready(function() {
-                    $("#modalInformativo").modal("show")
+                    // $("#modalInformativo").modal("show")
+                    console.log("fgfg")
                 });
             </script>
         {% endif %}
