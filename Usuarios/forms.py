@@ -35,6 +35,7 @@ class CambiarContrasena(forms.ModelForm):
             'requerid':'requerid',
             'name':'passwordC',
             "class":"form-control",
+            'placeholder':'Vuelve a escribir la contraseña'
         }
     ))
     passwordA = forms.CharField(label="Contraseña antigua",widget=forms.PasswordInput(
@@ -43,6 +44,7 @@ class CambiarContrasena(forms.ModelForm):
             'requerid':'requerid',
             'name':'passwordA',
             "class":"form-control",
+            'placeholder':'Ingrese la contraseña actual'
         }
     ))
     
@@ -51,7 +53,7 @@ class CambiarContrasena(forms.ModelForm):
         
         fields=['password']
         widgets={
-            'password': forms.PasswordInput(attrs={'class': 'form-control', "autocomplete": "off",'id':"password",'requerid':'requerid','name':'password',}),
+            'password': forms.PasswordInput(attrs={'class': 'form-control', "autocomplete": "off",'id':"password",'requerid':'requerid','name':'password', 'placeholder': 'Ingrese la nueva contraseña'}),
         }
     def clean_password2(self):
         password1 = self.cleaned_data.get('password')

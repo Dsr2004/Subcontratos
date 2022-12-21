@@ -63,7 +63,14 @@
             
         }
         .auth{
-            margin-left: 10px;
+            margin-left: 18px;
+        }
+
+        #CambiarContrasenaButton{
+            margin-top: 10px;
+            background-color: #78bb50;
+            color: white;
+            border-radius: 20px;
         }
     </style>
     <h4>Mi cuenta</h4>
@@ -119,20 +126,34 @@
                 {% endif %}
                 
                 <p id="rol" class="error_text"></p>
+
+                <button class="btn btn-primary"><i class="fa-solid fa-arrows-rotate"></i> Modificar</button>
             </form>  
         </div>
         <div class="separador">
             <center><hr style="width: 95%;"></center>
         </div>
         
-        <div class="row">
+        <div class="row mb-4">
             <h5 class="auth">Contraseña y autenticación</h5>
-            <p></p>
-            
+            <div class="row" style="margin-left: 12px;">
+                <div class="col-4">
+                    <p>Esta secciónte permite modificar tu contraseña, simplemente ingresando tu contraseña antigua e ingresando la nueva y una confirmación de la misma</p>
+                </div>
+            </div>
+            <div class="row" style="margin-left: 12px;">
+                <div class="col-4">
+                    <!-- Button trigger modal -->
+                    <a type="button" href="{% url 'cambiarContrasena' %}" class="btn btn-dark">
+                        Cambiar contraseña
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock contenido %} 
 
 
 {% block scripts %}
+
 {% endblock scripts %}
