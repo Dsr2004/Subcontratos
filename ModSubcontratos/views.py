@@ -1,10 +1,9 @@
 import pandas as pd
 from django.http import HttpResponse, JsonResponse
-from django.views.generic import View
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.db import transaction
-from django.views.generic import View, ListView, CreateView, UpdateView
+from django.views.generic import View, ListView, CreateView, UpdateView, TemplateView
 from django.http import QueryDict
 from .models import *
 from .forms import SubcontratoForm, Item_SubcontratoForm
@@ -47,7 +46,6 @@ def validar_itemsSubcontrato(item):
         return {"valor_unitario":"Un valor unitario no es un numero"}
         
     return True
-
 class SubContratos(View):
     template_name = "crearSubcontratos.html"
     
@@ -59,7 +57,6 @@ class SubContratos(View):
         else:
             ultimo_id=1
         return render(request, self.template_name,{"ultimo_id":ultimo_id, "form":SubcontratoForm()})
-        
     
     def post(self, request, *args, **kwargs):
         try:
@@ -127,8 +124,6 @@ class SubContratos(View):
         except Exception as e:
             print(str(e))
             return JsonResponse({"error":str(e)}, status = 400)
-
-    
 class GuardarSubcontrato(View):
     template_name = "crearSubcontratos.html"
     form_class = SubcontratoForm
@@ -175,31 +170,10 @@ class GuardarSubcontrato(View):
             print(form.errors)
             return JsonResponse({"errores":form.errors}, status=400) 
 
-
 class ListarSubcontratos(ListView):
-    model = Subcontrato
     template_name = "listarSubcontratos.html"
+    model = Subcontrato
     context_object_name = "subcontratos"
-    
-    # def get_queryset(self):
-    #     queryset = self.model.objects.exclude(pk=self.request.user.pk)
-    #     queryset = queryset.order_by("id")
-    #     return queryset
-        
-    # def get_context_data(self):
-    #     contexto = super().get_context_data()
-    #     contexto["form"] = UsuarioForm
-    #     return contexto
 
-class ModificarSubcontrato(View):   
-    def get(self, request, *args, **kwargs):
-        template_name = "modificarSubcontrato.html"
-        return render(request, template_name)
-
-    
-    # form_class = SubcontratoForm
-    # success_url = reverse_lazy("Listsubcontratos")
-    
-    # def form_invalid(self, form):
-    #     print(form.errors)
-    #     return JsonResponse({"errores":form.errors}, status=400)
+class ModificarSubcontrato(TemplateView):
+    template_name = "listarSubcontratos.html"

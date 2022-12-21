@@ -67,54 +67,57 @@
       </tr>
     </thead>
     <tbody>
-        <tr style="font-size: 13px;">
-            <td>Subcontrato-1</td>
-            <td>1.1 Contratos con IVA pleno suministros</td>
-            <td>Lambda analytics</td>
-            <td>0604224</td>
-            <td>GOOD INSPECTION LTDA</td>
-            <td>01/12/2022</td>
-            <td>27/12/2022</td>
-            <td>
-                <!-- Button trigger modal -->
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    <i class="fa-solid fa-eye"></i>
-                </button>
-                
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Detalles del subontrato: 1</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <tr>
+            {% for subcontrato in subcontratos %}
+                <td>{{subcontrato.pk}}</td>
+                <td>{{subcontrato.tipo_contrato}}</td>
+                <td>{{subcontrato.elaborador}}</td>
+                <td>{{subcontrato.proveedor.nit}}</td>
+                <td>{{subcontrato.proveedor}}</td>
+                <td>{{subcontrato.fecha_inicio_contrato}}</td>
+                <td>{{subcontrato.fecha_vencimiento_contrato}}</td>
+                <td>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Detalles del subontrato: 1</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                            ...
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
                         </div>
-                        <div class="modal-body">
-                        ...
-                        </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-            </td>
-            <td>
-                <button class="btn btn-outline-primary btn-sm"><a href="{% url 'modificarSubcontrato' %}"> <i class="fa-solid fa-pen-to-square"></i></a></button>
-                <button class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
-                <!-- <div class="row">
-                    <div class="col-6">
-                        <button class="btn btn-outline-primary"><i class='bx bx-edit'></i></button>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-check form-switch">
-                            <button class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
-                </div> -->
-            </td>
+                </td>
+                <td>
+                    <button class="btn btn-outline-primary btn-sm"><a href="{% url 'modificarSubcontrato' %}"> <i class="fa-solid fa-pen-to-square"></i></a></button>
+                    <button class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
+                    <!-- <div class="row">
+                        <div class="col-6">
+                            <button class="btn btn-outline-primary"><i class='bx bx-edit'></i></button>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-check form-switch">
+                                <button class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div> -->
+                </td>
+            {% endfor %}
         </tr>
+          
       
       {% for usuario in usuarios  %}
       <tr>
