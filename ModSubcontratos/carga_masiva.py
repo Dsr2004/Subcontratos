@@ -3,9 +3,9 @@ import os
 from .models import Nomina ,Centro_Operacion ,Compania ,Proveedor, Item
 from django.conf import settings
 from django.shortcuts import redirect
+import sys
 
 BASE_DIR = settings.BASE_DIR
-
 
 def cargar_Nomina():
     Nomina.objects.all().delete()
@@ -81,9 +81,9 @@ def cargar_items():
 
 
 def carga_masiva(request):
-    # cargar_Nomina()
-    # cargar_Centro_Operacion()
-    # cargar_compania()
-    # cargar_proveedores()
+    cargar_Nomina()
+    cargar_Centro_Operacion()
+    cargar_compania()
+    cargar_proveedores()
     cargar_items()
     return redirect("manageuser")
