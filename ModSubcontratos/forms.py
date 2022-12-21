@@ -1,5 +1,5 @@
 from django import forms
-from .models import Subcontrato, Item_Subcontrato
+from .models import Subcontrato, Item_Subcontrato,Poliza
 
 class SubcontratoForm(forms.ModelForm):
     class Meta:
@@ -46,9 +46,35 @@ class SubcontratoForm(forms.ModelForm):
         self.fields['porcentaje_imprevistos'].required = False
         self.fields['porcentaje_utilidad'].required = False
         self.fields['polizas'].required = False
+        self.fields['proximo_envio_correo'].required = False
+        
+    def clean_fecha_inicio_contrato(self):    
+        self.fechaInicioContrato = self.cleaned_data['fecha_inicio_contrato']
+        return self.fechaInicioContrato
+        
+    def clean_fecha_vencimiento_contrato(self):    
+        fecha = self.cleaned_data['fecha_vencimiento_contrato']
+        try:
+            inicio = self.fechaInicioContrato
+        except:
+            inicio = False
+        if inicio != False:
+            if fecha <= self.fechaInicioContrato:
+                raise forms.ValidationError('Esta fecha deber ser mayor a la fecha del inicio del contrato.')
+            
+        return fecha
         
         
 class Item_SubcontratoForm(forms.ModelForm):
     class Meta:
         model = Item_Subcontrato
         fields = "__all__"
+        
+class PolizaForm(forms.ModelForm):
+    class Meta:
+        model = Poliza
+        fields = "__all__"
+        widgets = {
+            "tipo_poliza":forms.Select(attrs={"class":"form-select"}),
+            "aseguradora":forms.Select(attrs={"class":"form-select"})
+        }

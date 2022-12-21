@@ -116,11 +116,19 @@ VALIDADORES = (
     ("Seguros", "Seguros"),
     
 )
+
+ESTADO_SUBCONTRATO = (
+    ("1", "En ejecución"),
+    ("2", "No ejecutado"),
+    ("3", "Suspendido"),
+    ("4", "Liquidado"),
+)
 def extension(file):
         name, extension = os.path.splitext(file)
         return extension
     
 def guardar_contrato(instance, filename):
+    print("guado contrato y algo mas")
     return  f"Subcontratos/{instance.proveedor.nit}-{instance.numero_orden}/contrato{extension(filename)}"
 def guardar_polizas_garantias(instance, filename):
     return  f"Subcontratos/{instance.proveedor.nit}-{instance.numero_orden}/polizas_garantias{extension(filename)}"
@@ -142,11 +150,14 @@ def validar_extencion_archivo(value):
 class Poliza(models.Model):
     tipo_poliza = models.CharField(max_length=23)
     numero_poliza = models.CharField(max_length=100)
-    aseguradora = models.CharField(max_length=34)
+    aseguradora = models.CharField(max_length=34, choices=ASEGURADORAS)
     fecha_vencimiento = models.DateField()
     
     class Meta:
         db_table = "polizas"
+        
+    def __str__(self):
+        return f"Poliza del subcontrato {self.subcontrato_set.all()[0].pk}"
     
      
 class Subcontrato(models.Model):
@@ -176,10 +187,16 @@ class Subcontrato(models.Model):
     modificaciones_contractuales = models.FileField(upload_to=guardar_modificaciones_contractuales, validators = [validar_extencion_archivo])
     acta_recibo_final = models.FileField(upload_to=guardar_acta_recibo_final, validators = [validar_extencion_archivo])
     acta_liquidacion = models.FileField(upload_to=guardar_acta_liquidacion, validators = [validar_extencion_archivo])
-    estado = models.CharField(max_length=250, default="En ejecución")
+    estado = models.CharField(max_length=30, choices=ESTADO_SUBCONTRATO)
+
+    fecha_creacion = models.DateField(auto_now_add=True)
+    proximo_envio_correo = models.DateField(null=True, blank=True)
 
     class Meta:
         db_table = "subcontratos"
+        
+    def __str__(self):
+        return f"Subcontrato {self.pk}"
     
 
 class Item_Subcontrato(models.Model):
@@ -193,6 +210,9 @@ class Item_Subcontrato(models.Model):
         
         class Meta:
             db_table = "items_subcontrato"
+            
+        def __str__(self):
+            return f"Item del subcontrato {self.subcontrato.pk}"
         
         @property
         def get_total(self):
