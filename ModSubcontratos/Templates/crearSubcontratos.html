@@ -183,14 +183,40 @@
                                 <th>Valor total</th>
                             </tr>
                             <tr onchange="calcularTotal()">
-                                <td><select type="text" class="form-control" id="Codigo"></select></td>
-                                <td><input type="text" class="form-control" id="Item"></td>
-                                <td><input type="text" class="form-control" id="Descripcion"></td>
-                                <td><input type="text" class="form-control" id="Unidad"></td>
-                                <td><input type="number" class="form-control" id="Cantidad"></td>
-                                <td><input type="number" class="form-control" id="ValorUnitario"></td>
-                                <td><input type="text" class="form-control" id="ValorTotal" readonly></td>
-                                <td><button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarItems(), calcularIva(), CalcularT()"><strong><i class='bx bx-plus'></i></strong> </button></td>
+                               <form id="ItemsSubcontratoForm">
+                                    <td>
+                                        <select type="text" class="form-control" id="Codigo"></select>
+                                        <p class="error_text" id="I_codigo"></p>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" id="Item">
+                                        <p class="error_text" id="I_item"></p>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" id="Descripcion">
+                                        <p class="error_text" id="I_descripcion"></p>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" id="Unidad">
+                                        <p class="error_text" id="I_unidad"></p>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" id="Cantidad">
+                                        <p class="error_text" id="I_cantidad"></p>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" id="ValorUnitario">
+                                        <p class="error_text" id="I_valorU"></p>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" id="ValorTotal" readonly>
+                                        <p></p>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarItems(), calcularIva(), CalcularT()"><strong><i class='bx bx-plus'></i></strong> </button>
+                                        <p></p>
+                                    </td>
+                               </form>
                             </tr>
                         </thead>
                         <tbody id="tblItems">
@@ -643,7 +669,7 @@
 
             
 
-            console.log(conversion)
+            // console.log(conversion)
             // if(status === status){
             //     console.log(status)
             // }
@@ -671,6 +697,9 @@
     var valorSubtotal = 0;
 
     function AgregarItems(){
+        $("#tbl_items").find('.error_text').text('');
+        $("#tbl_items").find(".is-invalid").removeClass('is-invalid');
+
         let codigo = $("#Codigo").val();
         let item = $("#Item").val();
         let descripcion = $("#Descripcion").val();
@@ -681,6 +710,26 @@
 
         let subt = document.getElementById("subtot");
         let subtt = document.getElementById("subtot3")
+
+        if(codigo == "" || codigo == null){
+            $("#Codigo").addClass("is-invalid")
+            $("#I_codigo").text("Este campo es requerido")
+        }else if(item == "" || item == null){
+            $("#Item").addClass("is-invalid")
+            $("#I_item").text("Este campo es requerido")
+        }else if(descripcion == "" || descripcion == null){
+            $("#Descripcion").addClass("is-invalid")
+            $("#I_descripcion").text("Este campo es requerido")
+        }else if(unidad == "" || unidad == null){
+            $("#Unidad").addClass("is-invalid")
+            $("#I_unidad").text("Este campo es requerido")
+        }else if(cantidad == "" || cantidad == null){
+            $("#Cantidad").addClass("is-invalid")
+            $("#I_cantidad").text("Este campo es requerido")
+        }else if(valorUnitario == "" || valorUnitario == null){
+            $("#ValorUnitario").addClass("is-invalid")
+            $("#I_valorU").text("Este campo es requerido")
+        }
 
         if(cantidad > 0 && valorUnitario > 0 && valorTotal > 0){
             $('#tblItems').append(`
@@ -700,7 +749,7 @@
                 </td>    
             </tr>
         `)
-        ItemsObject.data.push({
+        ItemsObject.data.push({ 
             codigo:codigo,
             data:{
                 codigo:codigo,
@@ -712,26 +761,39 @@
                 valorTotal:valorTotal
             }
         })
-        console.log(ItemsObject)
-
             let con = parseInt(valorTotal)
             valorSubtotal += con;
             
             subt.innerText = valorSubtotal
             subtt.innerText = valorSubtotal
             // subt.innerText = ${parseInt(valorSubtotal) += parseInt(valorSubtotal)};
+            
+            $("#Codigo").empty()
+            $("#Item").val("")
+            $("#Descripcion").val("")
+            $("#Unidad").val("")
+            $("#Cantidad").val("")
+            $("#ValorUnitario").val("")
+            $("#ValorTotal").val("")
+            console.log("con esto quede")
+            console.log(ItemsObject.data)
+            console.log("___________________")
         }
-        else{
-            alert("Ingrese una cantidad válida")
-        }
+       
         
     }
 
     function Eliminar_item(id){
+        console.log(ItemsObject.data)
         console.log(id)
         $("#tr-"+ id).remove();
-        let filtro = ItemsObject.data.filter(item => item.codigo != id)
-        console.log(ItemsObject, filtro)
+        for (let i = 0; i < ItemsObject.data.length; i++){
+            if (ItemsObject.data[i]["codigo"]==id){
+                ItemsObject.data.splice(i,1)
+                console.log("me borre "+ id)
+            }
+        }
+        console.log(ItemsObject.data)
 
     }
 

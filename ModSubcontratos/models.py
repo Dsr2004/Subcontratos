@@ -116,6 +116,13 @@ VALIDADORES = (
     ("Seguros", "Seguros"),
     
 )
+
+ESTADO_SUBCONTRATO = (
+    ("1", "En ejecución"),
+    ("2", "No ejecutado"),
+    ("3", "Suspendido"),
+    ("4", "Liquidado"),
+)
 def extension(file):
         name, extension = os.path.splitext(file)
         return extension
@@ -176,7 +183,10 @@ class Subcontrato(models.Model):
     modificaciones_contractuales = models.FileField(upload_to=guardar_modificaciones_contractuales, validators = [validar_extencion_archivo])
     acta_recibo_final = models.FileField(upload_to=guardar_acta_recibo_final, validators = [validar_extencion_archivo])
     acta_liquidacion = models.FileField(upload_to=guardar_acta_liquidacion, validators = [validar_extencion_archivo])
-    estado = models.CharField(max_length=250, default="En ejecución")
+    estado = models.CharField(max_length=30, choices=ESTADO_SUBCONTRATO)
+
+    fecha_creacion = models.DateField(auto_now_add=True)
+    proximo_envio_correo = models.DateField()
 
     class Meta:
         db_table = "subcontratos"

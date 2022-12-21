@@ -1,4 +1,5 @@
 import pandas as pd
+from datetime import timedelta
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import View
 from django.shortcuts import render
@@ -135,10 +136,23 @@ class GuardarSubcontrato(View):
         if form.is_valid():
             if request.POST.get("impo")=="si":
                 print(request.FILES)  
-                
             try:
                 with transaction.atomic():
                     subcontrato = form.save()
+                    dias = 0
+                    if subcontrato.seguimiento_acta == "1":
+                        dias = 8
+                    elif subcontrato.seguimiento_acta == "2":
+                        dias = 14
+                    elif subcontrato.seguimiento_acta == "3":
+                        dias = 15
+                    elif subcontrato.seguimiento_acta == "4":
+                        dias = 30
+                    else:
+                        return JsonResponse({"errores":{"seguimiento_acta":["Seleccione una opcion valida."]}}, status=400)
+        
+                    subcontrato.proximo_envio_correo = subcontrato.fecha_creacion+timedelta(days=dias)
+                    subcontrato.save()
                     print("el subcontratos es", subcontrato.pk)
                     if request.POST.get("impo")=="si":
                         file = request.FILES["excelItems"]

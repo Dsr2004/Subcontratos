@@ -367,7 +367,6 @@
      //items
      $('#Codigo').select2({
         theme: "bootstrap-5",
-        width:"100%",
         language: "es",
         allowClear: true,
         ajax:{
@@ -403,8 +402,6 @@
         placeholder: "Seleccione a los validadores",
         closeOnSelect: false,
         allowClear: false,
-        width:"100%",
-        height:"100%"
     });
 
 
