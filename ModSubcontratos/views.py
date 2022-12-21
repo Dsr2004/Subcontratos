@@ -1,3 +1,4 @@
+import json
 import pandas as pd
 from datetime import timedelta
 from django.http import HttpResponse, JsonResponse
@@ -6,45 +7,47 @@ from django.shortcuts import render
 from django.db import transaction
 from django.http import QueryDict
 from .models import *
-from .forms import SubcontratoForm, Item_SubcontratoForm
+from .forms import SubcontratoForm, Item_SubcontratoForm, PolizaForm
 
-def validar_itemsSubcontrato(item):
+def validar_itemsSubcontrato(item ,tipo):
     if not item["subcontrato"]:
-        return {"subcontrato":"No hay un subcontrato en la lista."}
+        raise Exception({"subcontrato":"No hay un subcontrato en la lista."})
     
     if not item["item_codigo"]:
-        return {"item_codigo":"No hay un codigo en la lista."}
+        raise Exception({"item_codigo":"No hay un codigo en la lista."})
     
     if not item["item_nombre"]:
-        return {"item_nombre":"No hay un item en la lista."}
+        raise Exception({"item_nombre":"No hay un item en la lista."})
     
     if not item["descripcion"]:
-        return {"descripcion":"No hay una descripción en la lista."}
+        raise Exception( {"descripcion":"No hay una descripción en la lista."})
     
     if not item["unidad"]:
-        return {"unidad":"No hay un unidad en la lista."}
+        return Exception({"unidad":"No hay un unidad en la lista."})
     
     if not item["cantidad"]:
-        return {"cantidad":"No hay un cantidad en la lista."}
+        raise Exception({"cantidad":"No hay un cantidad en la lista."})
     
     if not item["valor_unitario"]:
-        return {"valor_unitario":"No hay un valor unitario en la lista."}
+        raise Exception({"valor_unitario":"No hay un valor unitario en la lista."})
     
     try:
-        Item.objects.get(codigo=item["item_codigo"])
+        if tipo == "excel":
+            Item.objects.get(codigo=item["item_codigo"])
+        elif tipo == "html":
+            Item.objects.get(pk=item["item_codigo"])
     except:
-        return {"item_codigo":"No ay un item con este codigo {codigo}} en la base de datos".format(codigo=item['item_codigo'])}
+        raise Exception({"item_codigo":"No ay un item con este codigo {codigo} en la base de datos".format(codigo=item['item_codigo'])})
     
     try:
         x = int(item["cantidad"])
     except:
-        return {"cantidad":"Una cantidad no es un numero"}
+        raise Exception({"cantidad":"Una cantidad no es un numero"})
     
     try:
        x = int(item["valor_unitario"])
     except:
-        return {"valor_unitario":"Un valor unitario no es un numero"}
-        
+        raise Exception({"valor_unitario":"Un valor unitario no es un numero"} )
     return True
 class SubContratos(View):
     template_name = "crearSubcontratos.html"
@@ -57,7 +60,7 @@ class SubContratos(View):
             ultimo_id = ultimo_id.pk
         else:
             ultimo_id=1
-        return render(request, self.template_name,{"ultimo_id":ultimo_id, "form":SubcontratoForm()})
+        return render(request, self.template_name,{"ultimo_id":ultimo_id, "form":SubcontratoForm(), "formPoliza":PolizaForm()})
     
     def post(self, request, *args, **kwargs):
         try:
@@ -131,14 +134,22 @@ class GuardarSubcontrato(View):
     form_class = SubcontratoForm
     
     def post(self, request, *args, **kwargs):
-        print(request.POST)
         form = self.form_class(request.POST)
         if form.is_valid():
-            if request.POST.get("impo")=="si":
-                print(request.FILES)  
             try:
                 with transaction.atomic():
                     subcontrato = form.save()
+                    print(request.POST["listpolizas"])
+                    polizas = json.loads(request.POST.get("listpolizas"))
+                    for p in polizas:
+                        poliza = Poliza.objects.create(
+                            tipo_poliza = p["data"]["tipo"],
+                            numero_poliza = p["data"]["numero"],
+                            aseguradora = p["data"]["aseguradora"],
+                            fecha_vencimiento = p["data"]["vencimiento"]
+                        )
+                        subcontrato.polizas.add(poliza)
+                    
                     dias = 0
                     if subcontrato.seguimiento_acta == "1":
                         dias = 8
@@ -153,10 +164,8 @@ class GuardarSubcontrato(View):
         
                     subcontrato.proximo_envio_correo = subcontrato.fecha_creacion+timedelta(days=dias)
                     subcontrato.save()
-                    print("el subcontratos es", subcontrato.pk)
                     if request.POST.get("impo")=="si":
                         file = request.FILES["excelItems"]
-                        print("adfds", file)
                         if file:
                             df = pd.read_excel(file)
                             for index, row in df.iterrows():
@@ -167,7 +176,8 @@ class GuardarSubcontrato(View):
                                         "unidad":row["Unidad"],
                                         "cantidad":row["Cantidad"],
                                         "valor_unitario":row["Valor Unitario"]}
-                                if validar_itemsSubcontrato(data) == True:
+                                validacion = validar_itemsSubcontrato(data, "excel")
+                                if validacion == True:
                                     formItemSubcon = Item_Subcontrato.objects.create(subcontrato=subcontrato,
                                             item_codigo=Item.objects.get(codigo=row["Código ITEM"]),
                                             item_nombre=row["Item"],
@@ -177,11 +187,47 @@ class GuardarSubcontrato(View):
                                             valor_unitario=row["Valor Unitario"]
                                             )
                                 else:
-                                    print("validacionws: ",validar_itemsSubcontrato)
+                                    print("validaciones desde el excel: ",validacion)
+                    elif request.POST.get("impo")=="no":
+                        items = json.loads(request.POST.get("items"))
+                        if items:
+                            
+                            for i in items:
+                                codigo = i["data"]["codigo"]
+                                item = i["data"]["item"]
+                                descripcion = i["data"]["descripcion"]
+                                unidad = i["data"]["unidad"]
+                                cantidad = i["data"]["cantidad"]
+                                valorUnitario = i["data"]["valorUnitario"]
+                                print(codigo,item,descripcion,unidad,cantidad,valorUnitario)
+                                data = {"subcontrato":subcontrato.pk,
+                                        "item_codigo":codigo,
+                                        "item_nombre":item,
+                                        "descripcion":descripcion,
+                                        "unidad":unidad,
+                                        "cantidad":cantidad,
+                                        "valor_unitario":valorUnitario}
+                                validacion = validar_itemsSubcontrato(data, "html")
+                                if validacion == True:
+                                    formItemSubcon = Item_Subcontrato.objects.create(
+                                            subcontrato=subcontrato,
+                                            item_codigo=Item.objects.get(pk=codigo),
+                                            item_nombre=item,
+                                            descripcion=descripcion,
+                                            unidad=unidad,
+                                            cantidad=cantidad,
+                                            valor_unitario=valorUnitario
+                                            )
+                                    print(formItemSubcon)
+                                else:
+                                    print("validaciones desde html: ",validacion)
+                        else:
+                            return JsonResponse({"errores":{"items":["Debe ingresar los ítems, esta sección es obligatoria."]}}, status=400)
             except Exception as e:
-                print("hubo un error ",e)
+                print("hubo un error al crear el subcontrato",e)
+                return JsonResponse({"errores":e, "tipo":"general"}, status=400)
+      
             return HttpResponse(request.POST)
         else:
-            print(form.errors)
             return JsonResponse({"errores":form.errors}, status=400) 
         
