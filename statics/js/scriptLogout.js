@@ -3,7 +3,7 @@ window.setTimeout(function() {
     $(".alert").fadeTo(500, 0).slideUp(500, function() {
         $(this).remove();
     });
-}, 3000);
+}, 30000);
 
 
 // 2) Script para avisar al usuario acerca de de los 5 minutos
@@ -13,7 +13,7 @@ setTimeout(function() {
     if(noticia){
         noticia.click();
     }
-}, 1 * 15000);
+}, 1 * 150000);
 
 
 // 3) Script para cerrar sesión

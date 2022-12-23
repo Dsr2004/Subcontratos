@@ -213,13 +213,24 @@
                     
                     <table class="table text-center" id="tbl_items">
                         <thead>
-                            
+                            <th>Subcapitulo</th>
+                            <th>Condiciones contractuales</th>
+                            <th>Items asociados</th>
+                            <th>Subtotal capitulo</th>
                         </thead>
                         <tbody>
                             
                             
                         </tbody>
                     </table>
+                    
+                    <div class="row">
+                        <div class="col-4">
+                            <button ype="button" class="btn" data-bs-toggle="modal" data-bs-target="#AddSubcapitulo">
+                                <i class="fa-solid fa-plus"></i> &nbsp; Agregar
+                            </button>
+                        </div>
+                    </div>
                 </div>
     
     
@@ -531,6 +542,85 @@
         </div>
     </div>
    
+    <!-- Modal de subcapitulos -->
+    <div class="modal fade" id="AddSubcapitulo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-body">
+                <div class="row mt-4">
+                    <div class="col-4" id="impExcel">
+                        <label for=""><strong>¿Importar desde un excel?</strong>  <sup class="campo_requerido">*</sup></label>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" onclick="importarExcel(1)" type="radio" name="impo" id="impo" value="si">
+                                    <label class="form-check-label" for="impo">
+                                    Si
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" onclick="importarExcel(2)" type="radio" name="impo" id="impo" value="no" checked>
+                                    <label class="form-check-label" for="impo">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </div>            
+                    </div>
+                    <div class="col-8" id="excel" style="display: none;">
+                        <label for=""><strong>Información items</strong> </label>
+                        <input type="file" class="form-control" name="excelItems" id="">
+                        <small>Si desea importar los items para este subcapitulo, adjunte el excel con el formato indicado</small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-5">
+                        <label for=""><strong></strong> Subcapitulo <sup class="campo_requerido">*</sup></label>
+                        <select class="form-control">
+                            <option>OBRA CIVIL</option>
+                            <option>SUMINISTRO</option>
+                        </select>
+                        
+                    </div>
+                </div>
+                <table class="table text-center" id="tbl_items">
+                    <thead>
+                        <tr>
+                            <th width="200px">Código</th> 
+                            <th>Item</th>
+                            <th>Descripción</th>
+                            <th>Unidad</th>
+                            <th>Cantidad</th>
+                            <th>Valor Unitario</th>
+                            <th>Valor total</th>
+                        </tr>
+                        <tr onchange="calcularTotal()">
+                            <td><select type="text" class="form-control" id="Codigo"></select></td>
+                            <td><input type="text" class="form-control" id="Item"></td>
+                            <td><input type="text" class="form-control" id="Descripcion"></td>
+                            <td><input type="text" class="form-control" id="Unidad"></td>
+                            <td><input type="number" class="form-control" id="Cantidad"></td>
+                            <td><input type="number" class="form-control" id="ValorUnitario"></td>
+                            <td><input type="text" class="form-control" id="ValorTotal" readonly></td>
+                            <td><button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarItems(), calcularIva(), CalcularT()"><strong><i class='bx bx-plus'></i></strong> </button></td>
+                        </tr>
+                    </thead>
+                    <tbody id="tblItems">
+                        
+                        
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary"><i class="fa-regular fa-floppy-disk"></i> Guardar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+              
+            </div>
+          </div>
+        </div>
+    </div>
 {% endblock modales %}
 
 
@@ -553,6 +643,10 @@
 
     $(document).on('click', '#addItem', function() {
         $('#addItem').modal('show');
+    });
+
+    $("#suv").select2({
+        tags: true
     });
 </script>
 
@@ -796,5 +890,26 @@
     function my_function(){
         document.getElementById("note").innerHTML="";
     }
+
+
+
+    var campoS = document.getElementById("impo").value
+
+    function importarExcel(campoS){
+        
+        var tabla = document.getElementById("tbl_items")
+        var campoExcel = document.getElementById("excel")
+
+        if(campoS == 1){
+            tabla.style.display = "none"
+            campoExcel.style.display = "block"
+        }
+        else{
+            tabla.style.display = "block"
+            campoExcel.style.display = "none"
+        }
+    }
+    
+    
     </script>
 {% endblock scripts %}
