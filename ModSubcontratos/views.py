@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 from datetime import timedelta
+from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import View
 from django.shortcuts import render, redirect
@@ -139,7 +140,6 @@ class GuardarSubcontrato(View):
             try:
                 with transaction.atomic():
                     subcontrato = form.save()
-                    print(request.POST["listpolizas"])
                     polizas = json.loads(request.POST.get("listpolizas"))
                     for p in polizas:
                         poliza = Poliza.objects.create(
@@ -160,9 +160,11 @@ class GuardarSubcontrato(View):
                     elif subcontrato.seguimiento_acta == "4":
                         dias = 30
                     else:
-                        return JsonResponse({"errores":{"seguimiento_acta":["Seleccione una opcion valida."]}}, status=400)
-        
+                        raise Exception("En el campo seguimiento acta, por favor seleccione una opción válida.")
+                        # return JsonResponse({"errores":{"seguimiento_acta":["Seleccione una opcion valida."]}}, status=400)
+                    print(dias)
                     subcontrato.proximo_envio_correo = subcontrato.fecha_creacion+timedelta(days=dias)
+                    print()
                     subcontrato.save()
                     if request.POST.get("impo")=="si":
                         file = request.FILES["excelItems"]
@@ -222,12 +224,12 @@ class GuardarSubcontrato(View):
                                 else:
                                     print("validaciones desde html: ",validacion)
                         else:
-                            return JsonResponse({"errores":{"items":["Debe ingresar los ítems, esta sección es obligatoria."]}}, status=400)
+                            raise Exception("ítems: Debe ingresar los ítems, esta sección es obligatoria.")
             except Exception as e:
-                print("hubo un error al crear el subcontrato",e)
-                return JsonResponse({"errores":e, "tipo":"general"}, status=400)
-      
-            return redirect("listsubcontratos")
+                print("hubo un error al crear el subcontrato",str(e))
+                return JsonResponse({"errores":str(e), "tipo":"general"}, status=400)
+            print(reverse("listsubcontratos"))
+            return JsonResponse({"mensaje":"Creado correctamente","path":reverse("listsubcontratos")}, status=200)
         else:
             return JsonResponse({"errores":form.errors}, status=400) 
 

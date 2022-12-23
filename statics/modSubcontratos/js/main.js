@@ -445,7 +445,6 @@ function guardarSubcontrato(){
     formData.append("listpolizas",polizas)
     formData.append("tipo_orden",tipo_orden)
 
-    console.log(items)
     $.ajax({
         type:form.attr("method"),
         url:form.attr("action"),
@@ -455,20 +454,34 @@ function guardarSubcontrato(){
         success: function(response) {
             form.find('.error_text').text('');
             form.find('.is-invalid').removeClass('is-invalid');
-            console.log("si ")
+            location.href = response["path"]
         },
         error: function(errors){
-            errores = errors.responseJSON["errores"]
             form.find('.error_text').text('');
             form.find('.is-invalid').removeClass('is-invalid');
-            for (let i in errores){
-                let x=form.find('input[name='+i+']')
-                let y=form.find('select[name='+i+']')
-                x.addClass("is-invalid")
-                y.addClass("is-invalid")
-                $("#P_"+i).text(errores[i])
+            tipo = errors.responseJSON["tipo"]
+            if(tipo){
+                if(tipo=="general"){
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: errors.responseJSON["errores"],
+                      })
+                }
+            }else{
+                console.log(errors)
+                errores = errors.responseJSON["errores"]
+                form.find('.error_text').text('');
+                form.find('.is-invalid').removeClass('is-invalid');
+                for (let i in errores){
+                    let x=form.find('input[name='+i+']')
+                    let y=form.find('select[name='+i+']')
+                    x.addClass("is-invalid")
+                    y.addClass("is-invalid")
+                    $("#P_"+i).text(errores[i])
+                }
             }
-            console.log(errores)
+            
         }
     });
 }
