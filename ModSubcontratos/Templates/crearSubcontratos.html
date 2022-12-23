@@ -178,7 +178,7 @@
 
                 <div class="card mt-3 mb-5" style="padding: 10px;" id="card_it">
                     <h6>Items</h6>
-                    
+                    <p class="error_text" id="P_items"></p>
                     <table class="table text-center" id="tbl_items">
                         <thead>
                             <tr>
@@ -191,14 +191,40 @@
                                 <th>Valor total</th>
                             </tr>
                             <tr onchange="calcularTotal()">
-                                <td><select type="text" class="form-control" id="Codigo"></select></td>
-                                <td><input type="text" class="form-control" id="Item"></td>
-                                <td><input type="text" class="form-control" id="Descripcion"></td>
-                                <td><input type="text" class="form-control" id="Unidad"></td>
-                                <td><input type="number" class="form-control" id="Cantidad"></td>
-                                <td><input type="number" class="form-control" id="ValorUnitario"></td>
-                                <td><input type="text" class="form-control" id="ValorTotal" readonly></td>
-                                <td><button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarItems(), calcularIva(), CalcularT()"><strong><i class='bx bx-plus'></i></strong> </button></td>
+                               <form id="ItemsSubcontratoForm">
+                                    <td>
+                                        <select type="text" class="form-control" id="Codigo"></select>
+                                        <p class="error_text" id="I_codigo"></p>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" id="Item">
+                                        <p class="error_text" id="I_item"></p>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" id="Descripcion">
+                                        <p class="error_text" id="I_descripcion"></p>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" id="Unidad">
+                                        <p class="error_text" id="I_unidad"></p>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" id="Cantidad">
+                                        <p class="error_text" id="I_cantidad"></p>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" id="ValorUnitario">
+                                        <p class="error_text" id="I_valorU"></p>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" id="ValorTotal" readonly>
+                                        <p></p>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarItems(), calcularIva(), CalcularT()"><strong><i class='bx bx-plus'></i></strong> </button>
+                                        <p></p>
+                                    </td>
+                               </form>
                             </tr>
                         </thead>
                         <tbody id="tblItems">
@@ -345,24 +371,8 @@
                 </div>
                 <div class="card mt-3 mb-5" style="padding: 10px;">
                     <h6>Pólizas</h6>
-                    <div class="row mb-3">
-                        <div class="col-2 mr-3">
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="col-2">
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="col-2">
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="col-2">
-                            <input type="date" class="form-control">
-                        </div>
-                        <div class="col-1">
-                            <button class="btn" style="background-color: #60b232; color: white; font-weight: bold;"><strong><i class='bx bx-plus'></i></strong> </button>
-                        </div>
-                    </div>
-                    <table class="table">
+                   
+                    <table class="table" id="tbl_polizas">
                         <thead>
                             <tr>
                                 <th>Tipo de póliza</th>
@@ -371,7 +381,39 @@
                                 <th>Fecha de vencimiento</th>
                                 <th></th>
                             </tr>
+                            <tr onchange="calcularTotal()">
+                                <form id="ItemsSubcontratoForm">
+                                     <td>
+                                         <select type="text" class="form-select" id="Tipo_Poliza">
+                                            <option>Cumplimiento</option>
+                                            <option>Responsabilidad civil</option>
+                                            <option>Todo riesgo</option>
+                                         </select>
+                                         <p class="error_text" id="Po_tipo_poliza"></p>
+                                     </td>
+                                     <td>
+                                         <input type="text" class="form-control" id="Numero_Poliza">
+                                         <p class="error_text" id="Po_numero_poliza"></p>
+                                     </td>
+                                     <td>
+                                        {{formPoliza.aseguradora}}
+                                         <p class="error_text" id="Po_aseguradora"></p>
+                                     </td>
+                                     <td>
+                                         <input type="date" class="form-control" id="Fecha_vencimiento_poliza">
+                                         <p class="error_text" id="Po_fecha_vencimiento_poliza"></p>
+                                     </td>
+                                     <td>
+                                         <button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarPoliza()"><strong><i class='bx bx-plus'></i></strong> </button>
+                                         <p></p>
+                                     </td>
+                                </form>
+                             </tr>
                         </thead>
+                        <tbody id="tblpolizas">
+                            
+                            
+                        </tbody>
                     </table>
                 </div>
                 <div class="row">
@@ -745,7 +787,7 @@
 
             
 
-            console.log(conversion)
+            // console.log(conversion)
             // if(status === status){
             //     console.log(status)
             // }
@@ -769,10 +811,16 @@
     data:[]
    }
 
+   var PolizasObject ={
+    data:[]
+   }
     
     var valorSubtotal = 0;
 
     function AgregarItems(){
+        $("#tbl_items").find('.error_text').text('');
+        $("#tbl_items").find(".is-invalid").removeClass('is-invalid');
+
         let codigo = $("#Codigo").val();
         let item = $("#Item").val();
         let descripcion = $("#Descripcion").val();
@@ -783,6 +831,26 @@
 
         let subt = document.getElementById("subtot");
         let subtt = document.getElementById("subtot3")
+
+        if(codigo == "" || codigo == null){
+            $("#Codigo").addClass("is-invalid")
+            $("#I_codigo").text("Este campo es requerido")
+        }else if(item == "" || item == null){
+            $("#Item").addClass("is-invalid")
+            $("#I_item").text("Este campo es requerido")
+        }else if(descripcion == "" || descripcion == null){
+            $("#Descripcion").addClass("is-invalid")
+            $("#I_descripcion").text("Este campo es requerido")
+        }else if(unidad == "" || unidad == null){
+            $("#Unidad").addClass("is-invalid")
+            $("#I_unidad").text("Este campo es requerido")
+        }else if(cantidad == "" || cantidad == null){
+            $("#Cantidad").addClass("is-invalid")
+            $("#I_cantidad").text("Este campo es requerido")
+        }else if(valorUnitario == "" || valorUnitario == null){
+            $("#ValorUnitario").addClass("is-invalid")
+            $("#I_valorU").text("Este campo es requerido")
+        }
 
         if(cantidad > 0 && valorUnitario > 0 && valorTotal > 0){
             $('#tblItems').append(`
@@ -802,7 +870,7 @@
                 </td>    
             </tr>
         `)
-        ItemsObject.data.push({
+        ItemsObject.data.push({ 
             codigo:codigo,
             data:{
                 codigo:codigo,
@@ -814,29 +882,106 @@
                 valorTotal:valorTotal
             }
         })
-        console.log(ItemsObject)
-
             let con = parseInt(valorTotal)
             valorSubtotal += con;
             
             subt.innerText = valorSubtotal
             subtt.innerText = valorSubtotal
             // subt.innerText = ${parseInt(valorSubtotal) += parseInt(valorSubtotal)};
+            
+            $("#Codigo").empty()
+            $("#Item").val("")
+            $("#Descripcion").val("")
+            $("#Unidad").val("")
+            $("#Cantidad").val("")
+            $("#ValorUnitario").val("")
+            $("#ValorTotal").val("")
         }
-        else{
-            alert("Ingrese una cantidad válida")
-        }
+       
         
+    }
+    function AgregarPoliza(){
+        $("#tbl_polizas").find('.error_text').text('');
+        $("#tbl_polizas").find(".is-invalid").removeClass('is-invalid');
+
+        let tipo_poliza = $("#Tipo_Poliza").val();
+        let numero_poliza = $("#Numero_Poliza").val();
+        let aseguradora = $("#id_aseguradora").val();
+        let Fecha_vencimiento_poliza = $("#Fecha_vencimiento_poliza").val();
+       
+
+        if(tipo_poliza == "" || tipo_poliza == null){
+            $("#Tipo_Poliza").addClass("is-invalid")
+            $("#Po_tipo_poliza").text("Este campo es requerido")
+        }else if(numero_poliza == "" || numero_poliza == null){
+            $("#Numero_Poliza").addClass("is-invalid")
+            $("#Po_numero_poliza").text("Este campo es requerido")
+        }else if(aseguradora == "" || aseguradora == null){
+            $("#id_aseguradora").addClass("is-invalid")
+            $("#Po_aseguradora").text("Este campo es requerido")
+        }else if(Fecha_vencimiento_poliza == "" || Fecha_vencimiento_poliza == null){
+            $("#Fecha_vencimiento_poliza").addClass("is-invalid")
+            $("#Po_fecha_vencimiento_poliza").text("Este campo es requerido")
+        }else{
+            let id = Math.floor(Math.random(9999) * 10); 
+            $('#tblpolizas').append(`
+            <tr class="it_row" id="tr-${id}">
+                <td>
+                    <input type="hidden" name="" value="${id}"/>
+                    ${$("#Tipo_Poliza").select2('data')[0]['text']}
+                </td>
+                <td>${numero_poliza}</td>  
+                <td>${$("#id_aseguradora").select2('data')[0]['text']}</td>  
+                <td>${Fecha_vencimiento_poliza}</td>   
+                <td>
+                    <button class="btn" onclick="Eliminar_Poliza(${id})" style="color: #fc3322; font-size: 20px; font-weight: bold;"><i class='bx bx-x'></i></button>
+                </td>    
+            </tr>
+        `)
+        PolizasObject.data.push({ 
+            id:id,
+            data:{
+                tipo:tipo_poliza,
+                numero:numero_poliza,
+                aseguradora: aseguradora,
+                vencimiento: Fecha_vencimiento_poliza,
+            }
+        })
+            $("#Tipo_Poliza").val(null).trigger("change");
+            $("#Numero_Poliza").val("")
+            $("#id_aseguradora").val(null).trigger("change");
+            $("#Fecha_vencimiento_poliza").val("")
+        }    
+        console.log(PolizasObject.data, "----------------------")
     }
 
     function Eliminar_item(id){
+        console.log(ItemsObject.data)
         console.log(id)
         $("#tr-"+ id).remove();
-        let filtro = ItemsObject.data.filter(item => item.codigo != id)
-        console.log(ItemsObject, filtro)
+        for (let i = 0; i < ItemsObject.data.length; i++){
+            if (ItemsObject.data[i]["codigo"]==id){
+                ItemsObject.data.splice(i,1)
+                console.log("me borre "+ id)
+            }
+        }
+        console.log(ItemsObject.data)
 
     }
 
+    function Eliminar_Poliza(id){
+        console.log(PolizasObject.data)
+        console.log(id)
+        $("#tr-"+ id).remove();
+        for (let i = 0; i < PolizasObject.data.length; i++){
+            if (PolizasObject.data[i]["id"]==id){
+                PolizasObject.data.splice(i,1)
+                console.log("me borre "+ id)
+            }
+        }
+        console.log(PolizasObject.data)
+
+    }
     
 
     

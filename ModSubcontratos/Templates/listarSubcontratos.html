@@ -52,104 +52,118 @@
     </div>
 </div>
 
-<table class="table table-striped" id="listarUsuarios"  width="100%">
-    <thead>
-      <tr style="font-size: 14px;">
-        <th scope="col">Consecutivo</th>
-        <th scope="col">Tipo de contrato</th>
-        <th scope="col">Elaborador</th>
-        <th scope="col">Nit</th>
-        <th scope="col">Proveedor</th>
-        <th scope="col">Fecha de inicio</th>
-        <th scope="col">Fecha de vencimiento</th>
-        <th scope="col">Detalles</th>
-        <th scope="col">Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr style="font-size: 13px;">
-            <td>Subcontrato-1</td>
-            <td>1.1 Contratos con IVA pleno suministros</td>
-            <td>Lambda analytics</td>
-            <td>0604224</td>
-            <td>GOOD INSPECTION LTDA</td>
-            <td>01/12/2022</td>
-            <td>27/12/2022</td>
-            <td>
-                <!-- Button trigger modal -->
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    <i class="fa-solid fa-eye"></i>
-                </button>
+<div class="tablascroll">
+    <table class="table table-striped" id="listarSubcontratos"  width="100%">
+        <thead>
+          <tr style="font-size: 14px;">
+            <th scope="col">Consecutivo</th>
+            <th scope="col">Tipo de contrato</th>
+            <th scope="col">Elaborador</th>
+            <th scope="col">Nit</th>
+            <th scope="col">Proveedor</th>
+            <th scope="col">Fecha de inicio</th>
+            <th scope="col">Fecha de vencimiento</th>
+            <th scope="col">Director obra</th>
+            <th scope="col">Gestor obra</th>
+            <th scope="col">Empresa</th>
+            <th scope="col">Proyecto</th>
+            <th scope="col">Centro operaciones</th>
+            <th scope="col">Validador/es</th>
+            <th scope="col">Número polizas</th>
+            <th scope="col">Detalles</th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for subcontrato in subcontratos %}
+            <tr>
                 
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Detalles del subontrato: 1</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <td>{{subcontrato.pk}}</td>
+                    <td>{{subcontrato.tipo_contrato}}</td>
+                    <td>{{subcontrato.elaborador}}</td>
+                    <td>{{subcontrato.proveedor.nit}}</td>
+                    <td>{{subcontrato.proveedor}}</td>
+                    <td>{{subcontrato.fecha_inicio_contrato}}</td>
+                    <td>{{subcontrato.fecha_vencimiento_contrato}}</td>
+                    <td>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Detalles del subontrato: 1</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                ...
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                            </div>
                         </div>
-                        <div class="modal-body">
-                        ...
-                        </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-            </td>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-sm"><a href="{% url 'modificarSubcontrato' %}"> <i class="fa-solid fa-pen-to-square"></i></a></button>
+                        <button class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
+                        <!-- <div class="row">
+                            <div class="col-6">
+                                <button class="btn btn-outline-primary"><i class='bx bx-edit'></i></button>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <button class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div> -->
+                    </td>
+                
+            </tr>
+            {% endfor %}
+          
+          {% for usuario in usuarios  %}
+          <tr>
+            <th scope="row">{{forloop.counter}}</th>
+            <td>{{usuario.usuario}}</td>
+            <td>{{usuario}}</td>
+            <td>{{usuario.correo}}</td>
+            {% if usuario.rol %}
+                <td>{{usuario.rol}}</td>
+            {% else %}
+                <td>Sin Rol</td>
+            {% endif %}
+                
+            {% if usuario.estado %}
+                <td><span class="badge bg-success">Activo</span></td>
+            {% else %}
+                <td><span class="badge bg-danger">Inactivo</span></td>
+            {% endif %}
             <td>
-                <button class="btn btn-outline-primary btn-sm"><a href="{% url 'modificarSubcontrato' %}"> <i class="fa-solid fa-pen-to-square"></i></a></button>
-                <button class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
-                <!-- <div class="row">
+                <div class="row">
                     <div class="col-6">
-                        <button class="btn btn-outline-primary"><i class='bx bx-edit'></i></button>
+                        <!-- <button onclick="abrirModalModificarUsuario('{%url 'modificarUsuario' usuario.pk %}')" class="btn btn-outline-primary"><i class='bx bx-edit'></i></button> -->
                     </div>
                     <div class="col-6">
                         <div class="form-check form-switch">
-                            <button class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
-                        </div>
+                            <!-- <input class="form-check-input" type="checkbox" role="switch" onclick="actualizarEstadoUsuario('{%url 'modificarEstadoUsuario'%}', '{{usuario.pk}}')"  {% if usuario.estado %}checked{% endif %}> -->
+                          </div>
                     </div>
-                </div> -->
+                </div>
             </td>
-        </tr>
-      
-      {% for usuario in usuarios  %}
-      <tr>
-        <th scope="row">{{forloop.counter}}</th>
-        <td>{{usuario.usuario}}</td>
-        <td>{{usuario}}</td>
-        <td>{{usuario.correo}}</td>
-        {% if usuario.rol %}
-            <td>{{usuario.rol}}</td>
-        {% else %}
-            <td>Sin Rol</td>
-        {% endif %}
+          </tr>
+          {% endfor %}
             
-        {% if usuario.estado %}
-            <td><span class="badge bg-success">Activo</span></td>
-        {% else %}
-            <td><span class="badge bg-danger">Inactivo</span></td>
-        {% endif %}
-        <td>
-            <div class="row">
-                <div class="col-6">
-                    <!-- <button onclick="abrirModalModificarUsuario('{%url 'modificarUsuario' usuario.pk %}')" class="btn btn-outline-primary"><i class='bx bx-edit'></i></button> -->
-                </div>
-                <div class="col-6">
-                    <div class="form-check form-switch">
-                        <!-- <input class="form-check-input" type="checkbox" role="switch" onclick="actualizarEstadoUsuario('{%url 'modificarEstadoUsuario'%}', '{{usuario.pk}}')"  {% if usuario.estado %}checked{% endif %}> -->
-                      </div>
-                </div>
-            </div>
-        </td>
-      </tr>
-      {% endfor %}
-        
-    </tbody>
-  </table>
+        </tbody>
+    </table>
+</div>
+
 
   
 
@@ -167,7 +181,8 @@
 
   <script>
     $(document).ready(function () {
-        $('#listarUsuarios').DataTable({
+        $('#listarSubcontratos').DataTable({
+            scrollX: true,
             "language": {
                 "lengthMenu": "Mostrar " + `<select class="custom-select custom-select-sm form-control form-control-sm">
                                 <option value='5'>5</option>

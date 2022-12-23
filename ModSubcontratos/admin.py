@@ -4,3 +4,4 @@ from .models import *
 
 admin.site.register(Subcontrato)
 admin.site.register(Item_Subcontrato)
+admin.site.register(Poliza)

@@ -20,6 +20,7 @@ from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth.decorators import login_required
 from Usuarios.views import *
+from django.shortcuts import redirect
 
 from ModSubcontratos.carga_masiva import carga_masiva
 
@@ -31,7 +32,7 @@ urlpatterns = [
     path("RestablecerContraseña/", ResetPass.as_view(), name="restablecer"),
     path("Usuarios/", include("Usuarios.urls")),
     path("Subcontratos/", include("ModSubcontratos.urls")),
-    
+    path("", lambda y : redirect('login')),
     path("cargaMasiva", login_required(carga_masiva))
 ]
 if settings.DEBUG:

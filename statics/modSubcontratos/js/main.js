@@ -367,7 +367,6 @@
      //items
      $('#Codigo').select2({
         theme: "bootstrap-5",
-        width:"100%",
         language: "es",
         allowClear: true,
         ajax:{
@@ -403,8 +402,25 @@
         placeholder: "Seleccione a los validadores",
         closeOnSelect: false,
         allowClear: false,
+    });
+
+    //Polizas
+    $('#Tipo_Poliza').select2({
+        language: "es",
+        theme: "bootstrap-5",
         width:"100%",
-        height:"100%"
+        placeholder: "Seleccione el tipo de poliza",
+        closeOnSelect: true,
+        allowClear: false,
+        tags: true,
+    });
+    $('#id_aseguradora').select2({
+        language: "es",
+        theme: "bootstrap-5",
+        width:"100%",
+        placeholder: "Seleccione la aseguradora",
+        closeOnSelect: true,
+        allowClear: false,
     });
 
 
@@ -412,7 +428,8 @@
 
 
 function guardarSubcontrato(){
-    const items = ItemsObject.data
+    const items = JSON.stringify(ItemsObject.data)
+    const polizas = JSON.stringify(PolizasObject.data)
     let form = $("#guardarSubcontratoForm")
 
     $("#slec").prop("disabled", false)
@@ -425,8 +442,10 @@ function guardarSubcontrato(){
 
     let formData = new FormData(document.getElementById("guardarSubcontratoForm"));
     formData.append("items",items)
+    formData.append("listpolizas",polizas)
     formData.append("tipo_orden",tipo_orden)
-    console.log(formData)
+
+    console.log(items)
     $.ajax({
         type:form.attr("method"),
         url:form.attr("action"),
