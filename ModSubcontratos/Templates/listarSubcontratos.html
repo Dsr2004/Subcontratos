@@ -77,7 +77,7 @@
             {% for subcontrato in subcontratos %}
             <tr>
                 <!-- <td>{{subcontrato.pk}}</td> -->
-                <td>Subcontrato-{{subcontrato.pk}}</td>
+                <td>Subcontrato-{{subcontrato.consecutivo}}</td>
                 <td>{{subcontrato.get_tipo_contrato_display }}</td>
                 <td>{{subcontrato.elaborador}}</td>
                 <td>{{subcontrato.proveedor.nit}}</td>

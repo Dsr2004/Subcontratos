@@ -191,7 +191,7 @@ class Subcontrato(models.Model):
     acta_recibo_final = models.FileField(upload_to=guardar_acta_recibo_final, validators = [validar_extencion_archivo])
     acta_liquidacion = models.FileField(upload_to=guardar_acta_liquidacion, validators = [validar_extencion_archivo])
     estado = models.CharField(max_length=30, choices=ESTADO_SUBCONTRATO, default="1")
-    consecutivo = models.BigIntegerField()
+    consecutivo = models.BigIntegerField(unique=True)
     fecha_creacion = models.DateField(auto_now_add=True)
     proximo_envio_correo = models.DateField(null=True, blank=True)
 
