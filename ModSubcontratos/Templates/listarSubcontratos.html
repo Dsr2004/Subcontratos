@@ -55,7 +55,7 @@
 <div class="tablascroll">
     <table class="table table-striped" id="listarSubcontratos"  width="100%">
         <thead>
-          <tr style="font-size: 14px;">
+          <tr style="font-size: 13px;">
             <th scope="col">Consecutivo</th>
             <th scope="col">Tipo de contrato</th>
             <th scope="col">Elaborador</th>
@@ -70,96 +70,30 @@
             <th scope="col">Centro operaciones</th>
             <th scope="col">Validador/es</th>
             <th scope="col">Número polizas</th>
-            <th scope="col">Detalles</th>
-            <th scope="col">Acciones</th>
+            <th>Vaca</th>
           </tr>
         </thead>
         <tbody>
             {% for subcontrato in subcontratos %}
             <tr>
-                
-                    <td>{{subcontrato.pk}}</td>
-                    <td>{{subcontrato.tipo_contrato}}</td>
-                    <td>{{subcontrato.elaborador}}</td>
-                    <td>{{subcontrato.proveedor.nit}}</td>
-                    <td>{{subcontrato.proveedor}}</td>
-                    <td>{{subcontrato.fecha_inicio_contrato}}</td>
-                    <td>{{subcontrato.fecha_vencimiento_contrato}}</td>
-                    <td>
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            <i class="fa-solid fa-eye"></i>
-                        </button>
-                        
-                        <!-- Modal -->
-                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Detalles del subontrato: 1</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                ...
-                                </div>
-                                <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <button class="btn btn-outline-primary btn-sm"><a href="{% url 'modificarSubcontrato' %}"> <i class="fa-solid fa-pen-to-square"></i></a></button>
-                        <button class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
-                        <!-- <div class="row">
-                            <div class="col-6">
-                                <button class="btn btn-outline-primary"><i class='bx bx-edit'></i></button>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-check form-switch">
-                                    <button class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                            </div>
-                        </div> -->
-                    </td>
-                
+                <!-- <td>{{subcontrato.pk}}</td> -->
+                <td>Subcontrato-{{subcontrato.pk}}</td>
+                <td>{{subcontrato.get_tipo_contrato_display }}</td>
+                <td>{{subcontrato.elaborador}}</td>
+                <td>{{subcontrato.proveedor.nit}}</td>
+                <td>{{subcontrato.proveedor}}</td>
+                <td>{{subcontrato.fecha_inicio_contrato}}</td>
+                <td>{{subcontrato.fecha_vencimiento_contrato}}</td>
+                <td>{{subcontrato.director_obra}}</td>
+                <td>{{subcontrato.gestor_contrato}}</td>
+                <td>{{subcontrato.compania}}</td>
+                <td>{{subcontrato.proyecto}}</td>
+                <td>{{subcontrato.proyecto.id_proyecto}}</td>
+                <td>{{subcontrato.validadores}}</td>
+                <td>{{subcontrato.CantidadPolizas}}</td>
+                <td><a class="btn" href="{% url 'verSubcontrato' subcontrato.pk %}">detalles</a></td>
             </tr>
-            {% endfor %}
-          
-          {% for usuario in usuarios  %}
-          <tr>
-            <th scope="row">{{forloop.counter}}</th>
-            <td>{{usuario.usuario}}</td>
-            <td>{{usuario}}</td>
-            <td>{{usuario.correo}}</td>
-            {% if usuario.rol %}
-                <td>{{usuario.rol}}</td>
-            {% else %}
-                <td>Sin Rol</td>
-            {% endif %}
-                
-            {% if usuario.estado %}
-                <td><span class="badge bg-success">Activo</span></td>
-            {% else %}
-                <td><span class="badge bg-danger">Inactivo</span></td>
-            {% endif %}
-            <td>
-                <div class="row">
-                    <div class="col-6">
-                        <!-- <button onclick="abrirModalModificarUsuario('{%url 'modificarUsuario' usuario.pk %}')" class="btn btn-outline-primary"><i class='bx bx-edit'></i></button> -->
-                    </div>
-                    <div class="col-6">
-                        <div class="form-check form-switch">
-                            <!-- <input class="form-check-input" type="checkbox" role="switch" onclick="actualizarEstadoUsuario('{%url 'modificarEstadoUsuario'%}', '{{usuario.pk}}')"  {% if usuario.estado %}checked{% endif %}> -->
-                          </div>
-                    </div>
-                </div>
-            </td>
-          </tr>
-          {% endfor %}
-            
+          {% endfor %}   
         </tbody>
     </table>
 </div>

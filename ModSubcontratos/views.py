@@ -1,11 +1,13 @@
 import json
 import pandas as pd
 from datetime import timedelta
+from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
+from django.views.generic import View
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.db import transaction
-from django.views.generic import View, ListView, CreateView, UpdateView, TemplateView
+from django.views.generic import View, ListView, CreateView, UpdateView, TemplateView, DetailView
 from django.http import QueryDict
 from .models import *
 from .forms import SubcontratoForm, Item_SubcontratoForm, PolizaForm
@@ -52,7 +54,6 @@ def validar_itemsSubcontrato(item ,tipo):
     return True
 class SubContratos(View):
     template_name = "crearSubcontratos.html"
-    # template_name = "subcontratos.html"
     
     def get(self, request, *args, **kwargs):
         ultimo_id = Subcontrato.objects.last()
@@ -139,7 +140,6 @@ class GuardarSubcontrato(View):
             try:
                 with transaction.atomic():
                     subcontrato = form.save()
-                    print(request.POST["listpolizas"])
                     polizas = json.loads(request.POST.get("listpolizas"))
                     for p in polizas:
                         poliza = Poliza.objects.create(
@@ -160,9 +160,11 @@ class GuardarSubcontrato(View):
                     elif subcontrato.seguimiento_acta == "4":
                         dias = 30
                     else:
-                        return JsonResponse({"errores":{"seguimiento_acta":["Seleccione una opcion valida."]}}, status=400)
-        
+                        raise Exception("En el campo seguimiento acta, por favor seleccione una opción válida.")
+                        # return JsonResponse({"errores":{"seguimiento_acta":["Seleccione una opcion valida."]}}, status=400)
+                    print(dias)
                     subcontrato.proximo_envio_correo = subcontrato.fecha_creacion+timedelta(days=dias)
+                    print()
                     subcontrato.save()
                     if request.POST.get("impo")=="si":
                         file = request.FILES["excelItems"]
@@ -222,12 +224,12 @@ class GuardarSubcontrato(View):
                                 else:
                                     print("validaciones desde html: ",validacion)
                         else:
-                            return JsonResponse({"errores":{"items":["Debe ingresar los ítems, esta sección es obligatoria."]}}, status=400)
+                            raise Exception("ítems: Debe ingresar los ítems, esta sección es obligatoria.")
             except Exception as e:
-                print("hubo un error al crear el subcontrato",e)
-                return JsonResponse({"errores":e, "tipo":"general"}, status=400)
-      
-            return HttpResponse(request.POST)
+                print("hubo un error al crear el subcontrato",str(e))
+                return JsonResponse({"errores":str(e), "tipo":"general"}, status=400)
+            print(reverse("listsubcontratos"))
+            return JsonResponse({"mensaje":"Creado correctamente","path":reverse("listsubcontratos")}, status=200)
         else:
             return JsonResponse({"errores":form.errors}, status=400) 
 
@@ -238,3 +240,14 @@ class ListarSubcontratos(ListView):
 
 class ModificarSubcontrato(TemplateView):
     template_name = "listarSubcontratos.html"
+
+class VerSubcontrato(DetailView):
+    model = Subcontrato
+    template_name = "verSubcontrato.html"
+    context_object_name = "subcontrato"
+    
+    def get_context_data(self, **kwargs):
+        context = super(VerSubcontrato, self).get_context_data(**kwargs)
+        context["items"] = self.get_object().item_subcontrato_set.all()
+        return context
+    

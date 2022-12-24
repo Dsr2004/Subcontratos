@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block titulo %}
-    Creación de subcontrato
+    Ver detalles de subcontrato
 {% endblock titulo %}
     
     
@@ -46,11 +46,11 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="{% url 'listsubcontratos' %}" style="text-decoration: none; color: #60b232; font-weight: 500;">Lista de subcontratos</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Creación de subcontrato</li>
+      <li class="breadcrumb-item active" aria-current="page">Detalles de subcontrato</li>
     </ol>
   </nav>
 
-<h3 class="text-center mb-5 mt-3 tit_sec">Creación de subcontratos</h3>
+<h3 class="text-center mb-5 mt-3 tit_sec">detalles de subcontrato: {{subcontrato.pk}}</h3>
 
 
 <form action="{% url 'guardarSubcontrato' %}" method="post" enctype="multipart/form-data" id="guardarSubcontratoForm">
@@ -58,28 +58,19 @@
     <div class="row mb-3">
         <div class="col-3">
             <label for=""><strong>Identificador subcontrato </strong> <sup class="campo_requerido">*</sup></label>
-
-            <input type="text" class="form-control" value="{{ultimo_id}}" readonly>
+            <p>{{subcontrato.pk}}</p>
         </div>
         <div class="col-3">
             <label for=""><strong>Tipo de contrato</strong> <sup class="campo_requerido">*</sup></label>
-            <select id="comboA"  class="form-select " onchange="getComboA(this)" name="tipo_contrato">
-                <option value="1.1">1.1 Contratos con IVA pleno suministros</option>
-                <option value="1.2">1.2 Contratos con IVA pleno y algunos servicios.</option>
-                <option value="2">2. Contratos de servicios de obra civil.</option>
-                <option value="3">3. Contratos mixtos.</option>
-            </select>
-            
+            <p>{{subcontrato.get_tipo_contrato_display}}</p>
         </div>
         <div class="col-3">
             <label for=""><strong>Elaborador</strong> <sup class="campo_requerido">*</sup></label>
-
-            <select name="elaborador" id="elaborador" class="form-control" style="width: 100%;"></select>
-            <p class="error_text" id="P_elaborador"></p>
+            <p>{{subcontrato.elaborador}}</p>
         </div>
         <div class="col-3">
             <label for=""><strong>Cargo</strong> <sup class="campo_requerido">*</sup></label>
-            <input type="text" class="form-control" id="cargoElaborador" readonly>
+            <p>{{subcontrato.elaborador.cargo.capitalize}}</p>
         </div>
     </div>
 
@@ -87,20 +78,20 @@
 
         <div class="col-3">
             <label for=""><strong>Proyecto </strong> <sup class="campo_requerido">*</sup></label>
-            <select name="proyecto" id="proyecto" class="form-control"></select>
+            <p>{{subcontrato.proyecto}}</p>
             <p class="error_text" id="P_proyecto"></p>
         </div>
         <div class="col-3">
             <label for=""><strong>Centro de operaciones </strong> <sup class="campo_requerido">*</sup></label>
-            <select  id="centro_de_operaciones" class="form-control"></select>
+            <p>{{subcontrato.proyecto.id_proyecto}}</p>
         </div>
         <div class="col-3">
             <label for=""><strong>Nit</strong> <sup class="campo_requerido">*</sup></label>
-            <select id="nit" class="form-control"></select>
+            <p>{{subcontrato.proveedor.nit}}</p>
         </div>
         <div class="col-3">
             <label for=""><strong>Proveedor</strong> <sup class="campo_requerido">*</sup></label>
-            <select name="proveedor" id="proveedor" class="form-control"></select>
+            <p>{{subcontrato.proveedor}}</p>
             <p class="error_text" id="P_proveedor"></p>
         </div>
     </div>
@@ -115,20 +106,17 @@
         </div>
         <div class="col-3">
             <label for=""><strong>Compañía de registro</strong> <sup class="campo_requerido">*</sup></label>
-            <select name="compania" id="compania" class="form-control"></select>
+            <p>{{subcontrato.compania}}</p>
             <p class="error_text" id="P_compania"></p>
         </div>
         <div class="col-3">
             <label for=""><strong>Tipo Orden de compra</strong> <sup class="campo_requerido">*</sup></label>
-            <select class="form-select" name="tipo_orden" id="slec" disabled>
-                <option value="1" selected>OCS</option>
-                <option value="2">OCM</option>
-            </select>
+            <p>{{subcontrato.get_tipo_orden_display}}</p>
             <p class="error_text" id="P_tipo_orden"></p>
         </div>
         <div class="col-3">
             <label for=""><strong>Nro. Orden de compra</strong> <sup class="campo_requerido">*</sup></label>
-            <input type="text" class="form-control" name="numero_orden">
+            <p>{{subcontrato.numero_orden}}</p>
             <p class="error_text" id="P_numero_orden"></p>
         </div>
     </div>
@@ -190,6 +178,7 @@
                                 <th>Valor Unitario</th>
                                 <th>Valor total</th>
                             </tr>
+                            
                             <tr onchange="calcularTotal()">
                                <form id="ItemsSubcontratoForm">
                                     <td>
@@ -226,10 +215,20 @@
                                     </td>
                                </form>
                             </tr>
+                            
                         </thead>
                         <tbody id="tblItems">
-                            
-                            
+                            {% for item  in  items%}
+                                <tr>
+                                    <td>{{item.item_codigo}}</td>
+                                    <td>{{item.item_nombre}}</td>
+                                    <td>{{item.descripcion}}</td>
+                                    <td>{{item.unidad}}</td>
+                                    <td>{{item.cantidad}}</td>
+                                    <td>{{item.valor_unitario}}</td>
+                                </tr>
+                                
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -329,8 +328,95 @@
                 <div class="row mt-4 mb-3">
                     <div class="col-12">
                         <label for=""><strong>¿Como se hará el seguimiento de actas?</strong> <sup class="campo_requerido">*</sup></label>
-                        {{form.seguimiento_acta}}
+                        <p>{{subcontrato.get_seguimiento_acta_display}}</p>
                         <p class="error_text" id="P_seguimiento_acta"></p>
+                    </div>
+                    <div class="card mt-3 mb-5" style="padding: 10px;" id="card_it">
+                        <h6>Actas de producción</h6>
+                        <p class="error_text" id="P_items"></p>
+                        <table class="table text-center" id="tbl_items">
+                            <thead>
+                                <tr>
+                                    <th>Titulo</th>
+                                    <th>Seguimiento</th>
+                                    <th>Valor total</th>
+                                    <th>Seguridad social</th>
+                                    <th>Listado de personal</th>
+                                    <th>Estado</th>
+                                </tr>                                                   
+                            </thead>
+                            <tbody id="tblItems">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card mt-3 mb-5" style="padding: 10px;" id="card_it">
+                        <h6>Items</h6>
+                        <p class="error_text" id="P_items"></p>
+                        <table class="table text-center" id="tbl_items">
+                            <thead>
+                                <tr>
+                                    <th width="200px">Código</th> 
+                                    <th>Item</th>
+                                    <th>Descripción</th>
+                                    <th>Unidad</th>
+                                    <th>Cantidad</th>
+                                    <th>Valor Unitario</th>
+                                    <th>Valor total</th>
+                                </tr>
+                                
+                                <tr onchange="calcularTotal()">
+                                   <form id="ItemsSubcontratoForm">
+                                        <td>
+                                            <select type="text" class="form-control" id="Codigo"></select>
+                                            <p class="error_text" id="I_codigo"></p>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" id="Item">
+                                            <p class="error_text" id="I_item"></p>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" id="Descripcion">
+                                            <p class="error_text" id="I_descripcion"></p>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" id="Unidad">
+                                            <p class="error_text" id="I_unidad"></p>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control" id="Cantidad">
+                                            <p class="error_text" id="I_cantidad"></p>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control" id="ValorUnitario">
+                                            <p class="error_text" id="I_valorU"></p>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" id="ValorTotal" readonly>
+                                            <p></p>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarItems(), calcularIva(), CalcularT()"><strong><i class='bx bx-plus'></i></strong> </button>
+                                            <p></p>
+                                        </td>
+                                   </form>
+                                </tr>
+                                
+                            </thead>
+                            <tbody id="tblItems">
+                                {% for item  in  items%}
+                                    <tr>
+                                        <td>{{item.item_codigo}}</td>
+                                        <td>{{item.item_nombre}}</td>
+                                        <td>{{item.descripcion}}</td>
+                                        <td>{{item.unidad}}</td>
+                                        <td>{{item.cantidad}}</td>
+                                        <td>{{item.valor_unitario}}</td>
+                                    </tr>
+                                    
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -338,34 +424,34 @@
                 <div class="row mt-4">
                     <div class="col-3">
                         <label for=""><strong>Fecha inicio del contrato</strong> <sup class="campo_requerido">*</sup></label>
-                        <input type="date" class="form-control" name="fecha_inicio_contrato">
+                        <p>{{subcontrato.fecha_inicio_contrato}}</p>
                         <p class="error_text" id="P_fecha_inicio_contrato"></p>
                     </div>
                     <div class="col-3">
                         <label for=""><strong>Fecha vencimiento contrato</strong> <sup class="campo_requerido">*</sup></label>
-                        <input type="date" class="form-control" name="fecha_vencimiento_contrato">
+                        <p>{{subcontrato.fecha_vencimiento_contrato}}</p>
                         <p class="error_text" id="P_fecha_vencimiento_contrato"></p>
                     </div>
                     <div class="col-3">
                         <label for=""><strong>Director de obra</strong> <sup class="campo_requerido">*</sup></label>
-                        <input type="text" class="form-control" name="director_obra">
+                        <p>{{subcontrato.director_obra}}</p>
                         <p class="error_text" id="P_director_obra"></p>
                     </div>
                     <div class="col-3">
                         <label for=""><strong>Gestor del contrato</strong> <sup class="campo_requerido">*</sup></label>
-                        <input type="text" class="form-control" name="gestor_contrato">
+                        <p>{{subcontrato.gestor_contrato}}</p>
                         <p class="error_text" id="P_gestor_contrato"></p>
                     </div>
                 </div>
                 <div class="row mt-4">
                     <div class="col-12">
                         <label for=""><strong>Correo de notificación del proveedor</strong> <sup class="campo_requerido">*</sup></label>
-                        <input type="email" class="form-control" name="correo_notificacion_proveedor" id="correo_notificacion_proveedor">
+                        <p>{{subcontrato.correo_notificacion_proveedor}}</p>
                         <p class="error_text" id="P_correo_notificacion_proveedor"></p>
                     </div>
                     <div class="col-12 mt-3">
                         <label for=""><strong>Validador/es del subcontrato</strong> <sup class="campo_requerido">*</sup></label>
-                        {{form.validadores}}
+                        <p>{{subcontrato.validadores}}</p>
                         <p class="error_text" id="P_validadores"></p>
                     </div>
                 </div>
@@ -381,38 +467,17 @@
                                 <th>Fecha de vencimiento</th>
                                 <th></th>
                             </tr>
-                            <tr onchange="calcularTotal()">
-                                <form id="ItemsSubcontratoForm">
-                                     <td>
-                                         <select type="text" class="form-select" id="Tipo_Poliza">
-                                            <option>Cumplimiento</option>
-                                            <option>Responsabilidad civil</option>
-                                            <option>Todo riesgo</option>
-                                         </select>
-                                         <p class="error_text" id="Po_tipo_poliza"></p>
-                                     </td>
-                                     <td>
-                                         <input type="text" class="form-control" id="Numero_Poliza">
-                                         <p class="error_text" id="Po_numero_poliza"></p>
-                                     </td>
-                                     <td>
-                                        {{formPoliza.aseguradora}}
-                                         <p class="error_text" id="Po_aseguradora"></p>
-                                     </td>
-                                     <td>
-                                         <input type="date" class="form-control" id="Fecha_vencimiento_poliza">
-                                         <p class="error_text" id="Po_fecha_vencimiento_poliza"></p>
-                                     </td>
-                                     <td>
-                                         <button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarPoliza()"><strong><i class='bx bx-plus'></i></strong> </button>
-                                         <p></p>
-                                     </td>
-                                </form>
-                             </tr>
                         </thead>
                         <tbody id="tblpolizas">
-                            
-                            
+                            {% for poliza in subcontrato.polizas.all %}
+                                <tr>
+                                    <td>{{poliza.tipo_poliza}}</td>
+                                    <td>{{poliza.numero_poliza}}</td>
+                                    <td>{{poliza.get_aseguradora_display}}</td>
+                                    <td>{{poliza.fecha_vencimiento}}</td>
+                                </tr>
+                                
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -1050,3 +1115,106 @@
     
     </script>
 {% endblock scripts %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    

@@ -10,7 +10,8 @@ class Nomina(models.Model):
     email = models.EmailField(null=True, blank=True)
 
     def __str__(self):
-        return self.razon_social+ " "+ self.cargo
+        return self.razon_social.capitalize()
+    
     class Meta:
         db_table = "nominas"
 
@@ -56,7 +57,7 @@ class Proveedor(models.Model):
         
 
 # FIN
-TIPO_CONTRANTO =(
+TIPO_CONTRATO =(
    ("1.1", "1.1 Contratos con IVA pleno suministros."),
    ("1.2", "1.2 Contratos con IVA pleno y algunos servicios."),
    ("2", "2. Contratos de servicios de obra civil."),
@@ -66,7 +67,6 @@ TIPO_CONTRANTO =(
 TIPO_ORDEN =(
    ("1", "OCS"),
    ("2", "OCM"),
-  
 )
 SEGUIMIENTO_ACTAS = (
     ("1","Semanal"),
@@ -161,7 +161,7 @@ class Poliza(models.Model):
     
      
 class Subcontrato(models.Model):
-    tipo_contrato = models.CharField(max_length=5, choices=TIPO_CONTRANTO)
+    tipo_contrato = models.CharField(max_length=5, choices=TIPO_CONTRATO)
     elaborador = models.ForeignKey(Nomina, on_delete=models.SET_NULL, null=True)
     proyecto = models.ForeignKey(Centro_Operacion, on_delete=models.SET_NULL, null=True)
     proveedor = models.ForeignKey(Proveedor, on_delete=models.SET_NULL, null=True)
@@ -197,6 +197,10 @@ class Subcontrato(models.Model):
         
     def __str__(self):
         return f"Subcontrato {self.pk}"
+
+    @property
+    def CantidadPolizas(self):
+        return self.polizas.all().count()
     
 
 class Item_Subcontrato(models.Model):
