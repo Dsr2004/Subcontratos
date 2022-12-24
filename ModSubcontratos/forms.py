@@ -30,6 +30,7 @@ class SubcontratoForm(forms.ModelForm):
             "modificaciones_contractuales": forms.FileInput(attrs={"class":"form-control form-control-sm", "autocomplete":"off"}),
             "acta_recibo_final": forms.FileInput(attrs={"class":"form-control form-control-sm", "autocomplete":"off"}),
             "acta_liquidacion": forms.FileInput(attrs={"class":"form-control form-control-sm", "autocomplete":"off"}),
+            "impo": forms.CheckboxInput(),
         }
     def __init__(self, *args, **kwargs):
         super(SubcontratoForm, self).__init__(*args, **kwargs)

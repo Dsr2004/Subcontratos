@@ -157,7 +157,10 @@ class Poliza(models.Model):
         db_table = "polizas"
         
     def __str__(self):
-        return f"Poliza del subcontrato {self.subcontrato_set.all()[0].pk}"
+        if self.subcontrato_set.all():
+            return f"Poliza del subcontrato {self.subcontrato_set.all()[0].pk}"
+        else:
+            return f"TIPO: {self.tipo_poliza} NÚMERO: {self.numero_poliza} ASEGURADORA{self.get_aseguradora_display()} VENCIMIENTO:{self.fecha_vencimiento}"
     
      
 class Subcontrato(models.Model):
@@ -180,15 +183,15 @@ class Subcontrato(models.Model):
     correo_notificacion_proveedor = models.EmailField()
     validadores = MultiSelectField(max_length=150, choices=VALIDADORES)
     polizas = models.ManyToManyField(Poliza)
-    
+    impo = models.BooleanField()
     contrato = models.FileField(upload_to=guardar_contrato, validators = [validar_extencion_archivo])
     polizas_garantias = models.FileField(upload_to=guardar_polizas_garantias, validators = [validar_extencion_archivo])
     acta_inicio = models.FileField(upload_to=guardar_acta_inicio, validators = [validar_extencion_archivo])
     modificaciones_contractuales = models.FileField(upload_to=guardar_modificaciones_contractuales, validators = [validar_extencion_archivo])
     acta_recibo_final = models.FileField(upload_to=guardar_acta_recibo_final, validators = [validar_extencion_archivo])
     acta_liquidacion = models.FileField(upload_to=guardar_acta_liquidacion, validators = [validar_extencion_archivo])
-    estado = models.CharField(max_length=30, choices=ESTADO_SUBCONTRATO)
-
+    estado = models.CharField(max_length=30, choices=ESTADO_SUBCONTRATO, default="1")
+    consecutivo = models.BigIntegerField()
     fecha_creacion = models.DateField(auto_now_add=True)
     proximo_envio_correo = models.DateField(null=True, blank=True)
 

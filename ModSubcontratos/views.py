@@ -58,12 +58,11 @@ class SubContratos(View):
     def get(self, request, *args, **kwargs):
         ultimo_id = Subcontrato.objects.last()
         if ultimo_id:
-            ultimo_id.pk+=1
-            ultimo_id = ultimo_id.pk
+            consecutivo = ultimo_id.consecutivo+1
         else:
-            ultimo_id=1
+            consecutivo = 1
 
-        return render(request, self.template_name,{"ultimo_id":ultimo_id, "form":SubcontratoForm(), "formPoliza":PolizaForm()})
+        return render(request, self.template_name,{"consecutivo":consecutivo, "form":SubcontratoForm(), "formPoliza":PolizaForm()})
     def post(self, request, *args, **kwargs):
         try:
             action = request.POST.get("action")
@@ -135,7 +134,8 @@ class GuardarSubcontrato(View):
     form_class = SubcontratoForm
     
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
+        print(request.POST)
+        form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
             try:
                 with transaction.atomic():
@@ -167,17 +167,21 @@ class GuardarSubcontrato(View):
                     print()
                     subcontrato.save()
                     if request.POST.get("impo")=="si":
+                        print("sdsds")
                         file = request.FILES["excelItems"]
                         if file:
                             df = pd.read_excel(file)
                             for index, row in df.iterrows():
-                                data = {"subcontrato":subcontrato.pk,
+                                try:
+                                    data = {"subcontrato":subcontrato.pk,
                                         "item_codigo":row["Código ITEM"],
                                         "item_nombre":row["Item"],
                                         "descripcion":row["Descripción"],
                                         "unidad":row["Unidad"],
                                         "cantidad":row["Cantidad"],
                                         "valor_unitario":row["Valor Unitario"]}
+                                except Exception as e:
+                                    raise Exception("El formato del Excel es incorrecto, por favor verifique la columna: ", str(e))
                                 validacion = validar_itemsSubcontrato(data, "excel")
                                 if validacion == True:
                                     formItemSubcon = Item_Subcontrato.objects.create(subcontrato=subcontrato,
@@ -190,10 +194,11 @@ class GuardarSubcontrato(View):
                                             )
                                 else:
                                     print("validaciones desde el excel: ",validacion)
+                            subcontrato.impo = True
+                            subcontrato.save()
                     elif request.POST.get("impo")=="no":
                         items = json.loads(request.POST.get("items"))
                         if items:
-                            
                             for i in items:
                                 codigo = i["data"]["codigo"]
                                 item = i["data"]["item"]
@@ -223,6 +228,8 @@ class GuardarSubcontrato(View):
                                     print(formItemSubcon)
                                 else:
                                     print("validaciones desde html: ",validacion)
+                            subcontrato.impo = False
+                            subcontrato.save()
                         else:
                             raise Exception("ítems: Debe ingresar los ítems, esta sección es obligatoria.")
             except Exception as e:
@@ -231,6 +238,7 @@ class GuardarSubcontrato(View):
             print(reverse("listsubcontratos"))
             return JsonResponse({"mensaje":"Creado correctamente","path":reverse("listsubcontratos")}, status=200)
         else:
+            print("error al validar el formulario", form.errors)
             return JsonResponse({"errores":form.errors}, status=400) 
 
 class ListarSubcontratos(ListView):
