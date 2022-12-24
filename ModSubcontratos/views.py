@@ -7,7 +7,7 @@ from django.views.generic import View
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.db import transaction
-from django.views.generic import View, ListView, CreateView, UpdateView, TemplateView
+from django.views.generic import View, ListView, CreateView, UpdateView, TemplateView, DetailView
 from django.http import QueryDict
 from .models import *
 from .forms import SubcontratoForm, Item_SubcontratoForm, PolizaForm
@@ -248,3 +248,14 @@ class ListarSubcontratos(ListView):
 
 class ModificarSubcontrato(TemplateView):
     template_name = "listarSubcontratos.html"
+
+class VerSubcontrato(DetailView):
+    model = Subcontrato
+    template_name = "verSubcontrato.html"
+    context_object_name = "subcontrato"
+    
+    def get_context_data(self, **kwargs):
+        context = super(VerSubcontrato, self).get_context_data(**kwargs)
+        context["items"] = self.get_object().item_subcontrato_set.all()
+        return context
+    

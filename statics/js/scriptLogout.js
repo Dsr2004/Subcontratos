@@ -1,4 +1,3 @@
-
 window.setTimeout(function() {
     $(".alert").fadeTo(500, 0).slideUp(500, function() {
         $(this).remove();
@@ -25,3 +24,4 @@ setTimeout(function() {
         action.click();
     }
 }, 1 * 30000);
+
