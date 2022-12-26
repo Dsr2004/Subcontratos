@@ -592,7 +592,7 @@
    
     <!-- Modal de subcapitulos -->
     <div class="modal fade" id="AddSubcapitulo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
           <div class="modal-content">
             <div class="modal-body">
                 <div class="row mt-4">
@@ -601,7 +601,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-check">
-                                    <input class="form-check-input" onclick="importarExcel(1)" type="radio" name="impo" id="impo" value="si">
+                                    <input class="form-check-input" onclick="importarExcelSub(1)" type="radio" name="impoSub" id="impoSub" value="si">
                                     <label class="form-check-label" for="impo">
                                     Si
                                     </label>
@@ -609,7 +609,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="form-check">
-                                    <input class="form-check-input" onclick="importarExcel(2)" type="radio" name="impo" id="impo" value="no" checked>
+                                    <input class="form-check-input" onclick="importarExcelSub(2)" type="radio" name="impoSub" id="impoSub" value="no" checked>
                                     <label class="form-check-label" for="impo">
                                         No
                                     </label>
@@ -617,23 +617,23 @@
                             </div>
                         </div>            
                     </div>
-                    <div class="col-8" id="excel" style="display: none;">
+                    <div class="col-8" id="excelSub" style="display: none;">
                         <label for=""><strong>Información items</strong> </label>
-                        <input type="file" class="form-control" name="excelItems" id="">
+                        <input type="file" class="form-control" name="excelItems" id="excelItems">
                         <small>Si desea importar los items para este subcapitulo, adjunte el excel con el formato indicado</small>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-5">
                         <label for=""><strong></strong> Subcapitulo <sup class="campo_requerido">*</sup></label>
-                        <select class="form-control">
+                        <select class="form-control" id="Subcapitulos">
                             <option>OBRA CIVIL</option>
                             <option>SUMINISTRO</option>
                         </select>
                         
                     </div>
                 </div>
-                <table class="table text-center" id="tbl_items">
+                <table class="table text-center" id="tbl_itemsSub">
                     <thead>
                         <tr>
                             <th width="200px">Código</th> 
@@ -645,17 +645,41 @@
                             <th>Valor total</th>
                         </tr>
                         <tr onchange="calcularTotal()">
-                            <td><select type="text" class="form-control" id="Codigo"></select></td>
-                            <td><input type="text" class="form-control" id="Item"></td>
-                            <td><input type="text" class="form-control" id="Descripcion"></td>
-                            <td><input type="text" class="form-control" id="Unidad"></td>
-                            <td><input type="number" class="form-control" id="Cantidad"></td>
-                            <td><input type="number" class="form-control" id="ValorUnitario"></td>
-                            <td><input type="text" class="form-control" id="ValorTotal" readonly></td>
-                            <td><button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarItems(), calcularIva(), CalcularT()"><strong><i class='bx bx-plus'></i></strong> </button></td>
+                            <td>
+                                <select type="text" class="form-select" id="CodigoSub"></select>
+                                <p class="error_text" id="Sub_CodigoSub"></p>    
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="ItemSub">
+                                <p class="error_text" id="Sub_ItemSub"></p>    
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="DescripcionSub">
+                                <p class="error_text" id="Sub_DescripcionSub"></p>    
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="UnidadSub">
+                                <p class="error_text" id="Sub_UnidadSub"></p>    
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" id="CantidadSub">
+                                <p class="error_text" id="Sub_CantidadSub"></p>    
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" id="ValorUnitarioSub">
+                                <p class="error_text" id="Sub_ValorUnitarioSub"></p>    
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="ValorTotalSub" readonly>
+                                <p class="error_text" id="Sub_ValorTotalSub"></p>    
+                            </td>
+                            <td>
+                                <button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarItemsSub()"><strong><i class='bx bx-plus'></i></strong> </button>
+                                <p class="error_text"></p>    
+                            </td>
                         </tr>
                     </thead>
-                    <tbody id="tblItems">
+                    <tbody id="tblItemsSub">
                         
                         
                     </tbody>
@@ -772,7 +796,6 @@
     var campo = document.getElementById("impo").value
 
     function importarExcel(campo){
-        
         var tabla = document.getElementById("tbl_items")
         var campoExcel = document.getElementById("excel")
 
@@ -786,6 +809,20 @@
         }
     }
 
+     function importarExcelSub(campo){
+        var tabla = document.getElementById("tbl_itemsSub")
+        var campoExcel = document.getElementById("excelSub")
+
+        console.log(tabla, campoExcel)
+        if(campo == 1){
+            tabla.style.display = "none"
+            campoExcel.style.display = "block"
+        }
+        else{
+            tabla.style.display = "block"
+            campoExcel.style.display = "none"
+        }
+    }
     
 
     function calcularSubtotal(){
@@ -836,6 +873,10 @@
    }
 
    var PolizasObject ={
+    data:[]
+   }
+
+   var ItemsSucapituloObject ={
     data:[]
    }
     
@@ -997,8 +1038,104 @@
         }
 
     }
+     
     
+    // SUBCAPITULOS
+    function AgregarItemsSub(){
+        $("#tbl_itemsSub").find('.error_text').text('');
+        $("#tbl_itemsSub").find(".is-invalid").removeClass('is-invalid');
 
+        let codigo = $("#CodigoSub").val();
+        let item = $("#ItemSub").val();
+        let descripcion = $("#DescripcionSub").val();
+        let unidad = $("#UnidadSub").val();
+        let cantidad = $("#CantidadSub").val();
+        let valorUnitario = $("#ValorUnitarioSub").val(); 
+        let valorTotal = $("#ValorTotalSub").val();
+        let subcapitulo = $("#Subcapitulos").val()
+
+        let subt = document.getElementById("subtot");
+        let subtt = document.getElementById("subtot3")
+
+        if(codigo == "" || codigo == null){
+            $("#CodigoSub").addClass("is-invalid")
+            $("#Sub_CodigoSub").text("Este campo es requerido")
+        }else if(item == "" || item == null){
+            $("#ItemSub").addClass("is-invalid")
+            $("#Sub_ItemSub").text("Este campo es requerido")
+        }else if(descripcion == "" || descripcion == null){
+            $("#DescripcionSub").addClass("is-invalid")
+            $("#Sub_DescripcionSub").text("Este campo es requerido")
+        }else if(unidad == "" || unidad == null){
+            $("#UnidadSub").addClass("is-invalid")
+            $("#Sub_UnidadSub").text("Este campo es requerido")
+        }else if(cantidad == "" || cantidad == null){
+            $("#CantidadSub").addClass("is-invalid")
+            $("#Sub_CantidadSub").text("Este campo es requerido")
+        }else if(valorUnitario == "" || valorUnitario == null){
+            $("#ValorUnitarioSub").addClass("is-invalid")
+            $("#Sub_ValorUnitarioSub").text("Este campo es requerido")
+        }
+
+        if(cantidad > 0 && valorUnitario > 0 && valorTotal > 0){
+            $('#tblItemsSub').append(`
+            <tr class="it_row" id="tr-${codigo}">
+                <td>
+                    <input type="hidden" name="" value="${codigo}"/>
+                    ${$("#Codigo").select2('data')[0]['text']}
+                </td>
+                <td>${item}</td>  
+                <td>${descripcion}</td>  
+                <td>${unidad}</td>  
+                <td>${cantidad}</td>  
+                <td>${valorUnitario}</td>
+                <td class="valTot">${parseInt(valorTotal)}</td>  
+                <td>
+                    <button class="btn" onclick="Eliminar_ItemSubcapitulo(${codigo})" style="color: #fc3322; font-size: 20px; font-weight: bold;"><i class='bx bx-x'></i></button>
+                </td>    
+            </tr>
+        `)
+        ItemsSucapituloObject.data.push({ 
+            codigo:codigo,
+            data:{
+                codigo:codigo,
+                item:item,
+                descripcion: descripcion,
+                unidad: unidad,
+                cantidad:cantidad,
+                valorUnitario:valorUnitario,
+                valorTotal:valorTotal,
+                sucapitulo:subcapitulo
+            }
+        })
+            let con = parseInt(valorTotal)
+            valorSubtotal += con;
+            
+            subt.innerText = valorSubtotal
+            subtt.innerText = valorSubtotal
+            // subt.innerText = ${parseInt(valorSubtotal) += parseInt(valorSubtotal)};
+            
+            $("#Subcapitulos").val(null).trigger("change")
+            $("#CodigoSub").empty()
+            $("#ItemSub").val("")
+            $("#DescripcionSub").val("")
+            $("#UnidadSub").val("")
+            $("#CantidadSub").val("")
+            $("#ValorUnitarioSub").val("")
+            $("#ValorTotalSub").val("")
+        }
+       
+        
+    }
+    function Eliminar_ItemSubcapitulo(id){
+        $("#tr-"+ id).remove();
+        for (let i = 0; i < ItemsSucapituloObject.data.length; i++){
+            if (ItemsSucapituloObject.data[i]["id"]==id){
+                ItemsSucapituloObject.data.splice(i,1)
+            }
+        }
+
+    }
     
     
     

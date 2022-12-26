@@ -35,6 +35,15 @@
                     <label><strong>Rol de usuario</strong> <sup class="campo_requerido">*</sup></label>
                     {{form.rol}}
                     <p id="update_rol" class="error_text"></p>
+                    
+                    {% if object.rol.name == "Validador" %}
+                        <div id="validadorBox">
+                            <label><strong>Tipo de Validador</strong> <sup class="campo_requerido">*</sup></label>
+                            {{form.tipo_validador}}
+                            <p id="tipo_validador" class="error_text"></p>
+                        </div>
+                    {% endif %}
+  
             </form>      
         </div>
         <div class="modal-footer">
@@ -44,6 +53,8 @@
     </div>
 </div>
 <script>
+    
+
     function modificarUsuario(){
     let form = $("#modificarUsuarioForm")
     $.ajax({

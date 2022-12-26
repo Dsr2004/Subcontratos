@@ -10,7 +10,7 @@ class Nomina(models.Model):
     email = models.EmailField(null=True, blank=True)
 
     def __str__(self):
-        return self.razon_social.capitalize()
+        return self.razon_social
     
     class Meta:
         db_table = "nominas"
@@ -204,9 +204,30 @@ class Subcontrato(models.Model):
     @property
     def CantidadPolizas(self):
         return self.polizas.all().count()
-
+    
+    @property 
     def get_subtotal(self):
-        return str(self.cantidad * self.valor_unitario)
+        items = self.item_subcontrato_set.all()
+        sub = sum([item.get_total for item in items])
+        return sub
+    
+    @property
+    def get_iva(self):
+        iva = float("{:.5f}".format(self.get_subtotal*self.tarifa_iva/100))
+        return iva    
+
+    @property
+    def get_porcentaje_administracion(self):
+        porcentaje_administracion = float("{:.5f}".format(self.get_subtotal*self.porcentaje_administracion/100))
+        print(porcentaje_administracion)
+        return porcentaje_administracion
+    
+    @property
+    def get_total(self):
+        total = (self.get_subtotal+self.get_iva+self.get_porcentaje_administracion)
+        print(total)
+        return total
+
     
     
     
@@ -229,4 +250,12 @@ class Item_Subcontrato(models.Model):
         @property
         def get_total(self):
             return self.cantidad * self.valor_unitario
+    
+
+class SubCapitulo(models.Model):
+    nombre = models.CharField(max_length=150)
+    subitem = models.ManyToManyField(Item_Subcontrato)
+
+
+
     

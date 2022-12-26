@@ -7,7 +7,7 @@
             allowClear: true,
             ajax:{
                 delay: 250,
-                url: window.location.pathname,
+                url: '/Subcontratos/BusquedaInfoSubcontrato/',
                 type: "POST",
                 data: function(params){
                 var queryParams = {
@@ -32,7 +32,7 @@
         $('#elaborador').on("change", function(){
             $.ajax({
                 type: "POST",
-                url: window.location.pathname,
+                url: '/Subcontratos/BusquedaInfoSubcontrato/',
                 data: {"csrfmiddlewaretoken":csrftoken,"elaborador":$(this).val(),"action":"CargoElaborador", "tipo":"elaborador"},
                 success: function (response) {
                     respuesta = JSON.stringify(response)
@@ -54,7 +54,7 @@
             allowClear: true,
             ajax:{
                 delay: 250,
-                url: window.location.pathname,
+                url: '/Subcontratos/BusquedaInfoSubcontrato/',
                 type: "POST",
                 data: function(params){
                 var queryParams = {
@@ -79,7 +79,7 @@
         $('#proyecto').on("change", function(){
             $.ajax({
                 type: "POST",
-                url: window.location.pathname,
+                url: '/Subcontratos/BusquedaInfoSubcontrato/',
                 data: {"csrfmiddlewaretoken":csrftoken,"proyecto":$(this).val(),"action":"centroOperacionesProyecto",tipo: "proyecto"},
                 success: function (response) {
                     respuesta = JSON.stringify(response)
@@ -92,7 +92,7 @@
                         allowClear: true,
                         ajax:{
                             delay: 250,
-                            url: window.location.pathname,
+                            url: '/Subcontratos/BusquedaInfoSubcontrato/',
                             type: "POST",
                             data: function(params){
                             var queryParams = {
@@ -128,7 +128,7 @@
             allowClear: true,
             ajax:{
                 delay: 250,
-                url: window.location.pathname,
+                url: '/Subcontratos/BusquedaInfoSubcontrato/',
                 type: "POST",
                 data: function(params){
                 var queryParams = {
@@ -154,7 +154,7 @@
         $('#centro_de_operaciones').on("change", function(){
             $.ajax({
                 type: "POST",
-                url: window.location.pathname,
+                url: '/Subcontratos/BusquedaInfoSubcontrato/',
                 data: {"csrfmiddlewaretoken":csrftoken,"centroOperacion":$(this).val(),"action":"proyectoCentroOperaciones", tipo: "proyecto"},
                 success: function(response){
                     respuesta = JSON.stringify(response)
@@ -167,7 +167,7 @@
                         allowClear: true,
                         ajax:{
                             delay: 250,
-                            url: window.location.pathname,
+                            url: '/Subcontratos/BusquedaInfoSubcontrato/',
                             type: "POST",
                             data: function(params){
                             var queryParams = {
@@ -200,7 +200,7 @@
             allowClear: true,
             ajax:{
                 delay: 250,
-                url: window.location.pathname,
+                url: '/Subcontratos/BusquedaInfoSubcontrato/',
                 type: "POST",
                 data: function(params){
                 var queryParams = {
@@ -229,7 +229,7 @@
             allowClear: true,
             ajax:{
                 delay: 250,
-                url: window.location.pathname,
+                url: '/Subcontratos/BusquedaInfoSubcontrato/',
                 type: "POST",
                 data: function(params){
                 var queryParams = {
@@ -254,11 +254,12 @@
         $('#nit').on("change", function(){
             $.ajax({
                 type: "POST",
-                url: window.location.pathname,
+                url: '/Subcontratos/BusquedaInfoSubcontrato/',
                 data: {"csrfmiddlewaretoken":csrftoken,"nit":$(this).val(),"action":"proveedordelNIT", tipo:"proveedor"},
                 success: function(response){
-                    respuesta = JSON.stringify(response)
+                    let respuesta = JSON.stringify(response)
                     respuesta = JSON.parse(respuesta)
+                    $("#correo_notificacion_proveedor").val(respuesta["email"])
                     $('#proveedor').empty().select2({
                         data:[{id:respuesta["id"], text:respuesta["proveedor"]}],
                         theme: "bootstrap-5",
@@ -267,7 +268,7 @@
                         allowClear: true,
                         ajax:{
                             delay: 250,
-                            url: window.location.pathname,
+                            url: '/Subcontratos/BusquedaInfoSubcontrato/',
                             type: "POST",
                             data: function(params){
                             var queryParams = {
@@ -295,12 +296,12 @@
         $('#proveedor').on("change", function(){
             $.ajax({
                 type: "POST",
-                url: window.location.pathname,
+                url: '/Subcontratos/BusquedaInfoSubcontrato/',
                 data: {"csrfmiddlewaretoken":csrftoken,"proveedor":$(this).val(), "action":"NITdelProveedor", tipo:"proveedor"},
                 success: function(response){
                     respuesta = JSON.stringify(response)
                     respuesta = JSON.parse(respuesta)
-                    console.log(respuesta)
+                    $("#correo_notificacion_proveedor").val(respuesta["email"])
                     $('#nit').empty().select2({
                         data:[{id:respuesta["id"], text:respuesta["nit"]}],
                         theme: "bootstrap-5",
@@ -309,7 +310,7 @@
                         allowClear: true,
                         ajax:{
                             delay: 250,
-                            url: window.location.pathname,
+                            url: '/Subcontratos/BusquedaInfoSubcontrato/',
                             type: "POST",
                             data: function(params){
                             var queryParams = {
@@ -342,7 +343,7 @@
             allowClear: true,
             ajax:{
                 delay: 250,
-                url: window.location.pathname,
+                url: '/Subcontratos/BusquedaInfoSubcontrato/',
                 type: "POST",
                 data: function(params){
                 var queryParams = {
@@ -371,7 +372,7 @@
         allowClear: true,
         ajax:{
             delay: 250,
-            url: window.location.pathname,
+            url: '/Subcontratos/BusquedaInfoSubcontrato/',
             type: "POST",
             data: function(params){
             var queryParams = {
@@ -393,6 +394,38 @@
         placeholder: "Ingrese el codigo",
         minimumInputLength :3,
         scrollAfterSelect:true
+    });
+    // items del subcapitulo
+     $('#CodigoSub').select2({
+        theme: "bootstrap-5",
+        language: "es",
+        allowClear: true,
+        ajax:{
+            delay: 250,
+            url: '/Subcontratos/BusquedaInfoSubcontrato/',
+            type: "POST",
+            data: function(params){
+            var queryParams = {
+                csrfmiddlewaretoken:csrftoken,
+                term: params.term,
+                action: "autocompleteItem",
+                tipo: "item"
+            }
+            return queryParams
+            },
+            processResults: function(data){
+                return{
+                    results: $.map(data, function(item){
+                        return {id: item.id, text:item.final}
+                    })
+                }
+            }
+        },
+        placeholder: "Ingrese el codigo",
+        minimumInputLength :3,
+        scrollAfterSelect:true,
+        dropdownParent: $('#AddSubcapitulo'),
+        width:"20vw"
     });
     // elaboradores
     $('#validadores').select2({
@@ -422,7 +455,17 @@
         closeOnSelect: true,
         allowClear: false,
     });
-
+    //Subcapitulos
+    $('#Subcapitulos').select2({
+        language: "es",
+        theme: "bootstrap-5",
+        width:"100%",
+        placeholder: "Seleccione el subcapitulo",
+        closeOnSelect: true,
+        allowClear: false,
+        tags: true,
+        dropdownParent: $('#AddSubcapitulo'),
+    });
 
 });
 
@@ -435,7 +478,6 @@ function guardarSubcontrato(){
     $("#slec").prop("disabled", false)
     let tipo_orden = $("#slec").val()
     $("#slec").prop("disabled", true)
-    console.log()
     if ($('#comboA').val() == "3"){
         $("#slec").prop("disabled", false)
     }
