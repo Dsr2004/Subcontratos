@@ -206,7 +206,7 @@ class Subcontrato(models.Model):
         return self.polizas.all().count()
 
     def get_subtotal(self):
-        return self.cantidad * self.valor_unitario
+        return str(self.cantidad * self.valor_unitario)
     
     
     
