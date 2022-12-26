@@ -1077,12 +1077,12 @@
             $("#Sub_ValorUnitarioSub").text("Este campo es requerido")
         }
 
-        if(cantidad > 0 && valorUnitario > 0 && valorTotal > 0){
+        if(cantidad > 0 && valorUnitario > 0){
             $('#tblItemsSub').append(`
             <tr class="it_row" id="tr-${codigo}">
                 <td>
                     <input type="hidden" name="" value="${codigo}"/>
-                    ${$("#Codigo").select2('data')[0]['text']}
+                    ${$("#CodigoSub").select2('data')[0]['text']}
                 </td>
                 <td>${item}</td>  
                 <td>${descripcion}</td>  

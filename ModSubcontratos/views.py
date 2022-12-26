@@ -248,12 +248,12 @@ class ListarSubcontratos(ListView):
     model = Subcontrato
     context_object_name = "subcontratos"
     
-    def get(self, request,*args, **kwargs):
-        from datetime import datetime
-        contexto = {"nombrePersona": "Juan Manuel gaviria", "P": "Prueba", "id":"15", "fecha_creacion": datetime.now().date()}
-        from Subcontratos.correo import enviarCorreo
-        enviarCorreo("Recordatorio de realización de acta", "CorreosSubcontratos/RecordatorioActaBase.html", contexto, ["davitdy2015@gmail.com", "juanma28o123@gmail.com"])
-        return super().get(request,*args, **kwargs)
+    # def get(self, request,*args, **kwargs):
+    #     from datetime import datetime
+    #     contexto = {"nombrePersona": "Juan Manuel gaviria", "P": "Prueba", "id":"15", "fecha_creacion": datetime.now().date()}
+    #     from Subcontratos.correo import enviarCorreo
+    #     enviarCorreo("Recordatorio de realización de acta", "CorreosSubcontratos/RecordatorioActaBase.html", contexto, ["davitdy2015@gmail.com", "juanma28o123@gmail.com"])
+    #     return super().get(request,*args, **kwargs)
 
 class VerSubcontrato(DetailView):
     model = Subcontrato
