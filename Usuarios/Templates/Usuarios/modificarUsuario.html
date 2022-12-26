@@ -36,12 +36,17 @@
                     {{form.rol}}
                     <p id="update_rol" class="error_text"></p>
                     
-                    {% if object.rol.name == "Validador" %}
-                        <div id="validadorBox">
-                            <label><strong>Tipo de Validador</strong> <sup class="campo_requerido">*</sup></label>
-                            {{form.tipo_validador}}
-                            <p id="tipo_validador" class="error_text"></p>
-                        </div>
+                    <div id="validadorBox">
+                        <label><strong>Tipo de Validador</strong> <sup class="campo_requerido">*</sup></label>
+                        {{form.tipo_validador}}
+                        <p id="tipo_validador" class="error_text"></p>
+                    </div>
+
+                    {% if not object.rol.name == "Validador" %}
+                        <script>
+                            alert()
+                            $("#validadorBox").css("display","none")
+                        </script>
                     {% endif %}
   
             </form>      
@@ -53,7 +58,13 @@
     </div>
 </div>
 <script>
-    
+     $("#id_rol").on("change", function(){
+        if($("#id_rol option:selected").text() == "Validador"){
+            $("#validadorBox").css("display","block")
+        }else{
+            $("#validadorBox").css("display","none")
+        }
+    })
 
     function modificarUsuario(){
     let form = $("#modificarUsuarioForm")
