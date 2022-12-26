@@ -50,7 +50,7 @@
     </ol>
   </nav>
 
-<h3 class="text-center mb-5 mt-3 tit_sec">detalles de subcontrato: {{subcontrato.pk}}</h3>
+<h3 class="text-center mb-5 mt-3 tit_sec">detalles de subcontrato: {{subcontrato.consecutivo}}</h3>
 
 
 <form action="{% url 'guardarSubcontrato' %}" method="post" enctype="multipart/form-data" id="guardarSubcontratoForm">
@@ -58,7 +58,7 @@
     <div class="row mb-3">
         <div class="col-3">
             <label for=""><strong>Identificador subcontrato </strong> <sup class="campo_requerido">*</sup></label>
-            <p>{{subcontrato.pk}}</p>
+            <p>{{subcontrato.consecutivo}}</p>
         </div>
         <div class="col-3">
             <label for=""><strong>Tipo de contrato</strong> <sup class="campo_requerido">*</sup></label>
@@ -135,34 +135,6 @@
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                <div class="row mt-4">
-                    <div class="col-3" id="impExcel">
-                        <label for=""><strong>¿Importar desde un excel?</strong>  <sup class="campo_requerido">*</sup></label>
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" onclick="importarExcel(1)" type="radio" name="impo" id="impo" value="si">
-                                    <label class="form-check-label" for="impo">
-                                    Si
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" onclick="importarExcel(2)" type="radio" name="impo" id="impo" value="no" checked>
-                                    <label class="form-check-label" for="impo">
-                                        No
-                                    </label>
-                                </div>
-                            </div>
-                        </div>            
-                    </div>
-                    <div class="col-8" id="excel" style="display: none;">
-                        <label for=""><strong>Información items</strong> </label>
-                        <input type="file" class="form-control" name="excelItems" id="">
-                        <small>Si desea importar los items para este subcapitulo, adjunte el excel con el formato indicado</small>
-                    </div>
-                </div>
 
                 <div class="card mt-3 mb-5" style="padding: 10px;" id="card_it">
                     <h6>Items</h6>
@@ -177,45 +149,7 @@
                                 <th>Cantidad</th>
                                 <th>Valor Unitario</th>
                                 <th>Valor total</th>
-                            </tr>
-                            
-                            <tr onchange="calcularTotal()">
-                               <form id="ItemsSubcontratoForm">
-                                    <td>
-                                        <select type="text" class="form-control" id="Codigo"></select>
-                                        <p class="error_text" id="I_codigo"></p>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" id="Item">
-                                        <p class="error_text" id="I_item"></p>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" id="Descripcion">
-                                        <p class="error_text" id="I_descripcion"></p>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" id="Unidad">
-                                        <p class="error_text" id="I_unidad"></p>
-                                    </td>
-                                    <td>
-                                        <input type="number" class="form-control" id="Cantidad">
-                                        <p class="error_text" id="I_cantidad"></p>
-                                    </td>
-                                    <td>
-                                        <input type="number" class="form-control" id="ValorUnitario">
-                                        <p class="error_text" id="I_valorU"></p>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" id="ValorTotal" readonly>
-                                        <p></p>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarItems(), calcularIva(), CalcularT()"><strong><i class='bx bx-plus'></i></strong> </button>
-                                        <p></p>
-                                    </td>
-                               </form>
-                            </tr>
-                            
+                            </tr>   
                         </thead>
                         <tbody id="tblItems">
                             {% for item  in  items%}
@@ -350,74 +284,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="card mt-3 mb-5" style="padding: 10px;" id="card_it">
-                        <h6>Items</h6>
-                        <p class="error_text" id="P_items"></p>
-                        <table class="table text-center" id="tbl_items">
-                            <thead>
-                                <tr>
-                                    <th width="200px">Código</th> 
-                                    <th>Item</th>
-                                    <th>Descripción</th>
-                                    <th>Unidad</th>
-                                    <th>Cantidad</th>
-                                    <th>Valor Unitario</th>
-                                    <th>Valor total</th>
-                                </tr>
-                                
-                                <tr onchange="calcularTotal()">
-                                   <form id="ItemsSubcontratoForm">
-                                        <td>
-                                            <select type="text" class="form-control" id="Codigo"></select>
-                                            <p class="error_text" id="I_codigo"></p>
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" id="Item">
-                                            <p class="error_text" id="I_item"></p>
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" id="Descripcion">
-                                            <p class="error_text" id="I_descripcion"></p>
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" id="Unidad">
-                                            <p class="error_text" id="I_unidad"></p>
-                                        </td>
-                                        <td>
-                                            <input type="number" class="form-control" id="Cantidad">
-                                            <p class="error_text" id="I_cantidad"></p>
-                                        </td>
-                                        <td>
-                                            <input type="number" class="form-control" id="ValorUnitario">
-                                            <p class="error_text" id="I_valorU"></p>
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" id="ValorTotal" readonly>
-                                            <p></p>
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarItems(), calcularIva(), CalcularT()"><strong><i class='bx bx-plus'></i></strong> </button>
-                                            <p></p>
-                                        </td>
-                                   </form>
-                                </tr>
-                                
-                            </thead>
-                            <tbody id="tblItems">
-                                {% for item  in  items%}
-                                    <tr>
-                                        <td>{{item.item_codigo}}</td>
-                                        <td>{{item.item_nombre}}</td>
-                                        <td>{{item.descripcion}}</td>
-                                        <td>{{item.unidad}}</td>
-                                        <td>{{item.cantidad}}</td>
-                                        <td>{{item.valor_unitario}}</td>
-                                    </tr>
-                                    
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                   
                 </div>
             </div>
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
@@ -509,11 +376,6 @@
                         {{form.acta_liquidacion}}
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row mt-5 mb-2 justify-content-end text-center">
-            <div class="col-2">
-                <button class="btn btn-success" type="button" onclick="guardarSubcontrato()"><i class='bx bx-save'></i> Guardar</button>
             </div>
         </div>
     </div>

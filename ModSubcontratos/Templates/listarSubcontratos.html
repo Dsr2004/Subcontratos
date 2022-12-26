@@ -91,7 +91,10 @@
                 <td>{{subcontrato.proyecto.id_proyecto}}</td>
                 <td>{{subcontrato.validadores}}</td>
                 <td>{{subcontrato.CantidadPolizas}}</td>
-                <td><a class="btn" href="{% url 'verSubcontrato' subcontrato.pk %}">detalles</a></td>
+                <td>
+                    <a class="btn" href="{% url 'verSubcontrato' subcontrato.pk %}">detalles</a>
+                    <a href="{% url 'modificarSubcontrato' subcontrato.pk %}" class="btn btn-warning">Modificar</a>
+                </td>
             </tr>
           {% endfor %}   
         </tbody>

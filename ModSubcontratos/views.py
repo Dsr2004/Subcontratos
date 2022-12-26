@@ -63,6 +63,8 @@ class SubContratos(View):
             consecutivo = 1
 
         return render(request, self.template_name,{"consecutivo":consecutivo, "form":SubcontratoForm(), "formPoliza":PolizaForm()})
+    
+class BusquedaInfoSubcontrato(View):
     def post(self, request, *args, **kwargs):
         try:
             action = request.POST.get("action")
@@ -108,11 +110,11 @@ class SubContratos(View):
                     proveedor = request.POST.get("nit")
                     print(proveedor)
                     proveedor = Proveedor.objects.get(pk=proveedor)
-                    return JsonResponse({"id":proveedor.id,"proveedor":proveedor.razon_social})
+                    return JsonResponse({"id":proveedor.id,"proveedor":proveedor.razon_social,"email":proveedor.email})
                 elif action == "NITdelProveedor":
                     proveedor = request.POST.get("proveedor")
                     proveedor = Proveedor.objects.get(pk=proveedor)
-                    return JsonResponse({"id":proveedor.id,"nit":proveedor.nit})
+                    return JsonResponse({"id":proveedor.id,"nit":proveedor.nit,"email":proveedor.email})
             elif tipo == "compania":
                 if action == "autocompleteCompania":
                     compania = Compania.objects.filter(compania__icontains=request.POST.get("term"))
@@ -246,9 +248,6 @@ class ListarSubcontratos(ListView):
     model = Subcontrato
     context_object_name = "subcontratos"
 
-class ModificarSubcontrato(TemplateView):
-    template_name = "listarSubcontratos.html"
-
 class VerSubcontrato(DetailView):
     model = Subcontrato
     template_name = "verSubcontrato.html"
@@ -258,4 +257,11 @@ class VerSubcontrato(DetailView):
         context = super(VerSubcontrato, self).get_context_data(**kwargs)
         context["items"] = self.get_object().item_subcontrato_set.all()
         return context
+
+class ModificarSubcontrato(UpdateView):
+    template_name = "modificarSubcontrato.html"
+    model = Subcontrato
+    form_class = SubcontratoForm
+    success_url = reverse_lazy("listsubcontratos")
+    
     

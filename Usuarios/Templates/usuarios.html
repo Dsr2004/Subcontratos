@@ -118,6 +118,7 @@
 
   <script>
     $(document).ready(function () {
+        $("#validadorBox").css("display","none")
         $('#listarUsuarios').DataTable({
             "language": {
                 "lengthMenu": "Mostrar " + `<select class="custom-select custom-select-sm form-control form-control-sm">
@@ -140,6 +141,15 @@
         });
     });
   </script>
+  <script>
+    $("#id_rol").on("change", function(){
+        if($("#id_rol option:selected").text() == "Validador"){
+            $("#validadorBox").css("display","block")
+        }else{
+            $("#validadorBox").css("display","none")
+        }
+    })
+</script>
 {% endblock scripts %}
     
 
@@ -185,6 +195,12 @@
                     <label><strong>Rol de usuario</strong> <sup class="campo_requerido">*</sup></label>
                     {{form.rol}}
                     <p id="rol" class="error_text"></p>
+
+                    <div id="validadorBox">
+                        <label><strong>Tipo de Validador</strong> <sup class="campo_requerido">*</sup></label>
+                        {{form.tipo_validador}}
+                        <p id="tipo_validador" class="error_text"></p>
+                    </div>
                 </form>      
             </div>
             <div class="modal-footer">
@@ -199,6 +215,7 @@
 
     </div>
 {% endblock modales %}
-      
+
+
 
     

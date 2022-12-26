@@ -15,7 +15,7 @@ class LoginForm(AuthenticationForm):
 class UsuarioForm(forms.ModelForm):
     class Meta(forms.ModelForm):
         model = Usuario
-        fields = ['usuario','nombres','apellidos','correo','cedula',"rol"]
+        fields = ['usuario','nombres','apellidos','correo','cedula',"rol", "tipo_validador"]
         widgets = {
             "usuario": forms.TextInput(attrs={"class":"form-control mb-3", "autocomplete":"off", "placeholder":"Ingrese el nombre de usuario"}),
             "nombres": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el nombre completo"}),
@@ -23,8 +23,13 @@ class UsuarioForm(forms.ModelForm):
             "cedula": forms.TextInput(attrs={"class":"form-control mb-2", "autocomplete":"off", "placeholder":"Ingrese el número de documento"}),
             "correo": forms.EmailInput(attrs={"class":"form-control mb-2", "autocomplete":"off", "placeholder":"Ingrese el correo electrónico"}),
             "rol": forms.Select(attrs={"class":"form-select", "autocomplete":"off"}),
+            "tipo_validador":forms.Select(attrs={"class":"form-select", "autocomplete":"off"}),
             
         }
+        
+    def __init__(self, *args, **kwargs):
+        super(UsuarioForm, self).__init__(*args, **kwargs)
+        self.fields['tipo_validador'].required = False
        
         
         

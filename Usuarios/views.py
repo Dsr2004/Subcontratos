@@ -103,9 +103,9 @@ class CrearUsuario(CreateView):
         cedula = request.POST.get("cedula")
         correo = request.POST.get("correo")
         rol = request.POST.get("rol")
+        tipo = request.POST.get("tipo_validador")
         
         form = self.form_class(request.POST)
-        print(form)
         if form.is_valid():
             try:
                 rol = Group.objects.get(pk=rol)
@@ -118,7 +118,8 @@ class CrearUsuario(CreateView):
                usuario = usuario,
                cedula = cedula,
                correo = correo,
-               rol = rol
+               rol = rol,
+               tipo_validador = tipo
             )
             usuario.set_password(cedula)
             if rol is not None:

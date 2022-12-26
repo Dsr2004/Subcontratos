@@ -10,7 +10,7 @@ class Nomina(models.Model):
     email = models.EmailField(null=True, blank=True)
 
     def __str__(self):
-        return self.razon_social.capitalize()
+        return self.razon_social
     
     class Meta:
         db_table = "nominas"
@@ -224,4 +224,9 @@ class Item_Subcontrato(models.Model):
         @property
         def get_total(self):
             return str(self.cantidad*self.valor_unitario)
+    
+
+class SubCapitulo(models.Model):
+    nombre = models.CharField(max_length=150)
+    subitem = models.ManyToManyField(Item_Subcontrato)
     
