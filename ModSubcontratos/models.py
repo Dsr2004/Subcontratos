@@ -221,7 +221,25 @@ class Subcontrato(models.Model):
         porcentaje_administracion = float("{:.5f}".format(self.get_subtotal*self.porcentaje_administracion/100))
         print(porcentaje_administracion)
         return porcentaje_administracion
-    
+
+    @property
+    def get_porcentaje_imprevistos(self):
+        porcentaje_imprevistos = float("{:.5f}".format(self.get_subtotal*self.porcentaje_imprevistos/100))
+        # print(porcentaje_imprevistos)
+        return porcentaje_imprevistos
+
+    @property
+    def get_porcentaje_utilidad(self):
+        porcentaje_utilidad = float("{:.5f}".format(self.get_subtotal*self.porcentaje_utilidad/100))
+        # print(porcentaje_imprevistos)
+        return porcentaje_utilidad
+
+    @property
+    def get_iva_utilidad(self):
+        iva_utilidad = float("{:.5f}".format(self.get_porcentaje_utilidad*self.tarifa_iva/100))
+        # print(porcentaje_imprevistos)
+        return iva_utilidad
+
     @property
     def get_total(self):
         total = (self.get_subtotal+self.get_iva+self.get_porcentaje_administracion)

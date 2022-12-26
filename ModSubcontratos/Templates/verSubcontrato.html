@@ -62,7 +62,7 @@
         </div>
         <div class="col-3">
             <label for=""><strong>Tipo de contrato</strong> <sup class="campo_requerido">*</sup></label>
-            <p>{{subcontrato.get_tipo_contrato_display}}</p>
+            <p id="tipo_contra">{{subcontrato.get_tipo_contrato_display}}</p>
         </div>
         <div class="col-3">
             <label for=""><strong>Elaborador</strong> <sup class="campo_requerido">*</sup></label>
@@ -221,16 +221,16 @@
                 <div class="row justify-content-between mb-5" id="contservice" style="display: none;">
                     <div class="col-4">
                         <label for=""><strong>Tarifa de IVA</strong> </label>
-                        <input type="number" class="form-control mb-1" onchange="calcularIva(), CalcularT()" id="tarifaivaT" value="19">
+                        <p>{{subcontrato.tarifa_iva}} %</p>
     
                         <label for=""><strong>Porcentaje Administración</strong> </label>
-                        <input type="number" class="form-control mb-1" onchange="CalcularAdmins(), CalcularT()" id="porcAdmin" value="0">
+                        <p>{{subcontrato.porcentaje_administracion}} %</p>
     
                         <label for=""><strong>Porcentaje Imprevistos</strong> </label>
-                        <input type="number" class="form-control mb-1" onchange="CalcularImprevist(), CalcularT()" id="porcImpr" value="0">
+                        <p>{{subcontrato.porcentaje_imprevistos}} %</p>
     
                         <label for=""><strong>Porcentaje Utilidad</strong> </label>
-                        <input type="number" class="form-control mb-1" onchange="CalcularUtilidad(), CalcularIvaUtilidad(), CalcularT()" id="porcUtil" value="0">
+                        <p>{{subcontrato.porcentaje_utilidad}} %</p>
                     </div>
                     <div class="col-6">
                         <div class="row">
@@ -246,10 +246,10 @@
                             <div class="col-6">
                                 <p id="subtot3">{{subcontrato.get_subtotal}}</p>
                                 <p id="admin2">{{subcontrato.get_porcentaje_administracion}}</p>
-                                <p id="imprev2">0</p>
-                                <p id="util2">0</p>
+                                <p id="imprev2">{{subcontrato.get_porcentaje_imprevistos}}</p>
+                                <p id="util2">{{subcontrato.get_porcentaje_utilidad}}</p>
                                 <p id="iv3">{{subcontrato.get_iva}}</p>
-                                <p id="ivu2">0</p>
+                                <p id="ivu2">{{subcontrato.get_iva_utilidad}}</p>
                                 <p id="Tot3">{{subcontrato.get_total}}</p>
                             </div>
                         </div>
@@ -350,35 +350,67 @@
                 </div>
                 <div class="row">
                     <div class="col-4">
-                        <label for=""><strong>Contrato</strong> </label>
-                        {{form.contrato}}
+                        <label style="width: 100%;" for=""><strong>Contrato</strong> </label>
+                        {% if subcontrato.contrato %}
+                            <a href="/media/{{object.contrato}}" download="Contrato.png" class="btn btn-primary">Descargar documento &nbsp; <i class="fa-solid fa-download"></i></a>
+                        {% else %}
+                            <div class="alert alert-warning" role="alert">
+                                No hay archivos disponibles
+                            </div>
+                        {% endif %}
                     </div>
                     <div class="col-4">
                         <label for=""><strong>Pólizas o garantías</strong> </label>
-                        {{form.polizas_garantias}}
+                        {% if subcontrato.polizas_garantias %}
+                            <a href="/media/{{object.polizas_garantias}}" download="PolizaoGarantia.png" class="btn btn-primary">Descargar documento &nbsp; <i class="fa-solid fa-download"></i></a>
+                        {% else %}
+                            <div class="alert alert-warning" role="alert">
+                                No hay archivos disponibles
+                            </div>
+                        {% endif %}
                     </div>
                     <div class="col-4">
                         <label for=""><strong>Acta de inicio</strong> </label>
-                        {{form.acta_inicio}}
+                        {% if subcontrato.acta_inicio %}
+                            <a href="/media/{{object.acta_inicio}}" download="ActadeInicio.png" class="btn btn-primary">Descargar documento &nbsp; <i class="fa-solid fa-download"></i></a>
+                        {% else %}
+                            <!-- <p>No hay archivos disponibles</p>  -->
+                            <div class="alert alert-warning" role="alert">
+                                No hay archivos disponibles
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="row mt-4">
                     <div class="col-4">
                         <label for=""><strong>Modificaciones contractuales</strong> </label>
-                        {{form.modificaciones_contractuales}}
+                        {% if subcontrato.modificaciones_contractuales %}
+                            <a href="/media/{{object.modificaciones_contractuales}}" download="ModificacionesContractuales.png" class="btn btn-primary">Descargar documento &nbsp; <i class="fa-solid fa-download"></i></a>
+                        {% else %}
+                            <div class="alert alert-warning" role="alert">
+                                No hay archivos disponibles
+                            </div>
+                        {% endif %}
                     </div>
                     <div class="col-4">
                         <label for=""><strong>Acta de recibo final</strong></label>
-                        {{form.acta_recibo_final}}
+                        {% if subcontrato.acta_recibo_final %}
+                            <a href="/media/{{object.acta_recibo_final}}" download="ActaFinal.png" class="btn btn-primary">Descargar documento &nbsp; <i class="fa-solid fa-download"></i></a>
+                        {% else %}
+                            <div class="alert alert-warning" role="alert">
+                                No hay archivos disponibles
+                            </div> 
+                        {% endif %}
                     </div>
                     <div class="col-4">
                         <label for=""><strong>Acta de liquidación</strong></label>
                         {% if subcontrato.acta_liquidacion %}
-                        <a href="/media/{{subcontrato.acta_liquidacion}}" download={{subcontrato.acta_liquidacion}}>sds</a>
+                            <a href="/media/{{object.acta_liquidacion}}" download="ActaLiquidacion.png" class="btn  btn-primary">Descargar documento &nbsp; <i class="fa-solid fa-download"></i></a>
                         {% else %}
-                        NO HAY ARCHIVO
+                            <div class="alert alert-warning" role="alert">
+                                No hay archivos disponibles
+                            </div>
                         {% endif %}
-                       
                     </div>
                 </div>
             </div>
@@ -626,9 +658,10 @@
 </script>
 
 <script>
-    function getComboA(selectObject) {
-        // var campo = document.getElementById("tipoComp")
-        var selec = document.getElementById("slec")
+    $(document).ready(function(){
+        var selec = $("#tipo_contra")
+        let tipo = selec.text()
+
 
         var contNo = document.getElementById("contnorm")
         var tipoTarf = document.getElementById("contservice")
@@ -637,21 +670,17 @@
 
         var cardItems = document.getElementById("card_it")
         var cardSubcap = document.getElementById("card_subcap")
-
-        var value = selectObject.value;  
         
-        if(value == "1.1"){
-            selec.value = "1"
-            selec.setAttribute('disabled', '')
+        
+
+        if(tipo == "1.1 Contratos con IVA pleno suministros."){
             contNo.style.display = 'flex'
             tipoTarf.style.display = 'none'
             impExc.style.display = 'block'
             cardItems.style.display = 'flex'
             cardSubcap.style.display = 'none'
         }
-        else if(value == "1.2"){
-            selec.value = "2"
-            selec.setAttribute('disabled', '')
+        else if(tipo == "1.2 Contratos con IVA pleno y algunos servicios."){
             contNo.style.display = 'flex'
             tipoTarf.style.display = 'none'
             impExc.style.display = 'block'
@@ -659,9 +688,7 @@
             cardSubcap.style.display = 'none'
             
         }
-        else if(value == "2"){
-            selec.value = "1"
-            selec.setAttribute('disabled', '')
+        else if(tipo == "2. Contratos de servicios de obra civil."){
             contNo.style.display = 'none'
             tipoTarf.style.display = 'flex'
             impExc.style.display = 'block'
@@ -669,248 +696,17 @@
             cardSubcap.style.display = 'none'
         }
         else{
-            selec.removeAttribute('disabled')
+            
             contNo.style.display = 'none'
             tipoTarf.style.display = 'flex'
             impExc.style.display = 'none'
             cardItems.style.display = 'none'
             cardSubcap.style.display = 'flex'
         }
-    }
+    })
 
-    var campo = document.getElementById("impo").value
+  
 
-    function importarExcel(campo){
-        
-        var tabla = document.getElementById("tbl_items")
-        var campoExcel = document.getElementById("excel")
-
-        if(campo == 1){
-            tabla.style.display = "none"
-            campoExcel.style.display = "block"
-        }
-        else{
-            tabla.style.display = "block"
-            campoExcel.style.display = "none"
-        }
-    }
-
-    
-
-    function calcularSubtotal(){
-
-        const resume_table = document.getElementById("tbl_items");
-
-        const tableRows = document.querySelectorAll('#tbl_items tr.it_row');
-
-        let subt = document.getElementById("subtot");
-
-        let iva = document.getElementById("tarifaiva").value;
-
-        let con = parseFloat(iva)
-        let porc = (con / 100);
-
-        
-        for(let i = 0; i < tableRows.length; i++) {
-            const row = tableRows[i];
-
-            
-            const status = row.querySelector('.valTot');
-            let conversion= parseInt(status.innerHTML); 
-
-            
-
-            // console.log(conversion)
-            // if(status === status){
-            //     console.log(status)
-            // }
-            // else{
-            //     // conversion 
-            //     let conversion= parseInt(status.innerHTML); 
-
-                            
-
-            //     let su = conversion++
-            //     let suma = conversion + conversion 
-            //     console.log(su);
-            // }
-            
-        
-            // Para modificar un estado:
-            status.innerText = valorTotal;
-        }
-    }
-   var ItemsObject ={
-    data:[]
-   }
-
-   var PolizasObject ={
-    data:[]
-   }
-    
-    var valorSubtotal = 0;
-
-    function AgregarItems(){
-        $("#tbl_items").find('.error_text').text('');
-        $("#tbl_items").find(".is-invalid").removeClass('is-invalid');
-
-        let codigo = $("#Codigo").val();
-        let item = $("#Item").val();
-        let descripcion = $("#Descripcion").val();
-        let unidad = $("#Unidad").val();
-        let cantidad = $("#Cantidad").val();
-        let valorUnitario = $("#ValorUnitario").val(); 
-        let valorTotal = $("#ValorTotal").val();
-
-        let subt = document.getElementById("subtot");
-        let subtt = document.getElementById("subtot3")
-
-        if(codigo == "" || codigo == null){
-            $("#Codigo").addClass("is-invalid")
-            $("#I_codigo").text("Este campo es requerido")
-        }else if(item == "" || item == null){
-            $("#Item").addClass("is-invalid")
-            $("#I_item").text("Este campo es requerido")
-        }else if(descripcion == "" || descripcion == null){
-            $("#Descripcion").addClass("is-invalid")
-            $("#I_descripcion").text("Este campo es requerido")
-        }else if(unidad == "" || unidad == null){
-            $("#Unidad").addClass("is-invalid")
-            $("#I_unidad").text("Este campo es requerido")
-        }else if(cantidad == "" || cantidad == null){
-            $("#Cantidad").addClass("is-invalid")
-            $("#I_cantidad").text("Este campo es requerido")
-        }else if(valorUnitario == "" || valorUnitario == null){
-            $("#ValorUnitario").addClass("is-invalid")
-            $("#I_valorU").text("Este campo es requerido")
-        }
-
-        if(cantidad > 0 && valorUnitario > 0 && valorTotal > 0){
-            $('#tblItems').append(`
-            <tr class="it_row" id="tr-${codigo}">
-                <td>
-                    <input type="hidden" name="" value="${codigo}"/>
-                    ${$("#Codigo").select2('data')[0]['text']}
-                </td>
-                <td>${item}</td>  
-                <td>${descripcion}</td>  
-                <td>${unidad}</td>  
-                <td>${cantidad}</td>  
-                <td>${valorUnitario}</td>
-                <td class="valTot">${parseInt(valorTotal)}</td>  
-                <td>
-                    <button class="btn" onclick="Eliminar_item(${codigo})" style="color: #fc3322; font-size: 20px; font-weight: bold;"><i class='bx bx-x'></i></button>
-                </td>    
-            </tr>
-        `)
-        ItemsObject.data.push({ 
-            codigo:codigo,
-            data:{
-                codigo:codigo,
-                item:item,
-                descripcion: descripcion,
-                unidad: unidad,
-                cantidad:cantidad,
-                valorUnitario:valorUnitario,
-                valorTotal:valorTotal
-            }
-        })
-            let con = parseInt(valorTotal)
-            valorSubtotal += con;
-            
-            subt.innerText = valorSubtotal
-            subtt.innerText = valorSubtotal
-            // subt.innerText = ${parseInt(valorSubtotal) += parseInt(valorSubtotal)};
-            
-            $("#Codigo").empty()
-            $("#Item").val("")
-            $("#Descripcion").val("")
-            $("#Unidad").val("")
-            $("#Cantidad").val("")
-            $("#ValorUnitario").val("")
-            $("#ValorTotal").val("")
-        }
-       
-        
-    }
-    function AgregarPoliza(){
-        $("#tbl_polizas").find('.error_text').text('');
-        $("#tbl_polizas").find(".is-invalid").removeClass('is-invalid');
-
-        let tipo_poliza = $("#Tipo_Poliza").val();
-        let numero_poliza = $("#Numero_Poliza").val();
-        let aseguradora = $("#id_aseguradora").val();
-        let Fecha_vencimiento_poliza = $("#Fecha_vencimiento_poliza").val();
-       
-
-        if(tipo_poliza == "" || tipo_poliza == null){
-            $("#Tipo_Poliza").addClass("is-invalid")
-            $("#Po_tipo_poliza").text("Este campo es requerido")
-        }else if(numero_poliza == "" || numero_poliza == null){
-            $("#Numero_Poliza").addClass("is-invalid")
-            $("#Po_numero_poliza").text("Este campo es requerido")
-        }else if(aseguradora == "" || aseguradora == null){
-            $("#id_aseguradora").addClass("is-invalid")
-            $("#Po_aseguradora").text("Este campo es requerido")
-        }else if(Fecha_vencimiento_poliza == "" || Fecha_vencimiento_poliza == null){
-            $("#Fecha_vencimiento_poliza").addClass("is-invalid")
-            $("#Po_fecha_vencimiento_poliza").text("Este campo es requerido")
-        }else{
-            let id = Math.floor(Math.random(9999) * 10); 
-            $('#tblpolizas').append(`
-            <tr class="it_row" id="tr-${id}">
-                <td>
-                    <input type="hidden" name="" value="${id}"/>
-                    ${$("#Tipo_Poliza").select2('data')[0]['text']}
-                </td>
-                <td>${numero_poliza}</td>  
-                <td>${$("#id_aseguradora").select2('data')[0]['text']}</td>  
-                <td>${Fecha_vencimiento_poliza}</td>   
-                <td>
-                    <button class="btn" onclick="Eliminar_Poliza(${id})" style="color: #fc3322; font-size: 20px; font-weight: bold;"><i class='bx bx-x'></i></button>
-                </td>    
-            </tr>
-        `)
-        PolizasObject.data.push({ 
-            id:id,
-            data:{
-                tipo:tipo_poliza,
-                numero:numero_poliza,
-                aseguradora: aseguradora,
-                vencimiento: Fecha_vencimiento_poliza,
-            }
-        })
-            $("#Tipo_Poliza").val(null).trigger("change");
-            $("#Numero_Poliza").val("")
-            $("#id_aseguradora").val(null).trigger("change");
-            $("#Fecha_vencimiento_poliza").val("")
-        } 
-    }
-
-    function Eliminar_item(id){
-        $("#tr-"+ id).remove();
-        for (let i = 0; i < ItemsObject.data.length; i++){
-            if (ItemsObject.data[i]["codigo"]==id){
-                ItemsObject.data.splice(i,1)
-            }
-        }
-
-    }
-
-    function Eliminar_Poliza(id){
-        $("#tr-"+ id).remove();
-        for (let i = 0; i < PolizasObject.data.length; i++){
-            if (PolizasObject.data[i]["id"]==id){
-                PolizasObject.data.splice(i,1)
-            }
-        }
-
-    }
-    
-
-    
-    
-    
 
     function hidedjs() {
         let item = document.getElementById('addItem')
