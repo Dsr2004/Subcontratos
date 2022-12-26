@@ -135,7 +135,6 @@
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-
                 <div class="card mt-3 mb-5" style="padding: 10px;" id="card_it">
                     <h6>Items</h6>
                     <p class="error_text" id="P_items"></p>
@@ -160,6 +159,7 @@
                                     <td>{{item.unidad}}</td>
                                     <td>{{item.cantidad}}</td>
                                     <td>{{item.valor_unitario}}</td>
+                                    <td>{{item.get_total}}</td>
                                 </tr>
                                 
                             {% endfor %}
@@ -196,7 +196,7 @@
                 <div class="row justify-content-between mb-5" id="contnorm">
                     <div class="col-4">
                         <label for=""><strong>Tarifa de IVA</strong> </label>
-                        <input type="number" class="form-control" onchange="calcularIva(), CalcularT()" id="tarifaiva" value="19">
+                        <p>{{subcontrato.tarifa_iva}} %</p>
 
                     </div>
                     <div class="col-6">
@@ -207,7 +207,7 @@
                                 <p class="calcampo">Total (Inc. IVA):</p>
                             </div>
                             <div class="col-6">
-                                <p id="subtot">0</p>
+                                <p id="subtot">{{subcontrato.get_subtotal}}</p>
                                 <p id="calciv">0</p>
                                 <p id="Tot">0</p>
                             </div>
@@ -373,7 +373,12 @@
                     </div>
                     <div class="col-4">
                         <label for=""><strong>Acta de liquidación</strong></label>
-                        {{form.acta_liquidacion}}
+                        {% if subcontrato.acta_liquidacion %}
+                        <a href="/media/{{subcontrato.acta_liquidacion}}" download={{subcontrato.acta_liquidacion}}>sds</a>
+                        {% else %}
+                        NO HAY ARCHIVO
+                        {% endif %}
+                       
                     </div>
                 </div>
             </div>

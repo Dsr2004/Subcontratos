@@ -204,6 +204,13 @@ class Subcontrato(models.Model):
     @property
     def CantidadPolizas(self):
         return self.polizas.all().count()
+
+    def get_subtotal(self):
+        items = self.item_subcontrato_set.all()
+        print(items)
+        return "i"
+    
+    
     
 
 class Item_Subcontrato(models.Model):
@@ -223,10 +230,13 @@ class Item_Subcontrato(models.Model):
         
         @property
         def get_total(self):
-            return str(self.cantidad*self.valor_unitario)
+            return self.cantidad * self.valor_unitario
     
 
 class SubCapitulo(models.Model):
     nombre = models.CharField(max_length=150)
     subitem = models.ManyToManyField(Item_Subcontrato)
+
+
+
     
