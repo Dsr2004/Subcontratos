@@ -12,7 +12,7 @@ setTimeout(function() {
     if(noticia){
         noticia.click();
     }
-}, 1 * 15000);
+}, 1 * 60000);
 
 
 // 3) Script para cerrar sesión
@@ -23,5 +23,5 @@ setTimeout(function() {
     if(action){
         action.click();
     }
-}, 1 * 30000);
+}, 1 * 120000);
 

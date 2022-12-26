@@ -662,11 +662,11 @@
                                 <p class="error_text" id="Sub_UnidadSub"></p>    
                             </td>
                             <td>
-                                <input type="number" class="form-control" id="CantidadSub">
+                                <input type="number" class="form-control" id="CantidadSub" min="1">
                                 <p class="error_text" id="Sub_CantidadSub"></p>    
                             </td>
                             <td>
-                                <input type="number" class="form-control" id="ValorUnitarioSub">
+                                <input type="number" class="form-control" id="ValorUnitarioSub" >
                                 <p class="error_text" id="Sub_ValorUnitarioSub"></p>    
                             </td>
                             <td>
@@ -917,7 +917,7 @@
             $("#I_valorU").text("Este campo es requerido")
         }
 
-        if(cantidad > 0 && valorUnitario > 0 && valorTotal > 0){
+        if(cantidad > 0 && valorUnitario > 0){
             $('#tblItems').append(`
             <tr class="it_row" id="tr-${codigo}">
                 <td>
@@ -962,8 +962,39 @@
             $("#ValorUnitario").val("")
             $("#ValorTotal").val("")
         }
+        else{
+            alert("Ingrese cantidad válida")
+        }
        
         
+    }
+
+    
+
+    // console.log(subty.innerText)
+        // console.log(subt.innerText)
+
+    function Eliminar_item(id){
+        
+        let subty = document.getElementById("subtot");
+        let cambio = parseInt(subty.innerText)
+        
+
+        $("#tr-"+ id).remove();
+        for (let i = 0; i < ItemsObject.data.length; i++){
+            if (ItemsObject.data[i]["codigo"]==id){
+                let con = ItemsObject.data[i].data.valorTotal
+                let resta = cambio - con
+                
+                subty.innerHTML = resta
+                
+                
+                // console.log(cambio)
+                ItemsObject.data.splice(i,1)
+            }
+        }
+
+
     }
     function AgregarPoliza(){
         $("#tbl_polizas").find('.error_text').text('');
@@ -1019,15 +1050,7 @@
         } 
     }
 
-    function Eliminar_item(id){
-        $("#tr-"+ id).remove();
-        for (let i = 0; i < ItemsObject.data.length; i++){
-            if (ItemsObject.data[i]["codigo"]==id){
-                ItemsObject.data.splice(i,1)
-            }
-        }
-
-    }
+    
 
     function Eliminar_Poliza(id){
         $("#tr-"+ id).remove();

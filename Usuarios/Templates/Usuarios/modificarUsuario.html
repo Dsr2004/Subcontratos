@@ -32,19 +32,26 @@
                     {{form.correo}}
                     <p id="update_correo" class="error_text"></p>
                     
-                    <label><strong>Rol de usuario</strong> <sup class="campo_requerido">*</sup></label>
+                    <label ><strong>Rol de usuario</strong> <sup class="campo_requerido">*</sup></label>
                     {{form.rol}}
                     <p id="update_rol" class="error_text"></p>
                     
-                    <div id="validadorBox">
+                    <div id="validadorBo">
                         <label><strong>Tipo de Validador</strong> <sup class="campo_requerido">*</sup></label>
                         {{form.tipo_validador}}
-                        <p id="tipo_validador" class="error_text"></p>
                     </div>
 
-                    {% if not object.rol.name == "Validador" %}
+                    {% if not object.rol.name == "Validador" %}  
                         <script>
-                            $("#validadorBox").css("display","none")
+                            let a = true
+                            $(document).ready(function(){
+                                if(a === true){
+                                    $("#validadorBo").remove()
+                                }
+                                else{
+                                    console.log("error")
+                                }
+                            })
                         </script>
                     {% endif %}
   
@@ -57,6 +64,11 @@
     </div>
 </div>
 <script>
+
+    $(document).ready(function(){
+        
+    })
+
      $("#id_rol").on("change", function(){
         if($("#id_rol option:selected").text() == "Validador"){
             $("#validadorBox").css("display","block")
