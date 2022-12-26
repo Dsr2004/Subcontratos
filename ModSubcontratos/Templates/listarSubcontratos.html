@@ -39,6 +39,7 @@
         color: black;
     }
 
+    
 </style>
 <div class="row mb-4 mt-2" id="encabezado">
     <div class="col-6">
@@ -55,7 +56,7 @@
 <div class="tablascroll">
     <table class="table table-striped" id="listarSubcontratos"  width="100%">
         <thead>
-          <tr style="font-size: 13px;">
+          <tr style="font-size: 15px;">
             <th scope="col">Consecutivo</th>
             <th scope="col">Tipo de contrato</th>
             <th scope="col">Elaborador</th>
@@ -70,10 +71,10 @@
             <th scope="col">Centro operaciones</th>
             <th scope="col">Validador/es</th>
             <th scope="col">Número polizas</th>
-            <th>Vaca</th>
-          </tr>
+            <th scope="col">Acciones</th>
+          </tr> 
         </thead>
-        <tbody>
+        <tbody style="font-size: 13px;">
             {% for subcontrato in subcontratos %}
             <tr>
                 <!-- <td>{{subcontrato.pk}}</td> -->
@@ -82,8 +83,8 @@
                 <td>{{subcontrato.elaborador}}</td>
                 <td>{{subcontrato.proveedor.nit}}</td>
                 <td>{{subcontrato.proveedor}}</td>
-                <td>{{subcontrato.fecha_inicio_contrato}}</td>
-                <td>{{subcontrato.fecha_vencimiento_contrato}}</td>
+                <td>{{subcontrato.fecha_inicio_contrato|date:"d/m/Y"}}</td>
+                <td>{{subcontrato.fecha_vencimiento_contrato|date:"d/m/Y"}}</td>
                 <td>{{subcontrato.director_obra}}</td>
                 <td>{{subcontrato.gestor_contrato}}</td>
                 <td>{{subcontrato.compania}}</td>
@@ -91,7 +92,10 @@
                 <td>{{subcontrato.proyecto.id_proyecto}}</td>
                 <td>{{subcontrato.validadores}}</td>
                 <td>{{subcontrato.CantidadPolizas}}</td>
-                <td><a class="btn" href="{% url 'verSubcontrato' subcontrato.pk %}">detalles</a></td>
+                <td>
+                    <a class="btn btn-outline-dark" href="{% url 'verSubcontrato' subcontrato.pk %}">Ver detalles</a>
+                    <a class="btn btn-outline-primary" href=""><i class="fa-regular fa-pen-to-square"></i></a>
+                </td>
             </tr>
           {% endfor %}   
         </tbody>
@@ -116,7 +120,8 @@
   <script>
     $(document).ready(function () {
         $('#listarSubcontratos').DataTable({
-            scrollX: true,
+            // scrollX: true,
+            
             "language": {
                 "lengthMenu": "Mostrar " + `<select class="custom-select custom-select-sm form-control form-control-sm">
                                 <option value='5'>5</option>
@@ -134,7 +139,7 @@
                     "previous": "Anterior"
                 }
             },
-            responsive: true
+            responsive: true         
         });
     });
   </script>

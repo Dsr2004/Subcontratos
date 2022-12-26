@@ -139,22 +139,13 @@
                     <div class="col-3" id="impExcel">
                         <label for=""><strong>¿Importar desde un excel?</strong>  <sup class="campo_requerido">*</sup></label>
                         <div class="row">
-                            <div class="col-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" onclick="importarExcel(1)" type="radio" name="impo" id="impo" value="si">
-                                    <label class="form-check-label" for="impo">
-                                    Si
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" onclick="importarExcel(2)" type="radio" name="impo" id="impo" value="no" checked>
-                                    <label class="form-check-label" for="impo">
-                                        No
-                                    </label>
-                                </div>
-                            </div>
+                            
+                            {% if subcontrato.impo == False %}
+                                <p>No</p>
+                            {% else %}
+                                <p>Si</p>
+                            {% endif %}
+                            
                         </div>            
                     </div>
                     <div class="col-8" id="excel" style="display: none;">
@@ -226,6 +217,7 @@
                                     <td>{{item.unidad}}</td>
                                     <td>{{item.cantidad}}</td>
                                     <td>{{item.valor_unitario}}</td>
+                                    <td>{{item.get_total}}</td>
                                 </tr>
                                 
                             {% endfor %}
@@ -262,7 +254,7 @@
                 <div class="row justify-content-between mb-5" id="contnorm">
                     <div class="col-4">
                         <label for=""><strong>Tarifa de IVA</strong> </label>
-                        <input type="number" class="form-control" onchange="calcularIva(), CalcularT()" id="tarifaiva" value="19">
+                        <p>{{subcontrato.tarifa_iva}} %</p>
 
                     </div>
                     <div class="col-6">
@@ -273,7 +265,7 @@
                                 <p class="calcampo">Total (Inc. IVA):</p>
                             </div>
                             <div class="col-6">
-                                <p id="subtot">0</p>
+                                <p id="subtot"></p>
                                 <p id="calciv">0</p>
                                 <p id="Tot">0</p>
                             </div>
