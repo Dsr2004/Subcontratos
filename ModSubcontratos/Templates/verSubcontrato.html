@@ -208,8 +208,8 @@
                             </div>
                             <div class="col-6">
                                 <p id="subtot">{{subcontrato.get_subtotal}}</p>
-                                <p id="calciv">0</p>
-                                <p id="Tot">0</p>
+                                <p id="calciv">{{subcontrato.get_iva}}</p>
+                                <p id="Tot">{{subcontrato.get_total}}</p>
                             </div>
                         </div>
 
@@ -244,13 +244,13 @@
                                 <p class="calcampo">Total (Inc. IVA):</p>
                             </div>
                             <div class="col-6">
-                                <p id="subtot3">0</p>
-                                <p id="admin2">0</p>
+                                <p id="subtot3">{{subcontrato.get_subtotal}}</p>
+                                <p id="admin2">{{subcontrato.get_porcentaje_administracion}}</p>
                                 <p id="imprev2">0</p>
                                 <p id="util2">0</p>
-                                <p id="iv3">0</p>
+                                <p id="iv3">{{subcontrato.get_iva}}</p>
                                 <p id="ivu2">0</p>
-                                <p id="Tot3">0</p>
+                                <p id="Tot3">{{subcontrato.get_total}}</p>
                             </div>
                         </div>
                         <!-- <button onclick="calcularSubtotal()">f</button> -->

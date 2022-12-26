@@ -204,11 +204,30 @@ class Subcontrato(models.Model):
     @property
     def CantidadPolizas(self):
         return self.polizas.all().count()
-
+    
+    @property 
     def get_subtotal(self):
         items = self.item_subcontrato_set.all()
-        print(items)
-        return "i"
+        sub = sum([item.get_total for item in items])
+        return sub
+    
+    @property
+    def get_iva(self):
+        iva = float("{:.5f}".format(self.get_subtotal*self.tarifa_iva/100))
+        return iva    
+
+    @property
+    def get_porcentaje_administracion(self):
+        porcentaje_administracion = float("{:.5f}".format(self.get_subtotal*self.porcentaje_administracion/100))
+        print(porcentaje_administracion)
+        return porcentaje_administracion
+    
+    @property
+    def get_total(self):
+        total = (self.get_subtotal+self.get_iva+self.get_porcentaje_administracion)
+        print(total)
+        return total
+    
     
     
     
