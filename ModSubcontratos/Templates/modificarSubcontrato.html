@@ -53,13 +53,14 @@
 <h3 class="text-center mb-5 mt-3 tit_sec">Modificación del subcontrato {{object.consecutivo}}</h3>
 
 
-<form action="{% url 'modificarSubcontrato' object.pk %}" method="post" enctype="multipart/form-data" id="modificarrSubcontratoForm">
+<form action="{% url 'modificarSubcontrato' object.id %}" method="post" enctype="multipart/form-data" id="modificarrSubcontratoForm">
     {% csrf_token %}
     <div class="row mb-3">
         <div class="col-3">
             <label for=""><strong>Identificador subcontrato </strong> <sup class="campo_requerido">*</sup></label>
 
             <input type="text" class="form-control" value="{{object.consecutivo}}" readonly name="consecutivo">
+            <input type="hidden" value="{{object.pk}}" id="PK_Subcontrato">
         </div>
         <div class="col-3">
             <label for=""><strong>Tipo de contrato</strong> <sup class="campo_requerido">*</sup></label>
@@ -167,7 +168,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="desg" id="desg">
+                                    <input class="form-check-input" type="radio" name="desg" id="desg" onclick="OtroSi(1)">
                                     <label class="form-check-label" for="desg">
                                       Si
                                     </label>
@@ -175,7 +176,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="desg" id="desg" checked>
+                                    <input class="form-check-input" type="radio" name="desg" id="desg" checked onclick="OtroSi(2)">
                                     <label class="form-check-label" for="desg">
                                         No
                                     </label>
@@ -186,7 +187,7 @@
                     </div>
                 </div>
                 <div>
-                    <div class="card mt-3 mb-5" style="padding: 10px;" >
+                    <div class="card mt-3 mb-5" style="padding: 10px;" id="TableInfo">
                         <h6>Items</h6>
                         <p class="error_text" id="P_items"></p>
                         <table class="table text-center" id="tbl_itemsDefault" >
@@ -345,9 +346,9 @@
                                 <p class="calcampo">Total (Inc. IVA):</p>
                             </div>
                             <div class="col-6">
-                                <p id="subtot">0</p>
-                                <p id="calciv">0</p>
-                                <p id="Tot">0</p>
+                                <p id="subtot">{{subcontrato.get_subtotal}}</p>
+                                <p id="calciv">{{subcontrato.get_iva}}</p>
+                                <p id="Tot">{{subcontrato.get_total}}</p>
                             </div>
                         </div>
 
@@ -382,13 +383,13 @@
                                 <p class="calcampo">Total (Inc. IVA):</p>
                             </div>
                             <div class="col-6">
-                                <p id="subtot3">0</p>
-                                <p id="admin2">0</p>
-                                <p id="imprev2">0</p>
-                                <p id="util2">0</p>
-                                <p id="iv3">0</p>
-                                <p id="ivu2">0</p>
-                                <p id="Tot3">0</p>
+                                <p id="subtot3">{{object.get_subtotal}}</p>
+                                <p id="admin2">{{object.get_porcentaje_administracion}}</p>
+                                <p id="imprev2">{{object.get_porcentaje_imprevistos}}</p>
+                                <p id="util2">{{object.get_porcentaje_utilidad}}</p>
+                                <p id="iv3">{{object.get_iva}}</p>
+                                <p id="ivu2">{{object.get_iva_utilidad}}</p>
+                                <p id="Tot3">{{object.get_total}}</p>
                             </div>
                         </div>
                         <!-- <button onclick="calcularSubtotal()">f</button> -->
@@ -404,6 +405,55 @@
                         <p class="error_text" id="P_seguimiento_acta"></p>
                     </div>
                 </div>
+                <div class="card">
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Titulo</th>
+                                <th>Seguimiento</th>
+                                <th>Valot total</th>
+                                <th>Seguridad social</th>
+                                <th>Listado de personal</th>
+                                <th>Estado</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            {% if object.acta_set.all %}
+                              
+                              {% for acta in object.acta_set.all %}
+                                <tr>
+                                    <td>{{acta.titulo}}</td>
+                                    <td style="width: 15px; font-size: 8px;"><a class="btn btn-link btn-sm" onclick="abrir_modal_seguimiento_acta('{%url 'verSeguimientoActa' acta.pk%}')">Haga clic para más detalles</a></td>
+                                    <td>{{acta.titulo}}</td>
+                                    <td>{{acta.get_nombre_seguridad_social}}</td>
+                                    <td>{{acta.get_nombre_listado_personal}}</td>
+                                    <td>{{acta.get_estado_display}}</td>
+                                    <td>
+                                        <a href="" class="btn btn-outline-warning btn-sm"><i class="fa-solid fa-pencil"></i></a>
+                                    </td>
+                                </tr>
+                              {% endfor %}
+                            {% else %}
+                            <tr>
+                                <td colspan="6"><center><b style="color: #60b232;">No hay actas.</b></center></td>
+                            </tr> 
+                            {% endif %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>
+                                    <div >    
+                                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#AddActa">
+                                            <i class='bx bx-plus'></i> Agregar
+                                        </button> 
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
             </div>
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                 <div class="row mt-4">
@@ -482,8 +532,15 @@
                              </tr>
                         </thead>
                         <tbody id="tblpolizas">
-                            
-                            
+                            {% for poliza in object.polizas.all %}
+                                <tr>
+                                    <td>{{poliza.tipo_poliza}}</td>
+                                    <td>{{poliza.numero_poliza}}</td>
+                                    <td>{{poliza.get_aseguradora_display}}</td>
+                                    <td>{{poliza.fecha_vencimiento}}</td>
+                                </tr>
+                                
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -525,7 +582,7 @@
         </div>
         <div class="row mt-5 mb-2 justify-content-end text-center">
             <div class="col-2">
-                <button class="btn btn-success" type="button" onclick="guardarSubcontrato()"><i class='bx bx-save'></i> Guardar</button>
+                <button class="btn btn-success" type="button" onclick="modificarrSubcontrato()"><i class='bx bx-save'></i> Modificar</button>
             </div>
         </div>
     </div>
@@ -536,7 +593,7 @@
 {% block modales %}
     <!-- Modal -->
     <div class="modal fade" id="AddActa" tabindex="-1" role="dialog" style="overflow-y: scroll;" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel"><strong>Agregar Acta</strong></h5>
@@ -548,18 +605,18 @@
                     <table class="table text-center">
                         <thead>
                             <tr>
-                                <th>Item</th>
-                                <th>Descripción</th>
-                                <th>Unidad</th>
-                                <th>Cantidad</th>
-                                <th>Valor unitario</th>
+                                <th>Item <sup class="campo_requerido">*</sup></th>
+                                <th>Descripción <sup class="campo_requerido">*</sup></th>
+                                <th>Unidad <sup class="campo_requerido">*</sup></th>
+                                <th>Cantidad <sup class="campo_requerido">*</sup></th>
+                                <th>Valor unitario <sup class="campo_requerido">*</sup></th>
                             </tr>
                             <tr>
-                                <td><input type="text" class="form-control"></td>
-                                <td><input type="text" class="form-control"></td>
-                                <td><input type="text" class="form-control"></td>
-                                <td><input type="text" class="form-control"></td>
-                                <td><input type="text" class="form-control"></td>
+                                <td><select name="item" id="Acta_item" class="form-select"></select></td>
+                                <td><select id="Acta_descripcion" class="form-select"></select></td>
+                                <td><input type="text" id="Acta_Unidad" class="form-control" readonly></td>
+                                <td><input type="text" id="Acta_cantidad"class="form-control"></td>
+                                <td><input type="text" id="Acta_valor_unitario" class="form-control" readonly></td>
                             </tr>
                         </thead>
                     </table>
@@ -764,12 +821,16 @@
           </div>
         </div>
     </div>
+    <div class="modal fade" id="verSeguimientoActaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"  style="height: 98%;">
+
+    </div>
 {% endblock modales %}
 
 
 {% block scripts %}
 <script src="{% static 'js/firma.js' %}"></script>
 <script src="{% static 'modSubcontratos/js/main.js' %}"></script>
+<script src="{% static 'modSubcontratos/js/actas.js' %}"></script>
 <!-- solucion de autofocus en los campos version mas antigua de jquery  -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -795,6 +856,12 @@
 </script>
 
 <script>
+    $(document).ready(function(){
+        let select = document.getElementById("comboA")
+        if(select.value == "3"){
+            document.getElementById("slec").removeAttribute("disabled")
+        }
+    })
     function getComboA(selectObject) {
         // var campo = document.getElementById("tipoComp")
         var selec = document.getElementById("slec")
@@ -1179,6 +1246,7 @@
                 sucapitulo:subcapitulo
             }
         })
+        console.log(ItemsSucapituloObject.data)
             let con = parseInt(valorTotal)
             valorSubtotal += con;
             
@@ -1282,8 +1350,18 @@
     </script>
     <!-- Scripts que he hecho yo especificos para esta vista -->
     <script>
-        function OtroSiBox(option){
-            
+        function OtroSi(option){
+            let info = document.getElementById("TableInfo")
+            let guardado = document.getElementById("card_it")
+            if(option == 1){
+                info.style.display = "none"
+                guardado.style.display = "block"
+            }
+            else if(option==2){
+                guardado.style.display = "none"
+                info.style.display = "block"
+                
+            }
         }
     </script>
 {% endblock scripts %}

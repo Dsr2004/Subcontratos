@@ -124,9 +124,35 @@ class BusquedaInfoSubcontrato(View):
                 if action == "autocompleteItem":
                     items = Item.objects.filter(codigo__icontains=request.POST.get("term"))
                     items = items.values()
-
                     return JsonResponse(list(items), safe=False)
+            elif tipo == "acta":
+                if action == "autocompleteItemActa":
+                    sub = request.POST.get("subcontrato", None)
+                    if sub is not None:
+                        items = Item_Subcontrato.objects.filter(subcontrato=sub)
+                        items = items.filter(item_nombre__icontains=request.POST.get("term"))
+                        items = items.values()
+                    else:
+                        items = []
+                    return JsonResponse(list(items), safe=False)
+                elif action == "autocompleteDescripcionItem":
+                    sub = request.POST.get("subcontrato", None)
+                    if sub is not None:
+                        items = Item_Subcontrato.objects.filter(subcontrato=sub)
+                        items = items.filter(descripcion__icontains=request.POST.get("term"))
+                        items = items.values()
+                    else:
+                        items = []
+                    return JsonResponse(list(items), safe=False)
+                elif action == "Itemdescripcion":
+                    item = request.POST.get("item")
+                    item = Item_Subcontrato.objects.get(pk=item)
+                    return JsonResponse({"id":item.id,"item":item.item_nombre,"valor":item.valor_unitario, "unidad":item.unidad})
                 
+                elif action == "descripcionItem":
+                    item = request.POST.get("item")
+                    item = Item_Subcontrato.objects.get(pk=item)
+                    return JsonResponse({"id":item.id,"descripcion":item.descripcion,"valor":item.valor_unitario, "unidad":item.unidad})
                 
         except Exception as e:
             print(str(e))
@@ -154,7 +180,7 @@ class GuardarSubcontrato(View):
                     
                     dias = 0
                     if subcontrato.seguimiento_acta == "1":
-                        dias = 8
+                        dias = 7
                     elif subcontrato.seguimiento_acta == "2":
                         dias = 14
                     elif subcontrato.seguimiento_acta == "3":
@@ -164,10 +190,10 @@ class GuardarSubcontrato(View):
                     else:
                         raise Exception("En el campo seguimiento acta, por favor seleccione una opción válida.")
                         # return JsonResponse({"errores":{"seguimiento_acta":["Seleccione una opcion valida."]}}, status=400)
-                    print(dias)
                     subcontrato.proximo_envio_correo = subcontrato.fecha_creacion+timedelta(days=dias)
-                    print()
                     subcontrato.save()
+                    print(subcontrato.proximo_envio_correo)
+                    print("se genero el dia del correo")
                     if request.POST.get("impo")=="si":
                         print("sdsds")
                         file = request.FILES["excelItems"]
@@ -271,4 +297,22 @@ class ModificarSubcontrato(UpdateView):
     form_class = SubcontratoForm
     success_url = reverse_lazy("listsubcontratos")
     
+    def post(self, request, *args, **kwargs):
+        print(request.POST)
+        return super().post(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        form.save()
+        print("el form es valido")
+        return JsonResponse({"mensaje":"Creado correctamente","path":reverse("verSubcontrato", kwargs={'pk':self.get_object().pk})}, status=200)
+    
+    def form_invalid(self, form):
+        print(form.errors)
+        return super().form_invalid(form)
+
+
+class VerSeguimientoActa(DetailView):
+    model = Acta
+    template_name = "Actas/verSeguimientoActa.html"
+    context_object_name = "acta"
     
