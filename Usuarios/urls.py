@@ -12,4 +12,5 @@ urlpatterns = [
       path("CambiarContrasena/", login_required(CambiarContrasena.as_view()), name="cambiarContrasena"),
 
       path("MiCuenta/<int:pk>", login_required(MiCuenta.as_view()), name="miCuenta"),
+      path("ActualizarPerfil/", login_required(ActualizarPerfil.as_view()), name="actualizarPerfil"),
 ]

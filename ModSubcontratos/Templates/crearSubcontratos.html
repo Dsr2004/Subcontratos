@@ -11,8 +11,10 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.15/dist/sweetalert2.css">
 <link href="{% static 'usuarios/gestion.css' %}" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.15/dist/sweetalert2.css">
+
 {% endblock estilos %}
 
 
@@ -42,24 +44,22 @@
         font-weight: bold;
     }
 </style>
-
+ 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{% url 'Listsubcontratos' %}" style="text-decoration: none; color: #60b232; font-weight: 500;">Lista de subcontratos</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'listsubcontratos' %}" style="text-decoration: none; color: #60b232; font-weight: 500;">Lista de subcontratos</a></li>
       <li class="breadcrumb-item active" aria-current="page">Creación de subcontrato</li>
     </ol>
   </nav>
 
 <h3 class="text-center mb-5 mt-3 tit_sec">Creación de subcontratos</h3>
-
-
 <form action="{% url 'guardarSubcontrato' %}" method="post" enctype="multipart/form-data" id="guardarSubcontratoForm">
     {% csrf_token %}
     <div class="row mb-3">
         <div class="col-3">
             <label for=""><strong>Identificador subcontrato </strong> <sup class="campo_requerido">*</sup></label>
 
-            <input type="text" class="form-control" value="{{ultimo_id}}" readonly>
+            <input type="text" class="form-control" value="{{consecutivo}}" readonly name="consecutivo">
         </div>
         <div class="col-3">
             <label for=""><strong>Tipo de contrato</strong> <sup class="campo_requerido">*</sup></label>
@@ -190,7 +190,7 @@
                                 <th>Valor Unitario</th>
                                 <th>Valor total</th>
                             </tr>
-                            <tr onchange="calcularTotal()">
+                            <tr onchange="calcularTotal(this)">
                                <form id="ItemsSubcontratoForm">
                                     <td>
                                         <select type="text" class="form-control" id="Codigo"></select>
@@ -239,20 +239,29 @@
                     
                     <table class="table text-center" id="tbl_items">
                         <thead>
-                            
+                            <th>Subcapitulo</th>
+                            <th>Condiciones contractuales</th>
+                            <th>Items asociados</th>
+                            <th>Subtotal capitulo</th>
                         </thead>
-                        <tbody>
-                            
-                            
+                        <tbody id="bodySubCapitulos">
                         </tbody>
                     </table>
+                    
+                    <div class="row">
+                        <div class="col-4">
+                            <button ype="button" class="btn" data-bs-toggle="modal" data-bs-target="#AddSubcapitulo">
+                                <i class="fa-solid fa-plus"></i> &nbsp; Agregar
+                            </button>
+                        </div>
+                    </div>
                 </div>
     
     
                 <div class="row justify-content-between mb-5" id="contnorm">
                     <div class="col-4">
                         <label for=""><strong>Tarifa de IVA</strong> </label>
-                        <input type="number" class="form-control" onchange="calcularIva(), CalcularT()" id="tarifaiva" value="19">
+                        <input type="number" name="tarifa_iva" class="form-control" onchange="calcularIva(), CalcularT()" id="tarifaiva" value="19">
 
                     </div>
                     <div class="col-6">
@@ -277,16 +286,16 @@
                 <div class="row justify-content-between mb-5" id="contservice" style="display: none;">
                     <div class="col-4">
                         <label for=""><strong>Tarifa de IVA</strong> </label>
-                        <input type="number" class="form-control mb-1" onchange="calcularIva(), CalcularT()" id="tarifaivaT" value="19">
+                        <input type="number" name="tarifa_iva" class="form-control mb-1" disabled onchange="calcularIva(), CalcularT()" id="tarifaivaT" value="19">
     
                         <label for=""><strong>Porcentaje Administración</strong> </label>
-                        <input type="number" class="form-control mb-1" onchange="CalcularAdmins(), CalcularT()" id="porcAdmin" value="0">
+                        <input type="number" name="porcentaje_administracion" class="form-control mb-1" onchange="CalcularAdmins(), CalcularT()" id="porcAdmin" value="0">
     
                         <label for=""><strong>Porcentaje Imprevistos</strong> </label>
-                        <input type="number" class="form-control mb-1" onchange="CalcularImprevist(), CalcularT()" id="porcImpr" value="0">
+                        <input type="number" name="porcentaje_imprevistos" class="form-control mb-1" onchange="CalcularImprevist(), CalcularT()" id="porcImpr" value="0">
     
                         <label for=""><strong>Porcentaje Utilidad</strong> </label>
-                        <input type="number" class="form-control mb-1" onchange="CalcularUtilidad(), CalcularIvaUtilidad(), CalcularT()" id="porcUtil" value="0">
+                        <input type="number" name="porcentaje_utilidad" class="form-control mb-1" onchange="CalcularUtilidad(), CalcularIvaUtilidad(), CalcularT()" id="porcUtil" value="0">
                     </div>
                     <div class="col-6">
                         <div class="row">
@@ -370,7 +379,7 @@
                                 <th>Fecha de vencimiento</th>
                                 <th></th>
                             </tr>
-                            <tr onchange="calcularTotal()">
+                            <tr onchange="calcularTotal(this)">
                                 <form id="ItemsSubcontratoForm">
                                      <td>
                                          <select type="text" class="form-select" id="Tipo_Poliza">
@@ -409,28 +418,34 @@
                     <div class="col-4">
                         <label for=""><strong>Contrato</strong> </label>
                         {{form.contrato}}
+                         <p class="error_text" id="P_contrato"></p>
                     </div>
                     <div class="col-4">
                         <label for=""><strong>Pólizas o garantías</strong> </label>
                         {{form.polizas_garantias}}
+                         <p class="error_text" id="P_polizas_garantias"></p>
                     </div>
                     <div class="col-4">
                         <label for=""><strong>Acta de inicio</strong> </label>
                         {{form.acta_inicio}}
+                         <p class="error_text" id="P_acta_inicio"></p>
                     </div>
                 </div>
                 <div class="row mt-4">
                     <div class="col-4">
                         <label for=""><strong>Modificaciones contractuales</strong> </label>
                         {{form.modificaciones_contractuales}}
+                         <p class="error_text" id="P_modificaciones_contractuales"></p>
                     </div>
                     <div class="col-4">
                         <label for=""><strong>Acta de recibo final</strong></label>
                         {{form.acta_recibo_final}}
+                         <p class="error_text" id="P_acta_recibo_final"></p>
                     </div>
                     <div class="col-4">
                         <label for=""><strong>Acta de liquidación</strong></label>
                         {{form.acta_liquidacion}}
+                         <p class="error_text" id="P_acta_liquidacion"></p>
                     </div>
                 </div>
             </div>
@@ -537,7 +552,7 @@
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class='bx bx-x'></i> Cancelar</button>
-            <button type="button" class="btn btn-success">Guardar <i class='bx bx-save'></i></button>
+            <button type="button" class="btn btn-success">Guardar<i class='bx bx-save'></i></button>
             </div>
         </div>
         </div>
@@ -573,6 +588,182 @@
         </div>
     </div>
    
+    <!-- Modal de subcapitulos -->
+    <div class="modal fade" id="AddSubcapitulo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-body">
+                <div class="row mt-4">
+                    <div class="col-4" id="impExcel">
+                        <label for=""><strong>¿Importar desde un excel?</strong>  <sup class="campo_requerido">*</sup></label>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" onclick="importarExcelSub(1)" type="radio" name="impoSub" id="impoSub" value="si">
+                                    <label class="form-check-label" for="impo">
+                                    Si
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" onclick="importarExcelSub(2)" type="radio" name="impoSub" id="impoSub" value="no" checked>
+                                    <label class="form-check-label" for="impo">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </div>            
+                    </div>
+                <div class="col-8" id="excelSub" style="display: none;">
+                    <label for=""><strong>Información items</strong> </label>
+                    <input type="file" class="form-control" name="excelItems" id="excelSubInput">
+                    <small>Si desea importar los items para este subcapitulo, adjunte el excel con el formato indicado</small>
+                    
+                </div>
+                </div>
+                <div class="row">
+                    <div class="col-5">
+                        <label for=""><strong></strong> Subcapitulo <sup class="campo_requerido">*</sup></label>
+                        <select class="form-control" id="Subcapitulos">
+                            <option>OBRA CIVIL</option>
+                            <option>SUMINISTRO</option>
+                        </select>
+                        <p class="error_text" id="Sub_Subcapitulo"></p>  
+                        
+                    </div>
+                </div>
+                
+                <div class="alert alert-warning" id="AlertaSubCapitulosItemsExcel" style="display: none;">
+                    <ul>
+
+                    </ul>
+                </div>
+                <table class="table text-center" id="tbl_itemsSub">
+                    <thead>
+                        <tr>
+                            <th width="200px">Código</th> 
+                            <th>Item</th>
+                            <th>Descripción</th>
+                            <th>Unidad</th>
+                            <th>Cantidad</th>
+                            <th>Valor Unitario</th>
+                            <th>Valor total</th>
+                        </tr>
+                        <tr onchange="calcularTotal(this);">
+                            <td>
+                                <select type="text" class="form-select" id="CodigoSub"></select>
+                                <p class="error_text" id="Sub_CodigoSub"></p>    
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="ItemSub">
+                                <p class="error_text" id="Sub_ItemSub"></p>    
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="DescripcionSub">
+                                <p class="error_text" id="Sub_DescripcionSub"></p>    
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="UnidadSub">
+                                <p class="error_text" id="Sub_UnidadSub"></p>    
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" id="CantidadSub" min="1">
+                                <p class="error_text" id="Sub_CantidadSub"></p>    
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" id="ValorUnitarioSub">
+                                <p class="error_text" id="Sub_ValorUnitarioSub"></p>    
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="ValorTotalSub" readonly>
+                                <p class="error_text" id="Sub_ValorTotalSub"></p>    
+                            </td>
+                            <td>
+                                <button type="button" class="btn" style="background-color: #60b232; color: white; font-weight: bold;" onclick="AgregarItemsSub()"><strong><i class='bx bx-plus'></i></strong> </button>
+                                <p class="error_text"></p>    
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody id="tblItemsSub">
+                        
+                        
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="GuardarSubContrato(this)" campo=0 id="guardarSubContrato"><i class="fa-regular fa-floppy-disk"></i> Guardar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+              
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ejListSubCapitulos" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-5">
+                        <h3 for="">Subcapitulo: </h3>
+                        <h5></h5>
+                    </div>
+                </div>
+                <table class="table text-center">
+                    <thead>
+                        <tr>
+                            <th width="200px">Código</th> 
+                            <th>Item</th>
+                            <th>Descripción</th>
+                            <th>Unidad</th>
+                            <th>Cantidad</th>
+                            <th>Valor Unitario</th>
+                            <th>Valor total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblItemsSubCambiar">
+                        <tr onchange="calcularTotal(this);">
+                            <td>
+                                <select type="text" class="form-select"></select>
+                                <p class="error_text"></p>    
+                            </td>
+                            <td>
+                                <input type="text" class="form-control">
+                                <p class="error_text" ></p>    
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" >
+                                <p class="error_text" ></p>    
+                            </td>
+                            <td>
+                                <input type="text" class="form-control">
+                                <p class="error_text"></p>    
+                            </td>
+                            <td>
+                                <input type="number" class="form-control"min="1">
+                                <p class="error_text"></p>    
+                            </td>
+                            <td>
+                                <input type="number" class="form-control">
+                                <p class="error_text"></p>    
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" readonly>
+                                <p class="error_text"></p>    
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" campo=0 id=""><i class="fa-regular fa-floppy-disk"></i> Confirmar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+              
+            </div>
+          </div>
+        </div>
+    </div>
+    <div id="modalesSubCapitulos"></div>
 {% endblock modales %}
 
 
@@ -587,7 +778,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/es.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 <script src="{% static 'js/calculos.js' %}"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 <script>
     $(document).on('click', '#AddActa', function() {
         $('#AddActa').modal('show');
@@ -595,6 +788,10 @@
 
     $(document).on('click', '#addItem', function() {
         $('#addItem').modal('show');
+    });
+
+    $("#suv").select2({
+        tags: true
     });
 </script>
 
@@ -621,6 +818,11 @@
             impExc.style.display = 'block'
             cardItems.style.display = 'flex'
             cardSubcap.style.display = 'none'
+            document.getElementById("tarifaivaT").setAttribute('disabled', '')
+            document.getElementById("tarifaiva").removeAttribute('disabled')
+            document.getElementById("porcAdmin").value = 0
+            document.getElementById("porcImpr").value = 0
+            document.getElementById("porcUtil").value = 0
         }
         else if(value == "1.2"){
             selec.value = "2"
@@ -630,6 +832,11 @@
             impExc.style.display = 'block'
             cardItems.style.display = 'flex'
             cardSubcap.style.display = 'none'
+            document.getElementById("tarifaivaT").setAttribute('disabled', '')
+            document.getElementById("tarifaiva").removeAttribute('disabled')
+            document.getElementById("porcAdmin").value = 0
+            document.getElementById("porcImpr").value = 0
+            document.getElementById("porcUtil").value = 0
             
         }
         else if(value == "2"){
@@ -640,6 +847,11 @@
             impExc.style.display = 'block'
             cardItems.style.display = 'flex'
             cardSubcap.style.display = 'none'
+            document.getElementById("tarifaiva").setAttribute('disabled', '')
+            document.getElementById("tarifaivaT").removeAttribute('disabled')
+            document.getElementById("porcAdmin").value = 0
+            document.getElementById("porcImpr").value = 0
+            document.getElementById("porcUtil").value = 0
         }
         else{
             selec.removeAttribute('disabled')
@@ -648,13 +860,14 @@
             impExc.style.display = 'none'
             cardItems.style.display = 'none'
             cardSubcap.style.display = 'flex'
+            document.getElementById("tarifaiva").setAttribute('disabled', '')
+            document.getElementById("tarifaivaT").removeAttribute('disabled')
         }
     }
 
     var campo = document.getElementById("impo").value
 
     function importarExcel(campo){
-        
         var tabla = document.getElementById("tbl_items")
         var campoExcel = document.getElementById("excel")
 
@@ -668,6 +881,262 @@
         }
     }
 
+     function importarExcelSub(campo){
+        var tabla = document.getElementById("tbl_itemsSub")
+        var campoExcel = document.getElementById("excelSub")
+        let btn = document.getElementById("guardarSubContrato")
+
+        console.log(tabla, campoExcel)
+        if(campo == 1){
+            // Importar
+            tabla.style.display = "none"
+            campoExcel.style.display = "block"
+            btn.setAttribute('campo',1)
+            document.getElementById('AlertaSubCapitulosItemsExcel').style.display = 'none'
+        }
+        else{
+            tabla.style.display = "block"
+            campoExcel.style.display = "none"
+            btn.setAttribute('campo',0)
+            document.getElementById('AlertaSubCapitulosItemsExcel').style.display = 'none'
+        }
+    }
+    function serializarLosItemsSubCapitulo(tr){
+        console.log(tr)
+        try{
+            data = {
+                "item_codigo":tr.children[0].children[0].value,
+                "item_nombre":tr.children[1].children[0].value,
+                "descripcion":tr.children[2].children[0].value,
+                "unidad":tr.children[3].children[0].value,
+                "cantidad":tr.children[4].children[0].value,
+                "valor_unitario":tr.children[5].children[0].value
+            }
+        }
+        catch{
+            data = {
+                "item_codigo":tr.children[0].children[0].value,
+                "item_nombre":tr.children[1].innerHTML,
+                "descripcion":tr.children[2].innerHTML,
+                "unidad":tr.children[3].innerHTML,
+                "cantidad":tr.children[4].innerHTML,
+                "valor_unitario":tr.children[5].innerHTML
+            }
+        }
+        return data
+    }
+    function generarModalItemsSubCapitulo(subcapitulo){
+        let contenedor = document.getElementById('modalesSubCapitulos')
+        let plantilla = document.getElementById('ejListSubCapitulos').cloneNode(true)
+        plantilla.id = nombreId
+        plantilla.children[0].children[0].children[0].children[0].children[0].children[1].innerHTML = subcapitulo
+        let trPlantilla = plantilla.children[0].children[0].children[0].children[1].children[1].children[0]
+        for(let i = 0; i < len; i++){
+            let tr = trPlantilla.cloneNode(true)
+            let option = document.createElement("option")
+            option.value = items[i].item_codigo
+            option.innerHTML = items[i].item_codigo
+            tr.children[0].children[0].appendChild(option)
+            tr.children[1].children[0].value = items[i].item_nombre
+            tr.children[2].children[0].value = items[i].descripcion
+            tr.children[3].children[0].value = items[i].unidad
+            tr.children[4].children[0].value = items[i].cantidad
+            tr.children[5].children[0].value = items[i].valor_unitario
+            tr.children[6].children[0].value = parseInt(items[i].valor_unitario) * parseInt(items[i].cantidad)
+            plantilla.children[0].children[0].children[0].children[1].children[1].appendChild(tr)
+        }
+        plantilla.children[0].children[0].children[0].children[1].children[1].removeChild(trPlantilla)
+        contenedor.appendChild(plantilla)
+    }
+    function agregarItemsSubCapituloModal(item, subcapitulo){
+        let trO = tbody.children[0]
+        trO.children[2].innerHTML+='<div>'+item.item_nombre+'</div>'
+        trO.children[3].innerHTML = parseInt(trO.children[3].innerHTML) + (parseInt(item.valor_unitario) * parseInt(item.cantidad))
+        let plantilla = document.getElementById(nombreId)
+        let trPlantilla = plantilla.children[0].children[0].children[0].children[1].children[1].children[0]
+        let tr = trPlantilla.cloneNode(true)
+        let option = document.createElement("option")
+        option.value = item.item_codigo
+        option.innerHTML = item.item_codigo
+        tr.children[0].children[0].innerHTML = ''
+        tr.children[0].children[0].appendChild(option)
+        tr.children[1].children[0].value = item.item_nombre
+        tr.children[2].children[0].value = item.descripcion
+        tr.children[3].children[0].value = item.unidad
+        tr.children[4].children[0].value = item.cantidad
+        tr.children[5].children[0].value = item.valor_unitario
+        tr.children[6].children[0].value = parseInt(item.valor_unitario) * parseInt(item.cantidad)
+        plantilla.children[0].children[0].children[0].children[1].children[1].appendChild(tr)
+    }
+    function generarItemsSubCapitulo(object){
+        console.log(object)
+        tbody = document.getElementById('bodySubCapitulos');
+        trs = tbody.getElementsByTagName('tr')
+        if(trs.length == 0){
+            items = object[Object.keys(object)[0]]
+            tbody.innerHTML = ''
+            len = items.length
+            tr = document.createElement('tr')
+            subcapitulo = document.createElement('td')
+            subcapitulo.innerHTML = Object.keys(object)
+            condiciones = document.createElement('td')
+            nombreId = String('ListSubCapitulos'+Object.keys(object)).replace(' ','')
+            generarModalItemsSubCapitulo(String(Object.keys(object)))
+            condiciones.innerHTML = '<button ype="button" class="btn" data-bs-toggle="modal" data-bs-target="#'+nombreId+'"><i class="fa-solid fa-eye"></i> Ver</button>'
+            itemsA = document.createElement('td')
+            subTotal = document.createElement('td')
+            subTotal.innerHTML = '0'
+            for(var i = 0; i < len; i++){
+                p = document.createElement('div')
+                p.innerHTML = items[i].item_nombre
+                itemsA.appendChild(p)
+                subTotal.innerHTML = parseInt(subTotal.innerHTML) + ((parseInt(items[i].valor_unitario) * parseInt(items[i].cantidad)))
+            }
+            tr.appendChild(subcapitulo)
+            tr.appendChild(condiciones)
+            tr.appendChild(itemsA)
+            tr.appendChild(subTotal)
+            tbody.appendChild(tr)
+        }
+        else{
+            items = object[Object.keys(object)[0]]
+            len = items.length
+            tr = document.createElement('tr')
+            subcapitulo = document.createElement('td')
+            subcapitulo.innerHTML = Object.keys(object)
+            condiciones = document.createElement('td')
+            nombreId = String('ListSubCapitulos'+Object.keys(object)).replace(' ','')
+            repite = 'nuevo' // Valida si está creado el subCapitulo y obtiene la posicion del hijo
+            for(i=0; i<trs.length; i++){
+                if(trs[i].children[0].innerHTML == String(Object.keys(object))){
+                    // Va a validar los items uno por uno y va a cargar los nuevos
+                    repite = i
+                }
+                else{
+                    // Va a cargar los items del nuevo SubCapitulo
+                    console.log(trs[i].children[0].innerHTML)
+                }
+            }
+            console.log(repite)
+            if(repite == 'nuevo' ){
+                tr = document.createElement('tr')
+                subcapitulo = document.createElement('td')
+                subcapitulo.innerHTML = Object.keys(object)
+                condiciones = document.createElement('td')
+                nombreId = String('ListSubCapitulos'+Object.keys(object)).replace(' ','')
+                generarModalItemsSubCapitulo(String(Object.keys(object)))
+                condiciones.innerHTML = '<button ype="button" class="btn" data-bs-toggle="modal" data-bs-target="#'+nombreId+'"><i class="fa-solid fa-eye"></i> Ver</button>'
+                itemsA = document.createElement('td')
+                subTotal = document.createElement('td')
+                subTotal.innerHTML = '0'
+                for(var i = 0; i < len; i++){
+                    p = document.createElement('div')
+                    p.innerHTML = items[i].item_nombre
+                    itemsA.appendChild(p)
+                    subTotal.innerHTML = parseInt(subTotal.innerHTML) +  + (parseInt(items[i].valor_unitario) * parseInt(items[i].cantidad))
+                }
+                tr.appendChild(subcapitulo)
+                tr.appendChild(condiciones)
+                tr.appendChild(itemsA)
+                tr.appendChild(subTotal)
+                tbody.appendChild(tr)
+            }else{
+                let modal = document.getElementById(String(trs[repite].children[1].children[0].getAttribute('data-bs-target')).substring(1))
+                let tbodyModal = modal.children[0].children[0].children[0].children[1].children[1]
+                let alert = document.getElementById('AlertaSubCapitulosItemsExcel').children[0]
+                alert.innerHTML = ''
+                let exite = []
+                for(let e=0; e<tbodyModal.children.length; e++){
+                    itemS = {}
+                    itemS = serializarLosItemsSubCapitulo(tbodyModal.children[e])
+                    function existe(item){
+                        exist = false
+                        for(var f=0;f<items.length;f++){
+                            if (items[f].item_codigo == item.item_codigo){
+                                exist = true
+                                exite.push(items[f].item_codigo)
+                            }
+                        }
+                        return exist
+                    }
+                    if (existe(itemS)){
+                        alert.innerHTML += '<li>Ya exite el item '+itemS.item_codigo+'</li>'
+                        document.getElementById('AlertaSubCapitulosItemsExcel').style.display = 'block'
+                    }
+                }
+                for(let e=0; e<items.length; e++){
+                    if(exite.includes(items[e].item_codigo) == false){
+                        agregarItemsSubCapituloModal(items[e],String(Object.keys(object)))
+                    }
+                }
+            }
+        }
+    }
+    function GuardarSubContrato(btn){
+        if(btn.getAttribute('campo') == 1){
+            div = document.getElementById('excelSub')
+            select = document.getElementById('Subcapitulos')
+            if($('#excelSubInput').prop('files').length <1){
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Atención.',
+                    html: '<p>Es necesario importar un excel para continuar con esta operación.</p>',
+                })
+            }
+            else{
+                form = new FormData();
+                form.append('csrfmiddlewaretoken',csrftoken)
+                form.append('type', 'excel')
+                form.append('excel', $('#excelSubInput').prop('files')[0])
+                form.append('subCapitulo',select.value)
+                form.append('consecutivo', document.getElementsByName('consecutivo')[0].value)
+                $.ajax({
+                    url:'{%url "excelSubcontratos" %}',
+                    data: form,
+                    processData: false,
+                    contentType: false,
+                    type: 'POST',
+                    success: function(data){
+                        $('#excelSubInput').val('')
+                        generarItemsSubCapitulo(data)
+                    },
+                    error: function(error){
+                        if(error['responseJSON']==undefined){
+                            error['responseJSON']={'error':'No se pudo realizar la carga, hubo un error interno'}
+                        }
+                        console.log(error['responseJSON'])
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Atención.',
+                            html: '<p>'+error['responseJSON'].error + '.</p> <sub>Se recargará la página para evitar posibles problemas.</sub>',
+                        }).then(function(){
+                            location.reload()
+                        })
+                    }
+                })
+            }
+        }
+        else{
+            let tbody = document.getElementById('tblItemsSub')
+            if(tbody.children.length > 0){
+                let items = []
+                let data = {}
+                for(let i = 0; i < tbody.children.length; i++){
+                    items.push(serializarLosItemsSubCapitulo(tbody.children[i]))
+                }
+                let subcapitulo = document.getElementById('Subcapitulos')
+                data[subcapitulo.value]=items
+                generarItemsSubCapitulo(data)
+            }
+            else{
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Atención.',
+                    html: '<p>Para continuar el proceso se debe digitar al menos un item</p>',
+                })
+            }
+        }
+    }
     
 
     function calcularSubtotal(){
@@ -720,6 +1189,10 @@
    var PolizasObject ={
     data:[]
    }
+
+   var ItemsSucapituloObject ={
+    data:[]
+   }
     
     var valorSubtotal = 0;
 
@@ -758,7 +1231,7 @@
             $("#I_valorU").text("Este campo es requerido")
         }
 
-        if(cantidad > 0 && valorUnitario > 0 && valorTotal > 0){
+        if(cantidad > 0 && valorUnitario > 0){
             $('#tblItems').append(`
             <tr class="it_row" id="tr-${codigo}">
                 <td>
@@ -803,8 +1276,39 @@
             $("#ValorUnitario").val("")
             $("#ValorTotal").val("")
         }
+        else{
+            alert("Ingrese cantidad válida")
+        }
        
         
+    }
+
+    
+
+    // console.log(subty.innerText)
+        // console.log(subt.innerText)
+
+    function Eliminar_item(id){
+        
+        let subty = document.getElementById("subtot");
+        let cambio = parseInt(subty.innerText)
+        
+
+        $("#tr-"+ id).remove();
+        for (let i = 0; i < ItemsObject.data.length; i++){
+            if (ItemsObject.data[i]["codigo"]==id){
+                let con = ItemsObject.data[i].data.valorTotal
+                let resta = cambio - con
+                
+                subty.innerHTML = resta
+                
+                
+                // console.log(cambio)
+                ItemsObject.data.splice(i,1)
+            }
+        }
+
+
     }
     function AgregarPoliza(){
         $("#tbl_polizas").find('.error_text').text('');
@@ -857,39 +1361,123 @@
             $("#Numero_Poliza").val("")
             $("#id_aseguradora").val(null).trigger("change");
             $("#Fecha_vencimiento_poliza").val("")
-        }    
-        console.log(PolizasObject.data, "----------------------")
+        } 
     }
 
-    function Eliminar_item(id){
-        console.log(ItemsObject.data)
-        console.log(id)
-        $("#tr-"+ id).remove();
-        for (let i = 0; i < ItemsObject.data.length; i++){
-            if (ItemsObject.data[i]["codigo"]==id){
-                ItemsObject.data.splice(i,1)
-                console.log("me borre "+ id)
-            }
-        }
-        console.log(ItemsObject.data)
-
-    }
+    
 
     function Eliminar_Poliza(id){
-        console.log(PolizasObject.data)
-        console.log(id)
         $("#tr-"+ id).remove();
         for (let i = 0; i < PolizasObject.data.length; i++){
             if (PolizasObject.data[i]["id"]==id){
                 PolizasObject.data.splice(i,1)
-                console.log("me borre "+ id)
             }
         }
-        console.log(PolizasObject.data)
 
     }
+     
     
+    // SUBCAPITULOS
+    function AgregarItemsSub(){
+        $("#tbl_itemsSub").find('.error_text').text('');
+        $("#tbl_itemsSub").find(".is-invalid").removeClass('is-invalid');
 
+        let codigo = $("#CodigoSub").val();
+        let item = $("#ItemSub").val();
+        let descripcion = $("#DescripcionSub").val();
+        let unidad = $("#UnidadSub").val();
+        let cantidad = $("#CantidadSub").val();
+        let valorUnitario = $("#ValorUnitarioSub").val(); 
+        let valorTotal = $("#ValorTotalSub").val();
+        let subcapitulo = $("#Subcapitulos").val()
+
+        let subt = document.getElementById("subtot");
+        let subtt = document.getElementById("subtot3")
+
+        if(subcapitulo == "" || subcapitulo == null){
+            $("#Subcapitulos").addClass("is-invalid")
+            $("#Sub_Subcapitulo").text("Este campo es requerido")
+        }else{
+            if(codigo == "" || codigo == null){
+                $("#CodigoSub").addClass("is-invalid")
+                $("#Sub_CodigoSub").text("Este campo es requerido")
+            }else if(item == "" || item == null){
+                $("#ItemSub").addClass("is-invalid")
+                $("#Sub_ItemSub").text("Este campo es requerido")
+            }else if(descripcion == "" || descripcion == null){
+                $("#DescripcionSub").addClass("is-invalid")
+                $("#Sub_DescripcionSub").text("Este campo es requerido")
+            }else if(unidad == "" || unidad == null){
+                $("#UnidadSub").addClass("is-invalid")
+                $("#Sub_UnidadSub").text("Este campo es requerido")
+            }else if(cantidad == "" || cantidad == null){
+                $("#CantidadSub").addClass("is-invalid")
+                $("#Sub_CantidadSub").text("Este campo es requerido")
+            }else if(valorUnitario == "" || valorUnitario == null){
+                $("#ValorUnitarioSub").addClass("is-invalid")
+                $("#Sub_ValorUnitarioSub").text("Este campo es requerido")
+            }
+
+            if(cantidad > 0 && valorUnitario > 0){
+                $('#tblItemsSub').append(`
+                <tr class="it_row" id="tr-${codigo}">
+                    <td>
+                        <input type="hidden" name="" value="${codigo}"/>
+                        ${$("#CodigoSub").select2('data')[0]['text']}
+                    </td>
+                    <td>${item}</td>  
+                    <td>${descripcion}</td>  
+                    <td>${unidad}</td>  
+                    <td>${cantidad}</td>  
+                    <td>${valorUnitario}</td>
+                    <td class="valTot">${parseInt(valorTotal)}</td>  
+                    <td>
+                        <button class="btn" onclick="Eliminar_ItemSubcapitulo(${codigo})" style="color: #fc3322; font-size: 20px; font-weight: bold;"><i class='bx bx-x'></i></button>
+                    </td>    
+                </tr>
+            `)
+            ItemsSucapituloObject.data.push({ 
+                codigo:codigo,
+                data:{
+                    codigo:codigo,
+                    item:item,
+                    descripcion: descripcion,
+                    unidad: unidad,
+                    cantidad:cantidad,
+                    valorUnitario:valorUnitario,
+                    valorTotal:valorTotal,
+                    sucapitulo:subcapitulo
+                }
+            })
+                let con = parseInt(valorTotal)
+                valorSubtotal += con;
+                
+                subt.innerText = valorSubtotal
+                subtt.innerText = valorSubtotal
+                // subt.innerText = ${parseInt(valorSubtotal) += parseInt(valorSubtotal)};
+                
+                //$("#Subcapitulos").val(null).trigger("change")
+                $("#CodigoSub").empty()
+                $("#ItemSub").val("")
+                $("#DescripcionSub").val("")
+                $("#UnidadSub").val("")
+                $("#CantidadSub").val("")
+                $("#ValorUnitarioSub").val("")
+                $("#ValorTotalSub").val("")
+            }
+        }  
+    }
+    function Eliminar_ItemSubcapitulo(id){
+        $("#tr-"+ id).remove();
+        for (let i = 0; i < ItemsSucapituloObject.data.length; i++){
+            if (ItemsSucapituloObject.data[i]["codigo"]==id){
+                ItemsSucapituloObject.data.splice(i,1)
+            }
+        }
+        console.log("se borro")
+        console.log(ItemsSucapituloObject.data)
+
+    }
     
     
     
@@ -941,5 +1529,26 @@
     function my_function(){
         document.getElementById("note").innerHTML="";
     }
+
+
+
+    var campoS = document.getElementById("impo").value
+
+    function importarExcel(campoS){
+        
+        var tabla = document.getElementById("tbl_items")
+        var campoExcel = document.getElementById("excel")
+
+        if(campoS == 1){
+            tabla.style.display = "none"
+            campoExcel.style.display = "block"
+        }
+        else{
+            tabla.style.display = "block"
+            campoExcel.style.display = "none"
+        }
+    }
+    
+    
     </script>
 {% endblock scripts %}

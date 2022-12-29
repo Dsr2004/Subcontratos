@@ -2,6 +2,20 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group
 
 
+VALIDADORES = (
+    ("Ambiental", "Ambiental"),
+    ("Social", "Social"),
+    ("RRHH", "RRHH"),
+    ("Calidad", "Calidad"),
+    ("SST", "SST"),
+    ("P&C Planeación", "P&C Planeación"),
+    ("P&C Costos", "P&C Costos"),
+    ("Administrador", "Administrador"),
+    ("Seguros", "Seguros"),
+    
+)
+
+
 class UsuarioManager(BaseUserManager):
     def create_user(self,usuario,nombres,apellidos,correo,cedula,password=None):
         if  not correo:
@@ -43,6 +57,7 @@ class Usuario(AbstractBaseUser):
     cedula = models.CharField('Cedula', unique=True, max_length=15, null=False, blank=False)
     estado = models.BooleanField("Estado del usuario", default=True)
     rol = models.ForeignKey(Group, on_delete=models.PROTECT, related_name="rol", null=True, blank=True)
+    tipo_validador = models.CharField(max_length=150, choices=VALIDADORES)
     administrador = models.BooleanField(default=False)
     objects = UsuarioManager()
 
