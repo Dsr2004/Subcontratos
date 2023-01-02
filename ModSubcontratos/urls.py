@@ -9,7 +9,8 @@ urlpatterns = [
     path("", login_required(ListarSubcontratos.as_view()), name="listsubcontratos"),
     path("VerSubcontrato/<int:pk>", login_required(VerSubcontrato.as_view()), name="verSubcontrato"),
     path("ModificarSubcontrato/<int:pk>", login_required(ModificarSubcontrato.as_view()), name="modificarSubcontrato"),
-    
+    path("VerSeguimientoActa/<int:pk>", login_required(VerSeguimientoActa.as_view()), name="verSeguimientoActa"),
+    path("cargarExcelSubcontratos/", login_required(excelSubcontratos.as_view()), name="excelSubcontratos"),
 ]
 
 

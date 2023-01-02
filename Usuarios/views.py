@@ -194,6 +194,19 @@ class MiCuenta(ValidateProfileUser, UpdateView):
     def form_invalid(self, form):
         print(form.errors)
         return JsonResponse({"errores":form.errors}, status=400)
+    
+class ActualizarPerfil(View):
+    def post(self, request, *args, **kwargs):
+        correo = request.POST.get("correo")
+        if correo == request.user.correo:
+            messages.info(request, "No se pudo actualizar el perfil porque el correo es el mismo.")
+            return redirect("miCuenta",pk=request.user.pk)
+        else:
+            usuario = Usuario.objects.get(pk=request.user.pk)
+            usuario.correo = correo
+            usuario.save()
+            messages.success(request, "Se modificó el correo correctamente.")
+            return redirect("miCuenta",pk=request.user.pk)
 
 # Auto Logout
 class AutoLogout():
@@ -202,3 +215,4 @@ class AutoLogout():
         request.user = None
         messages.info(request, ".") # Nota: El argumento no puede estar vacío
         return HttpResponseRedirect('/Login')
+

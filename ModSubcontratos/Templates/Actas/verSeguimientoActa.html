@@ -1,0 +1,47 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><strong>Seguimiento del acta {{acta.titulo}}</strong></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+           <table class="table">
+            <thead>
+                <tr>
+                    <th>Ítem</th>
+                    <th>Descripción ítem</th>
+                    <th>Cantidad por ejecutar</th>
+                    <th>Valor unitario</th>
+                    <th>Unidad</th>
+                    <th>Cantidad ejecutada</th>
+                    <th>Valor</th>
+                    <th>Cantidades</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                {% if acta.seguimiento_set.all %}
+                    {% for seguimiento in acta.seguimiento_set.all %}
+                        <td>{{seguimiento.item.item_nombre}}</td>
+                        <td>{{seguimiento.item.descripcion}}</td>
+                        <td>{{seguimiento.cantidad_por_ejecutar}}</td>
+                        <td>{{seguimiento.item.valor_unitario}}</td>
+                        <td>{{seguimiento.item.unidad}}</td>
+                        <td>{{seguimiento.cantidad}}</td>
+                        <td>${{seguimiento.get_valor}}</td>
+                        <td>{{seguimiento.}}</td>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="8"><center><b style="color: #60b232;">Esta acta no tiene seguimiento.</b></center></td>
+                    </tr>     
+                {% endif %}
+                                 
+            </tbody>
+           </table> 
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class='bx bx-x'></i> Cerrar</button>
+        </div>
+    </div>
+</div>

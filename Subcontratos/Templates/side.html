@@ -26,14 +26,14 @@
         <header>
             <div class="image-text" style="background-color: var(--primary-color-light); border-radius: 10px; padding: 3px;" onclick="redirigirP()">
                 <a  href="{% url 'miCuenta' request.user.id %}"></a>
-                <span class="image">
+                <span class="image" style="cursor: pointer;">
                     <!--<img src="logo.png" alt="">-->
                     <img src="{% static 'img/user.png' %}" alt=""> 
                 </span>
 
                 
                
-                <div class="text logo-text">
+                <div class="text logo-text" style="cursor: pointer;">
                     <span class="name">{{request.user.usuario}}</span>
                     <span class="profession">
                         {% if request.user.rol.name %}
@@ -59,12 +59,12 @@
                 </li> -->
 
                 <ul class="menu-links" style="margin-left: -30px;">
-                    <li class="nav-link ">
+                    <!-- <li class="nav-link ">
                         <a href="#">
                             <i class='bx bx-home-alt icon' ></i>
                             <span class="text nav-text ">Inicio</span>
                         </a>
-                    </li>
+                    </li> -->
 
                     <li class="nav-link">
                         <a href="{% url 'manageuser' %}">
@@ -79,22 +79,6 @@
                             <span class="text nav-text">Subcontratos</span>
                         </a>
                     </li>
-
-                    <li class="nav-link">
-                        <a href="#">
-                            <i class='bx bx-file icon'></i>
-                            <span class="text nav-text">Actas</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-link">
-                        <a href="#">
-                            <i class='bx bx-book-open icon'></i>
-                            <span class="text nav-text">Documentos</span>
-                        </a>
-                    </li>
-
-
                 </ul>
             </div>
 
@@ -155,10 +139,12 @@
     <script src="{% static 'libs/bootstrap/dist/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'main.js' %}"></script>
     
+   
+    {% comment %}
+    <script src="{% static 'js/scriptLogout.js' %}"></script>
+    {% endcomment %}
+
     
-    <!-- <script src="{% static 'js/scriptLogout.js' %}"></script> -->
-    
-        
 
     <script>
         let headers = new Headers()

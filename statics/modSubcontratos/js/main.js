@@ -471,8 +471,8 @@
 
 
 function guardarSubcontrato(){
-    const items = JSON.stringify(ItemsObject.data)
-    const polizas = JSON.stringify(PolizasObject.data)
+    let items = JSON.stringify(ItemsObject.data)
+    let polizas = JSON.stringify(PolizasObject.data)
     let form = $("#guardarSubcontratoForm")
 
     $("#slec").prop("disabled", false)
@@ -485,6 +485,64 @@ function guardarSubcontrato(){
     let formData = new FormData(document.getElementById("guardarSubcontratoForm"));
     formData.append("items",items)
     formData.append("listpolizas",polizas)
+    formData.append("tipo_orden",tipo_orden)
+
+    $.ajax({
+        type:form.attr("method"),
+        url:form.attr("action"),
+        processData: false,
+        contentType: false,
+        data: formData,
+        success: function(response) {
+            form.find('.error_text').text('');
+            form.find('.is-invalid').removeClass('is-invalid');
+            location.href = response["path"]
+        },
+        error: function(errors){
+            form.find('.error_text').text('');
+            form.find('.is-invalid').removeClass('is-invalid');
+            tipo = errors.responseJSON["tipo"]
+            if(tipo){
+                if(tipo=="general"){
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: errors.responseJSON["errores"],
+                      })
+                }
+            }else{
+                console.log(errors)
+                errores = errors.responseJSON["errores"]
+                form.find('.error_text').text('');
+                form.find('.is-invalid').removeClass('is-invalid');
+                for (let i in errores){
+                    let x=form.find('input[name='+i+']')
+                    let y=form.find('select[name='+i+']')
+                    x.addClass("is-invalid")
+                    y.addClass("is-invalid")
+                    $("#P_"+i).text(errores[i])
+                }
+            }
+            
+        }
+    });
+}
+
+function modificarrSubcontrato(){
+    const items = JSON.stringify(ItemsObject.data)
+    const polizas = JSON.stringify(PolizasObject.data)
+    let form = $("#modificarrSubcontratoForm")
+
+    $("#slec").prop("disabled", false)
+    let tipo_orden = $("#slec").val()
+    $("#slec").prop("disabled", true)
+    if ($('#comboA').val() == "3"){
+        $("#slec").prop("disabled", false)
+    }
+
+    let formData = new FormData(document.getElementById("modificarrSubcontratoForm"));
+    // formData.append("items",items)
+    // formData.append("listpolizas",polizas)
     formData.append("tipo_orden",tipo_orden)
 
     $.ajax({

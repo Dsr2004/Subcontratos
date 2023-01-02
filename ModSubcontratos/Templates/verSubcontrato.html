@@ -57,19 +57,19 @@
     {% csrf_token %}
     <div class="row mb-3">
         <div class="col-3">
-            <label for=""><strong>Identificador subcontrato </strong> <sup class="campo_requerido">*</sup></label>
+            <label for=""><strong>Identificador subcontrato </strong> </label>
             <p>{{subcontrato.consecutivo}}</p>
         </div>
         <div class="col-3">
-            <label for=""><strong>Tipo de contrato</strong> <sup class="campo_requerido">*</sup></label>
+            <label for=""><strong>Tipo de contrato</strong> </label>
             <p id="tipo_contra">{{subcontrato.get_tipo_contrato_display}}</p>
         </div>
         <div class="col-3">
-            <label for=""><strong>Elaborador</strong> <sup class="campo_requerido">*</sup></label>
+            <label for=""><strong>Elaborador</strong> </label>
             <p>{{subcontrato.elaborador}}</p>
         </div>
         <div class="col-3">
-            <label for=""><strong>Cargo</strong> <sup class="campo_requerido">*</sup></label>
+            <label for=""><strong>Cargo</strong> </label>
             <p>{{subcontrato.elaborador.cargo.capitalize}}</p>
         </div>
     </div>
@@ -77,20 +77,20 @@
     <div class="row mb-3">
 
         <div class="col-3">
-            <label for=""><strong>Proyecto </strong> <sup class="campo_requerido">*</sup></label>
+            <label for=""><strong>Proyecto </strong> </label>
             <p>{{subcontrato.proyecto}}</p>
             <p class="error_text" id="P_proyecto"></p>
         </div>
         <div class="col-3">
-            <label for=""><strong>Centro de operaciones </strong> <sup class="campo_requerido">*</sup></label>
+            <label for=""><strong>Centro de operaciones </strong> </label>
             <p>{{subcontrato.proyecto.id_proyecto}}</p>
         </div>
         <div class="col-3">
-            <label for=""><strong>Nit</strong> <sup class="campo_requerido">*</sup></label>
+            <label for=""><strong>Nit</strong> </label>
             <p>{{subcontrato.proveedor.nit}}</p>
         </div>
         <div class="col-3">
-            <label for=""><strong>Proveedor</strong> <sup class="campo_requerido">*</sup></label>
+            <label for=""><strong>Proveedor</strong> </label>
             <p>{{subcontrato.proveedor}}</p>
             <p class="error_text" id="P_proveedor"></p>
         </div>
@@ -105,17 +105,17 @@
             
         </div>
         <div class="col-3">
-            <label for=""><strong>Compañía de registro</strong> <sup class="campo_requerido">*</sup></label>
+            <label for=""><strong>Compañía de registro</strong> </label>
             <p>{{subcontrato.compania}}</p>
             <p class="error_text" id="P_compania"></p>
         </div>
         <div class="col-3">
-            <label for=""><strong>Tipo Orden de compra</strong> <sup class="campo_requerido">*</sup></label>
+            <label for=""><strong>Tipo Orden de compra</strong> </label>
             <p>{{subcontrato.get_tipo_orden_display}}</p>
             <p class="error_text" id="P_tipo_orden"></p>
         </div>
         <div class="col-3">
-            <label for=""><strong>Nro. Orden de compra</strong> <sup class="campo_requerido">*</sup></label>
+            <label for=""><strong>Nro. Orden de compra</strong> </label>
             <p>{{subcontrato.numero_orden}}</p>
             <p class="error_text" id="P_numero_orden"></p>
         </div>
@@ -261,7 +261,7 @@
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                 <div class="row mt-4 mb-3">
                     <div class="col-12">
-                        <label for=""><strong>¿Como se hará el seguimiento de actas?</strong> <sup class="campo_requerido">*</sup></label>
+                        <label for=""><strong>¿Como se hará el seguimiento de actas?</strong> </label>
                         <p>{{subcontrato.get_seguimiento_acta_display}}</p>
                         <p class="error_text" id="P_seguimiento_acta"></p>
                     </div>
@@ -290,34 +290,34 @@
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                 <div class="row mt-4">
                     <div class="col-3">
-                        <label for=""><strong>Fecha inicio del contrato</strong> <sup class="campo_requerido">*</sup></label>
+                        <label for=""><strong>Fecha inicio del contrato</strong> </label>
                         <p>{{subcontrato.fecha_inicio_contrato}}</p>
                         <p class="error_text" id="P_fecha_inicio_contrato"></p>
                     </div>
                     <div class="col-3">
-                        <label for=""><strong>Fecha vencimiento contrato</strong> <sup class="campo_requerido">*</sup></label>
+                        <label for=""><strong>Fecha vencimiento contrato</strong> </label>
                         <p>{{subcontrato.fecha_vencimiento_contrato}}</p>
                         <p class="error_text" id="P_fecha_vencimiento_contrato"></p>
                     </div>
                     <div class="col-3">
-                        <label for=""><strong>Director de obra</strong> <sup class="campo_requerido">*</sup></label>
+                        <label for=""><strong>Director de obra</strong> </label>
                         <p>{{subcontrato.director_obra}}</p>
                         <p class="error_text" id="P_director_obra"></p>
                     </div>
                     <div class="col-3">
-                        <label for=""><strong>Gestor del contrato</strong> <sup class="campo_requerido">*</sup></label>
+                        <label for=""><strong>Gestor del contrato</strong> </label>
                         <p>{{subcontrato.gestor_contrato}}</p>
                         <p class="error_text" id="P_gestor_contrato"></p>
                     </div>
                 </div>
                 <div class="row mt-4">
                     <div class="col-12">
-                        <label for=""><strong>Correo de notificación del proveedor</strong> <sup class="campo_requerido">*</sup></label>
+                        <label for=""><strong>Correo de notificación del proveedor</strong> </label>
                         <p>{{subcontrato.correo_notificacion_proveedor}}</p>
                         <p class="error_text" id="P_correo_notificacion_proveedor"></p>
                     </div>
                     <div class="col-12 mt-3">
-                        <label for=""><strong>Validador/es del subcontrato</strong> <sup class="campo_requerido">*</sup></label>
+                        <label for=""><strong>Validador/es del subcontrato</strong> </label>
                         <p>{{subcontrato.validadores}}</p>
                         <p class="error_text" id="P_validadores"></p>
                     </div>
@@ -417,6 +417,11 @@
         </div>
     </div>
 </form>
+<div class="row mt-5 mb-2 justify-content-end text-center">
+    <div class="col-2">
+        <a class="btn btn-success" type="button" href="{% url 'modificarSubcontrato' object.pk %}"><i class='bx bx-save'></i> Modificar</a>
+    </div>
+</div>
 {% endblock contenido %} 
 
 
@@ -528,11 +533,11 @@
               <form action="">
                 <div class="row mt-4 justify-content-right">
                     <div class="col-6">
-                        <label for=""><strong>Cantidad</strong>  <sup class="campo_requerido">*</sup></label>
+                        <label for=""><strong>Cantidad</strong>  </label>
                         <input type="text" class="form-control">
                     </div>
                     <div class="col-6">
-                        <label for=""><strong>Paquete de trabajo</strong>  <sup class="campo_requerido">*</sup></label>
+                        <label for=""><strong>Paquete de trabajo</strong>  </label>
                         <input type="text" class="form-control">
                     </div>
                     <div class="col-2 mt-3">
@@ -555,7 +560,7 @@
             <div class="modal-body">
                 <div class="row mt-4">
                     <div class="col-4" id="impExcel">
-                        <label for=""><strong>¿Importar desde un excel?</strong>  <sup class="campo_requerido">*</sup></label>
+                        <label for=""><strong>¿Importar desde un excel?</strong>  </label>
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-check">
@@ -583,7 +588,7 @@
                 </div>
                 <div class="row">
                     <div class="col-5">
-                        <label for=""><strong></strong> Subcapitulo <sup class="campo_requerido">*</sup></label>
+                        <label for=""><strong></strong> Subcapitulo </label>
                         <select class="form-control">
                             <option>OBRA CIVIL</option>
                             <option>SUMINISTRO</option>

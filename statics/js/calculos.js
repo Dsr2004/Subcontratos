@@ -1,13 +1,12 @@
 // Valores del subcontrato con tipo de contrato 1.1 y 1.2
-function calcularTotal(){
-    campoCantidad = document.getElementById("Cantidad").value
-    campoValorUnitario = document.getElementById("ValorUnitario").value
+function calcularTotal(tr){
+    campoCantidad = tr.children[4].firstElementChild.value
+    campoValorUnitario = tr.children[5].firstElementChild.value
 
     resultado = campoCantidad * campoValorUnitario
 
-    campoTotal = document.getElementById("ValorTotal")
+    campoTotal = tr.children[6].firstElementChild
     campoTotal.value = resultado
-
 }
 
 
