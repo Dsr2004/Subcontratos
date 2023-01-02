@@ -931,7 +931,7 @@
                 <td>${valorUnitario}</td>
                 <td class="valTot">${parseInt(valorTotal)}</td>  
                 <td>
-                    <button class="btn" onclick="Eliminar_item(${codigo})" style="color: #fc3322; font-size: 20px; font-weight: bold;"><i class='bx bx-x'></i></button>
+                    <button class="btn" onclick="Eliminar_item(${codigo}, ${parseInt(valorTotal)})" style="color: #fc3322; font-size: 20px; font-weight: bold;"><i class='bx bx-x'></i></button>
                 </td>    
             </tr>
         `)
@@ -974,7 +974,7 @@
     // console.log(subty.innerText)
         // console.log(subt.innerText)
 
-    function Eliminar_item(id){
+    function Eliminar_item(id, total){
         
         let subty = document.getElementById("subtot");
         let cambio = parseInt(subty.innerText)
@@ -983,14 +983,16 @@
         $("#tr-"+ id).remove();
         for (let i = 0; i < ItemsObject.data.length; i++){
             if (ItemsObject.data[i]["codigo"]==id){
-                let con = ItemsObject.data[i].data.valorTotal
-                let resta = cambio - con
-                
-                subty.innerHTML = resta
-                
-                
-                // console.log(cambio)
+                let con = ItemsObject.data[i].data.valorTotal || 0;
+                let resta = parseFloat(cambio) - parseFloat(total)
+
+                $("#subtot").text(resta)
+                console.log(resta)
                 ItemsObject.data.splice(i,1)
+                
+            
+                // console.log(cambio)
+                
             }
         }
 

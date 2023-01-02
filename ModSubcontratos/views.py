@@ -252,7 +252,7 @@ class ListarSubcontratos(ListView):
         from datetime import datetime
         contexto = {"nombrePersona": "Juan Manuel gaviria", "P": "Prueba", "id":"15", "fecha_creacion": datetime.now().date()}
         from Subcontratos.correo import enviarCorreo
-        enviarCorreo("Recordatorio de realización de acta", "CorreosSubcontratos/RecordatorioActaBase.html", contexto, ["davitdy2015@gmail.com", "juanma28o123@gmail.com"])
+        enviarCorreo("Recordatorio de realización de acta", "CorreosSubcontratos/AlertaValidadoresBase.html", contexto, ["davitdy2015@gmail.com", "juanma28o123@gmail.com"])
         return super().get(request,*args, **kwargs)
 
 class VerSubcontrato(DetailView):

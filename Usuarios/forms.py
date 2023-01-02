@@ -22,7 +22,7 @@ class UsuarioForm(forms.ModelForm):
             "apellidos": forms.DateInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese los apellidos"}),
             "cedula": forms.TextInput(attrs={"class":"form-control mb-2", "autocomplete":"off", "placeholder":"Ingrese el número de documento"}),
             "correo": forms.EmailInput(attrs={"class":"form-control mb-2", "autocomplete":"off", "placeholder":"Ingrese el correo electrónico"}),
-            "rol": forms.Select(attrs={"class":"form-select", "id":"rol_ti","autocomplete":"off"}),
+            "rol": forms.Select(attrs={"class":"form-select", "id":"rol_ti","autocomplete":"off", "onchange":"alert('Hola')"}),
             "tipo_validador":forms.Select(attrs={"class":"form-select", "autocomplete":"off"}),
             
         }
